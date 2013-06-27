@@ -20,7 +20,6 @@ options.filter = name;
 options.multiple = true;
 // find contacts
 navigator.contacts.find(fields, onSuccess, onError, options);
-navigator.service.contacts.find(fields, callback, onError,options);
 }
 // onSuccess: Get a snapshot of the current contacts
     //
