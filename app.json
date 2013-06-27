@@ -1,0 +1,9 @@
+{
+"reponame":"sample-phonegap-contacts",
+"caption":"PhoneGap Contacts",
+"tooltip":"Interact with device contact database",
+"description":"Interact with the device contact database using the PhoneGap Contacts API.",
+"articleurl":"http://software.intel.com/en-us/articles/phonegap-contacts-work-with-the-devices-contact-database",
+"categories":["PhoneGap"],
+"visible": "false"
+}
