@@ -7,19 +7,27 @@
 <link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css" />
 <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
 <script src="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.js"></script>
+<script>
+$("#main").on("pageshow", function(event, data) {
+$.mobile.loadPage( "prefetch-JS.html",{ showLoadMsg: false } );
+});
+</script>
+</script>
 
 </head>
 <body>
-<!-- Main Page -->
-<div id='main' data-role='page' data-theme='a'>
-<div data-role='header' data-theme='b'>
-<h1>Welcome!</h1>
+<div id="main" data-role="page">
+<div data-role="header">
+<h1>Header of Main Page</h1>
 </div>
-<div id='content' data-role='content'>
-<p>My jQuery Mobile App</p>
+<div data-role="content">
+<a href="prefetch.html" data-role="button"
+data-prefetch>Prefetch Page</a>
+<a href="prefetch-JS.html" data-role="button">
+Prefetch Page using JS</a>
 </div>
-<div data-role='footer' data-theme='b'>
-<h4>Enjoy ...</h4>
+<div data-role="footer">
+<h4>Footer of Main Page</h4>
 </div>
 </div>
 </body>
