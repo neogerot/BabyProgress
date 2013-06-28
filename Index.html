@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Device Properties Example</title>
+    <title>Compass Example</title>
 
-    <script type="text/javascript" charset="utf-8" src="phonegap.js"></script>
+    <script type="text/javascript" charset="utf-8" src="phonegap-1.0.0.js"></script>
     <script type="text/javascript" charset="utf-8">
 
     // Wait for PhoneGap to load
@@ -13,18 +13,25 @@
     // PhoneGap is ready
     //
     function onDeviceReady() {
-        var element = document.getElementById('deviceProperties');
+        navigator.compass.getCurrentHeading(onSuccess, onError);
+    }
 
-        element.innerHTML = 'Device Name: '     + device.name     + '<br />' + 
-                            'Device PhoneGap: ' + device.phonegap + '<br />' + 
-                            'Device Platform: ' + device.platform + '<br />' + 
-                            'Device UUID: '     + device.uuid     + '<br />' + 
-                            'Device Version: '  + device.version  + '<br />';
+    // onSuccess: Get the current heading
+    //
+    function onSuccess(heading) {
+        alert('Heading: ' + heading);
+    }
+
+    // onError: Failed to get the heading
+    //
+    function onError() {
+        alert('onError!');
     }
 
     </script>
   </head>
   <body>
-    <p id="deviceProperties">Loading device properties...</p>
+    <h1>Example</h1>
+    <p>getCurrentHeading</p>
   </body>
 </html>
