@@ -1,18 +1,48 @@
+<!DOCTYPE html>
 <html>
-<head>
-<title>Find A Friend</title>
-<link rel="stylesheet" href="style.css" />
-<meta name="viewport" content="width=device-width,initialscale=1.0" />
-</head>
-<body>
-<h1>Find A Friend</h1>
-<input type="text" id="friendName" placeholder="What's
-your
-friend's name?" />
-<button id="friendSubmit">Submit</button>
-</body>
-<script src="phonegap.js"></script>
-<script src="xui-more-1.0.0.min.js"></script>
-<script src="mustache.js"></script>
-<script src="app.js"></script>
+  <head>
+    <title>Contact Example</title>
+
+    <script type="text/javascript" charset="utf-8" src="phonegap.js"></script>
+    <script type="text/javascript" charset="utf-8">
+
+    // Wait for Cordova to load
+    //
+    document.addEventListener("deviceready", onDeviceReady, false);
+
+    // Cordova is ready
+    //
+    function onDeviceReady() {
+        var options = new ContactFindOptions();
+        options.filter="";
+        filter = ["displayName","organizations"];
+        navigator.contacts.find(filter, onSuccess, onError, options);
+    }
+
+    // onSuccess: Get a snapshot of the current contacts
+    //
+    function onSuccess(contacts) {
+        for (var i=0; i<contacts.length; i++) {
+            for (var j=0; j<contacts[i].organizations.length; j++) {
+                alert("Pref: " + contacts[i].organizations[j].pref + "\n" +
+                        "Type: " + contacts[i].organizations[j].type + "\n" +
+                        "Name: " + contacts[i].organizations[j].name + "\n" + 
+                        "Department: "  + contacts[i].organizations[j].department + "\n" + 
+                        "Title: "  + contacts[i].organizations[j].title);
+            }
+        }
+    };
+
+    // onError: Failed to get the contacts
+    //
+    function onError(contactError) {
+        alert('onError!');
+    }
+
+    </script>
+  </head>
+  <body>
+    <h1>Example</h1>
+    <p>Find Contacts</p>
+  </body>
 </html>
