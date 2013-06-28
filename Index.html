@@ -24,7 +24,7 @@
     //
     function onPhotoDataSuccess(imageData) {
       // Uncomment to view the base64 encoded image data
-      // console.log(imageData);
+       console.log(imageData);
 
       // Get image handle
       //
@@ -37,14 +37,14 @@
       // Show the captured photo
       // The inline CSS rules are used to resize the image
       //
-      smallImage.src = "data:image/jpeg;base64," + imageData;
+      smallImage.src = imageData;
     }
 
     // Called when a photo is successfully retrieved
     //
     function onPhotoURISuccess(imageURI) {
       // Uncomment to view the image file URI 
-      // console.log(imageURI);
+       console.log(imageURI);
 
       // Get image handle
       //
@@ -64,7 +64,8 @@
     //
     function capturePhoto() {
       // Take picture using device camera and retrieve image as base64-encoded string
-      navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 50 });
+	  var options={ sourceType:Camera.PictureSourceType.PHOTOLIBRARY,destinationType: Camera.DestinationType.FILE_URI };
+      navigator.camera.getPicture(onPhotoDataSuccess, onFail, options);
     }
 
     // A button will call this function
