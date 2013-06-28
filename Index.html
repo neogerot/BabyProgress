@@ -1,48 +1,47 @@
-<!DOCTYPE html>
 <html>
-  <head>
-    <title>Contact Example</title>
+<head>
+<script src="css/source-sans-pro.js"></script>
+<link href="css/styles.css" rel="stylesheet">
+</head>
+<body>
 
-    <script type="text/javascript" charset="utf-8" src="phonegap.js"></script>
-    <script type="text/javascript" charset="utf-8">
+<script id="home-tpl" type="text/x-handlebars-template">
+    <div class='header'><h1>Home</h1></div>
+    <div class='search-bar'><input class='search-key' type="search"/></div>
+    <div class="scroll"><ul class='employee-list'></ul></div>
+</script>
 
-    // Wait for Cordova to load
-    //
-    document.addEventListener("deviceready", onDeviceReady, false);
+<script id="employee-li-tpl" type="text/x-handlebars-template">
+    {{#.}}
+    <li><a href="#employees/{{this.id}}">{{this.firstName}} {{this.lastName}}<br/>{{this.title}}</a></li>
+    {{/.}}
+</script>
 
-    // Cordova is ready
-    //
-    function onDeviceReady() {
-        var options = new ContactFindOptions();
-        options.filter="Ak";
-        filter = ["displayName","organizations"];
-        navigator.contacts.find(filter, onSuccess, onError, options);
-    }
+<script id="employee-tpl" type="text/x-handlebars-template">
+    <div class='header'><a href='#' class="button header-button header-button-left">Back</a><h1>Details</h1></div>
+    <div class='details'>
+    <img id='image' src='img/{{firstName}}_{{lastName}}.jpg' style="float:left;margin:10px;"/>
+    <h1>{{firstName}} {{lastName}}</h1>
+    <h2>{{title}}</h2>
+    <span class="location"></span>
+    <ul>
+    <li><a href="tel:{{officePhone}}">Call Office<br/>{{officePhone}}</a></li>
+    <li><a href="tel:{{cellPhone}}">Call Cell<br/>{{cellPhone}}</a></li>
+    <li><a href="sms:{{cellPhone}}">SMS<br/>{{cellPhone}}</a></li>
+    <li><a href="#" class="add-location-btn">Add Location</a></li>
+    <li><a href="#" class="add-contact-btn">Add to Contacts</a></li>
+    <li><a href="#" class="change-pic-btn">Change Picture</a></li>
+    </ul>
+    </div>
+</script>
 
-    // onSuccess: Get a snapshot of the current contacts
-    //
-    function onSuccess(contacts) {
-        for (var i=0; i<contacts.length; i++) {
-            for (var j=0; j<contacts[i].organizations.length; j++) {
-                alert("Pref: " + contacts[i].organizations[j].pref + "\n" +
-                        "Type: " + contacts[i].organizations[j].type + "\n" +
-                        "Name: " + contacts[i].organizations[j].name + "\n" + 
-                        "Department: "  + contacts[i].organizations[j].department + "\n" + 
-                        "Title: "  + contacts[i].organizations[j].title);
-            }
-        }
-    };
+<script src="phonegap.js"></script>
+<script src="lib/jquery-1.8.2.min.js"></script>
+<script src="lib/handlebars.js"></script>
+<script src="js/storage/memory-store.js"></script>
+<script src="js/HomeView.js"></script>
+<script src="js/EmployeeView.js"></script>
+<script src="js/main.js"></script>
 
-    // onError: Failed to get the contacts
-    //
-    function onError(contactError) {
-        alert('onError!');
-    }
-
-    </script>
-  </head>
-  <body>
-    <h1>Example</h1>
-    <p>Find Contacts</p>
-  </body>
+</body>
 </html>
