@@ -2,27 +2,45 @@
 <html>
   <head>
     <title>Contact Example</title>
-
+ 
     <script type="text/javascript" charset="utf-8" src="phonegap.js"></script>
     <script type="text/javascript" charset="utf-8">
-
+ 
     // Wait for PhoneGap to load
     //
     document.addEventListener("deviceready", onDeviceReady, false);
-
+ 
     // PhoneGap is ready
     //
     function onDeviceReady() {
-        var myContact = navigator.contacts.create({"displayName": "Test User"});
-        myContact.gender = "male";
-        console.log("The contact, " + myContact.displayName + ", is of the " + myContact.gender + " gender");
+        // create
+        var contact = navigator.contacts.create();
+        contact.displayName = "Plumber";
+        contact.nickname = "Plumber";       //specify both to support all devices
+        var name = new ContactName();
+        name.givenName = "Jane";
+        name.familyName = "Doe";
+        contact.name = name;
+ 
+        // save
+        contact.save(onSaveSuccess,onSaveError);
     }
-
-
+ 
+    // onSaveSuccess: Get a snapshot of the current contacts
+    //
+    function onSaveSuccess(contact) {
+        alert("Save Success");
+    }
+ 
+    // onSaveError: Failed to get the contacts
+    //
+    function onSaveError(contactError) {
+        alert("Error = " + contactError.code);
+    }
     </script>
   </head>
   <body>
     <h1>Example</h1>
-    <p>Create Contact</p>
+    <p>Find Contacts</p>
   </body>
 </html>
