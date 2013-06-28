@@ -24,7 +24,9 @@
     //
     function onPhotoDataSuccess(imageData) {
       // Uncomment to view the base64 encoded image data
-       console.log(imageData);
+       //console.log(imageData);
+	   var element = document.getElementById('deviceProperties');
+	   element.innerHTML = 'Image Path:' +imageData;
 
       // Get image handle
       //
@@ -44,8 +46,9 @@
     //
     function onPhotoURISuccess(imageURI) {
       // Uncomment to view the image file URI 
-       console.log(imageURI);
-
+      //  console.log(imageURI);
+		
+		
       // Get image handle
       //
       var largeImage = document.getElementById('largeImage');
@@ -97,6 +100,7 @@
     <button onclick="capturePhotoEdit();">Capture Editable Photo</button> <br>
     <button onclick="getPhoto(pictureSource.PHOTOLIBRARY);">From Photo Library</button><br>
     <button onclick="getPhoto(pictureSource.SAVEDPHOTOALBUM);">From Photo Album</button><br>
+	<p id="deviceProperties">Loading device properties...</p>
     <img style="display:none;width:60px;height:60px;" id="smallImage" src="" />
     <img style="display:none;" id="largeImage" src="" />
   </body>
