@@ -64,7 +64,7 @@
     //
     function capturePhoto() {
       // Take picture using device camera and retrieve image as base64-encoded string
-	  var options={ sourceType:Camera.PictureSourceType.PHOTOLIBRARY,destinationType: Camera.DestinationType.FILE_URI };
+	  var options={ sourceType: Camera.PictureSourceType.CAMERA,destinationType: Camera.DestinationType.FILE_URI };
       navigator.camera.getPicture(onPhotoDataSuccess, onFail, options);
     }
 
