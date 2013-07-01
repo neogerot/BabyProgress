@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Employee Directory</title>
+        <meta name="viewport" content="width=device-width,initial-scale=1"/>
+        <link rel="stylesheet" href="css/styles.css" />
+    </head>
+    
+    <body>
+        
+	<div id="header" class="header">
+		<a href="index.html" class="nav">Home</a>
+		<h1>Employee Directory</h1>
+	</div>
+	<div id="header2">
+		<h2>Add Employee Details</h2>
+	</div>	
+	  	
+	<div id="employeeAddWrapper">
+ 		  		<form id="addEntryForm" action="index.html">
+					<label for="ID">ID:</label>
+					<input type="text" id="id"> <br>
+					<label for="FirstName">First Name:</label>
+					<input type="text" id="firstName"> <br>
+					<label for="Last Name">Last Name:</label>
+					<input type="text" id="lastName">	<br>	
+					<label for="Last Name">Manager Id:</label>
+					<input type="number" min="1" max="50" step="1" value="1" name="managerId" id="managerId"> <br>
+					<label for="Last Name">Title:</label>
+					<input type="text" id="title">	<br>	
+					<label for="Last Name">Department:</label>
+					<input type="text" id="department">	<br>	
+					<label for="Last Name">officePhone:</label>
+					<input type="text" id="officePhone"><br>
+					<label for="Last Name">cellPhone:</label>
+					<input type="text" id="cellPhone">	<br>
+					<label for="Last Name">email:</label>
+					<input type="email" name="email" id="email" required>	<br>
+					<label for="Last Name">city:</label>
+					<input type="text" id="city">	<br>
+					<input type="hidden" id="picture"><br>				
+					<button id="addEntrySubmit" onclick="addEmployee()">Save</button>
+					<button id="addImageubmit" onclick="capturePhoto()">Capture Photo</button>					
+				</form>	
+	<div>
+	
+
+	<div id="busy"/>Loading...</div>
+
+	<script src="js/phonegap.js"></script>
+	<script src="js/jquery.js"></script>
+    <script src="js/iscroll.js"></script>   
+	<script src="js/addemployee.js"></script>
+    </body>
+
+</html>

@@ -1,7 +1,7 @@
 var scroll = new iScroll('wrapper', { vScrollbar: false, hScrollbar:false, hScroll: false });
 
 var id = getUrlVars()["id"];
-
+//alert('id:'+id);
 var db;
 
 document.addEventListener("deviceready", onDeviceReady, false);
@@ -42,7 +42,8 @@ function getEmployee_success(tx, results) {
 	if (employee.reportCount>0) {
 		$('#actionList').append('<li><a href="reportlist.html?id=' + employee.id + '"><p class="line1">View Direct Reports</p>' +
 				'<p class="line2">' + employee.reportCount + '</p></a></li>');
-	}
+	}	
+	
 	if (employee.email) {
 		$('#actionList').append('<li><a href="mailto:' + employee.email + '"><p class="line1">Email</p>' +
 				'<p class="line2">' + employee.email + '</p><img src="img/mail.png" class="action-icon"/></a></li>');
@@ -57,6 +58,14 @@ function getEmployee_success(tx, results) {
 		$('#actionList').append('<li><a href="sms:' + employee.cellPhone + '"><p class="line1">SMS</p>' +
 				'<p class="line2">' + employee.cellPhone + '</p><img src="img/sms.png" class="action-icon"/></a></li>');
 	}
+
+	
+	if (employee.reportCount<1) 
+	{
+		$('#actionList').append('<li><a href="#" onClick="deleteEmployee()"><p class="line1">Delete Record</p>' +
+				'<p class="line2">.</p><img src="img/delete.gif" class="action-icon"/></a></li>');	
+	}
+	
 	setTimeout(function(){
 		scroll.refresh();
 	});
@@ -73,4 +82,23 @@ function getUrlVars() {
         vars[hash[0]] = hash[1];
     }
     return vars;
+}
+
+function deleteEmployee(){
+    console.log("opening database");
+    db = window.openDatabase("EmployeeDirectoryDB", "1.0", "PhoneGap Demo", 200000);
+	console.log("database opened");
+    db.transaction(deleteEmployeeDB, transaction_error);
+}
+function deleteEmployeeDB(tx)
+{
+   $('#busy').show();
+	var sql = "delete from employee where id=?";
+	tx.executeSql(sql, [id], deleteEmployee_success);
+}
+
+function deleteEmployee_success(tx, results) {
+	$('#busy').hide();
+	alert("Employee Deleted");		
+    window.location="index.html";
 }

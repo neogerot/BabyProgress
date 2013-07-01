@@ -201,3 +201,9 @@ li .action-icon {
     height: 100px;
     vertical-align: top;
 }
+#employeeAddWrapper {
+	position: absolute; 
+	top: 100px; 
+	bottom: 0px;
+	width: 100%;	
+}
