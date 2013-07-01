@@ -49,7 +49,7 @@ function transaction_error(tx, error) {
     alert("Database Error: " + error);
 }
 function addEmployeeInDB_success() {
-	alert('Employee Added Successfully');	
+	//alert('Employee Added Successfully');	
 	//console.log("Employee Added");
 	$('#busy').hide();
 }
