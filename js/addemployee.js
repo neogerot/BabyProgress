@@ -4,6 +4,19 @@ var db;
 
 document.addEventListener("deviceready", onDeviceReady, false);
 
+function gotFS(fileSystem) {
+    console.log("got filesystem");
+    // save the file system for later access
+    console.log(fileSystem.root.fullPath);
+    window.rootFS = fileSystem.root;
+	$('#photofilepath').val(window.rootFS.fullPath);
+}
+
+document.addEventListener('deviceready', function() {                
+    window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
+    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS, fail);
+}, false);
+
 function onDeviceReady() {
 		
 	$('#busy').hide();
