@@ -84,7 +84,7 @@ function createFileEntry(imageURI) {
 function copyPhoto(fileEntry) {
     window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSys) { 
         fileSys.root.getDirectory("photos", {create: true, exclusive: false}, function(dir) { 
-                fileEntry.copyTo(dir, "file.jpg", onCopySuccess, fail); 
+                fileEntry.copyTo(dir, $('#firstName').val()+"_"+$('#lastName').val() +".jpg", onCopySuccess, fail); 
             }, fail); 
     }, fail); 
 }

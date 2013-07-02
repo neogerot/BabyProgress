@@ -6,6 +6,18 @@ var db;
 
 document.addEventListener("deviceready", onDeviceReady, false);
 
+function gotFS(fileSystem) {
+    console.log("got filesystem");
+    // save the file system for later access
+    console.log(fileSystem.root.fullPath);
+    window.rootFS = fileSystem.root;	
+}
+
+document.addEventListener('deviceready', function() {                
+    window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
+    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS, fail);
+}, false);
+
 function onDeviceReady() {
 	console.log("opening database");
     db = window.openDatabase("EmployeeDirectoryDB", "1.0", "PhoneGap Demo", 200000);
@@ -30,7 +42,7 @@ function getEmployee(tx) {
 function getEmployee_success(tx, results) {
 	$('#busy').hide();
 	var employee = results.rows.item(0);
-	$('#employeePic').attr('src', 'pics/' + employee.picture);
+	$('#employeePic').attr('src', window.rootFS.fullPath '/photos/' + employee.picture);
 	$('#fullName').text(employee.firstName + ' ' + employee.lastName);
 	$('#employeeTitle').text(employee.title);
 	$('#city').text(employee.city);
