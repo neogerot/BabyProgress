@@ -42,10 +42,10 @@ function getEmployee(tx) {
 function getEmployee_success(tx, results) {
 	$('#busy').hide();
 	var employee = results.rows.item(0);
-	$('#employeePic').attr('src', window.rootFS.fullPath '/photos/' + employee.picture);
+	$('#employeePic').attr('src', window.rootFS.fullPath + '/photos/' + employee.picture);
 	$('#fullName').text(employee.firstName + ' ' + employee.lastName);
 	$('#employeeTitle').text(employee.title);
-	$('#city').text(employee.city);
+	$('#city').text(employee.city+window.rootFS.fullPath + '/photos/' + employee.picture);
 	console.log(employee.officePhone);
 	if (employee.managerId>0) {
 		$('#actionList').append('<li><a href="employeedetails.html?id=' + employee.managerId + '"><p class="line1">View Manager</p>' +
