@@ -99,6 +99,6 @@ function deleteEmployeeDB(tx)
 
 function deleteEmployee_success(tx, results) {
 	$('#busy').hide();
-	alert("Employee Deleted");		
+	//alert("Employee Deleted");		
     window.location="index.html";
 }

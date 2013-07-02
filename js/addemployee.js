@@ -5,32 +5,10 @@ var db;
 document.addEventListener("deviceready", onDeviceReady, false);
 
 function onDeviceReady() {
-	//alert('OnDeviceReady');	
-	//console.log("opening database");
-	
-    //db = window.openDatabase("EmployeeDirectoryDB", "1.0", "PhoneGap Demo", 200000);
-	//console.log("database opened");
-	
-   // db.transaction(isTableExists,"employee", transaction_error);
-	
+		
 	$('#busy').hide();
 }
-function isTableExists(tx, tableName, callback) {
-alert('table existence check:'+tableName);
-              tx.executeSql('SELECT * FROM '+tableName, [], function(tx, resultSet) {
-                  if (resultSet.rows.length <= 0) {
-                      alert('exists');
-					  callback(false);
-                  } else {
-				    alert('does not exist');
-                      callback(true);
-                  }
-              }, function(err) {
-			    alert(err);
-                  callback(false);
-              })
-        };
-		
+	
 function transaction_error(tx, error) {
 	$('#busy').hide();
     alert("Database Error: " + error);
@@ -40,30 +18,29 @@ function addEmployee()
 {
 	//alert('start adding');
 	db = window.openDatabase("EmployeeDirectoryDB", "1.0", "PhoneGap Demo", 200000);
-	db.transaction(addEmployeeInDB, transaction_error, addEmployeeInDB_success);
-	//alert('db call');
+	console.log("database opened");
+	db.transaction(addEmployeeInDB,transaction_error,addEmployeeInDB_success);	
 }
 function transaction_error(tx, error) {
 	$('#busy').hide();
 	//alert('transaction_error:Insert');
     alert("Database Error: " + error);
 }
-function addEmployeeInDB_success() {
+function addEmployeeInDB_success(tx) {
 	//alert('Employee Added Successfully');	
-	//console.log("Employee Added");
+	console.log("Employee Added");
 	$('#busy').hide();
+	window.location="index.html";
 }
-function  addEmployeeInDB(tx)
+function addEmployeeInDB(tx)
 {	
-	$('#busy').show();	
-	
+	$('#busy').show();		
 	var sql ="INSERT INTO employee (id,firstName,lastName,managerId,title,department,officePhone,cellPhone,email,city,picture) VALUES ("+ $('#id').val()+",'"+
 	$('#firstName').val() +"','"+$('#lastName').val() +"',"+$('#managerId').val() +",'"+$('#title').val() +"','"+$('#department').val() +"','"+$('#officePhone').val() +"','"+
 	$('#cellPhone').val() +"','"+$('#email').val() +"','"+$('#city').val() +"','"+$('#firstName').val()+"_"+$('#lastName').val() +".jpg')"; 
-		
-	tx.executeSql(sql);
-	//alert(sql);
 	
+	tx.executeSql(sql);
+	//alert('Query Executed');
 }
 
 function getUrlVars() {
@@ -79,11 +56,12 @@ function getUrlVars() {
 }
 
 function capturePhoto() {
-    navigator.camera.getPicture(onPhotoURISuccess, fail, { quality: 25, destinationType: Camera.DestinationType.FILE_URI });
+    navigator.camera.getPicture(onPhotoURISuccess, fail, { quality: 25, destinationType: Camera.DestinationType.FILE_URI ,saveToPhotoAlbum: true});
 }
 
 function onPhotoURISuccess(imageURI) {
     createFileEntry(imageURI);
+	$('#photofilepath').val(imageURI);
 }
 
 function createFileEntry(imageURI) {
