@@ -1,7 +1,7 @@
 var scroll = new iScroll('wrapper', { vScrollbar: false, hScrollbar:false, hScroll: false });
 
 var id = getUrlVars()["id"];
-//alert('id:'+id);
+alert('id:'+id);
 var db;
 
 document.addEventListener("deviceready", onDeviceReady, false);
@@ -44,6 +44,7 @@ function getEmployee(tx) {
 }
 
 function getEmployee_success(tx, results) {
+	alert('employee details retreived');
 	$('#busy').hide();
 	var employee = results.rows.item(0);
 	$('#employeePic').attr('src', window.rootFS.fullPath + '/photos/' + employee.picture);
