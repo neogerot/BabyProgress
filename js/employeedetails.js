@@ -47,6 +47,9 @@ function getEmployee_success(tx, results) {
 	alert('employee details retreived');
 	$('#busy').hide();
 	var employee = results.rows.item(0);
+	alert('assigned');
+	alert(window.rootFS.fullPath);
+	alert(winfow.rootFS);	
 	$('#employeePic').attr('src', window.rootFS.fullPath + '/photos/' + employee.picture);
 	$('#fullName').text(employee.firstName + ' ' + employee.lastName);
 	$('#employeeTitle').text(employee.title);
