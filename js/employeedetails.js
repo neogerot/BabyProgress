@@ -8,9 +8,11 @@ document.addEventListener("deviceready", onDeviceReady, false);
 
 function gotFS(fileSystem) {
     console.log("got filesystem");
+	alert("got filesystem");
     // save the file system for later access
     console.log(fileSystem.root.fullPath);
     window.rootFS = fileSystem.root;	
+	alert("assigned filesystem");
 }
 
 document.addEventListener('deviceready', function() {                
@@ -47,13 +49,12 @@ function getEmployee_success(tx, results) {
 	alert('employee details retreived');
 	$('#busy').hide();
 	var employee = results.rows.item(0);
-	alert('assigned');
-	alert(window.rootFS.fullPath);
-	alert(winfow.rootFS);	
-	$('#employeePic').attr('src', window.rootFS.fullPath + '/photos/' + employee.picture);
+	alert('assigned');	
+	var photopath="/sdcard";
+	$('#employeePic').attr('src', photopath + '/photos/' + employee.picture);
 	$('#fullName').text(employee.firstName + ' ' + employee.lastName);
 	$('#employeeTitle').text(employee.title);
-	$('#city').text(employee.city+window.rootFS.fullPath + '/photos/' + employee.picture);
+	$('#city').text(employee.city + photopath + '/photos/' + employee.picture);
 	console.log(employee.officePhone);
 	if (employee.managerId>0) {
 		$('#actionList').append('<li><a href="employeedetails.html?id=' + employee.managerId + '"><p class="line1">View Manager</p>' +
