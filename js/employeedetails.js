@@ -6,19 +6,19 @@ var db;
 
 document.addEventListener("deviceready", onDeviceReady, false);
 
-function gotFS(fileSystem) {
-    console.log("got filesystem");
-	alert("got filesystem");
-    // save the file system for later access
-    console.log(fileSystem.root.fullPath);
-    window.rootFS = fileSystem.root;	
-	alert("assigned filesystem");
-}
+// function gotFS(fileSystem) {
+    // console.log("got filesystem");
+	// alert("got filesystem");
+    // // save the file system for later access
+    // console.log(fileSystem.root.fullPath);
+    // window.rootFS = fileSystem.root;	
+	// alert("assigned filesystem");
+// }
 
-document.addEventListener('deviceready', function() {                
-    window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
-    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS, fail);
-}, false);
+// document.addEventListener('deviceready', function() {                
+    // window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
+    // window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS, fail);
+// }, false);
 
 function onDeviceReady() {
 	console.log("opening database");
