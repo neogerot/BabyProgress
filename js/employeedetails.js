@@ -25,6 +25,10 @@ function onDeviceReady() {
     db.transaction(getEmployee, transaction_error);
 }
 
+function fail()
+{
+   
+}
 function transaction_error(tx, error) {
 	$('#busy').hide();
     alert("Database Error: " + error);
