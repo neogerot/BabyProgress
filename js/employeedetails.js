@@ -1,7 +1,7 @@
 var scroll = new iScroll('wrapper', { vScrollbar: false, hScrollbar:false, hScroll: false });
 
 var id = getUrlVars()["id"];
-alert('id:'+id);
+//alert('id:'+id);
 var db;
 
 document.addEventListener("deviceready", onDeviceReady, false);
@@ -31,6 +31,7 @@ function fail()
 {
    
 }
+
 function transaction_error(tx, error) {
 	$('#busy').hide();
     alert("Database Error: " + error);
@@ -46,10 +47,10 @@ function getEmployee(tx) {
 }
 
 function getEmployee_success(tx, results) {
-	alert('employee details retreived');
+	//alert('employee details retreived');
 	$('#busy').hide();
 	var employee = results.rows.item(0);
-	alert('assigned');	
+	
 	var photopath="/sdcard";
 	$('#employeePic').attr('src', photopath + '/photos/' + employee.picture);
 	$('#fullName').text(employee.firstName + ' ' + employee.lastName);

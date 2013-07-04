@@ -28,19 +28,16 @@ function transaction_error(tx, error) {
 }
 
 function addEmployee()
-{
-	//alert('start adding');
+{	
 	db = window.openDatabase("EmployeeDirectoryDB", "1.0", "PhoneGap Demo", 200000);
 	console.log("database opened");
 	db.transaction(addEmployeeInDB,transaction_error,addEmployeeInDB_success);	
 }
 function transaction_error(tx, error) {
-	$('#busy').hide();
-	//alert('transaction_error:Insert');
+	$('#busy').hide();	
     alert("Database Error: " + error);
 }
 function addEmployeeInDB_success(tx) {
-	//alert('Employee Added Successfully');	
 	console.log("Employee Added");
 	$('#busy').hide();
 	window.location="index.html";
