@@ -1,4 +1,4 @@
-var scroll = new iScroll('employeeAddWrapper', { vScrollbar: false, hScrollbar:false, hScroll: false });
+var scroll = new iScroll('wrapper', { vScrollbar: false, hScrollbar:false, hScroll: false });
 var id = 0;
 var db;
 
