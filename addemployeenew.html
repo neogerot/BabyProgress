@@ -48,9 +48,10 @@ document.addEventListener('DOMContentLoaded', loaded, false);
 <body onload="loaded()">
 <!-- Home -->
    <div data-role="page" id="page1">
-   	<div data-theme="b" data-role="header">
+   	 <div id="header" data-role="header" data-position="fixed" data-theme="b">
          <h2>Add Employee</h2>       
     </div>
+    <div data-role="content">
     <div id="wrapper">    	
     	<div id="scroller">
 	<ul>					  
@@ -135,16 +136,18 @@ document.addEventListener('DOMContentLoaded', loaded, false);
             </label>
             <input name="city" id="city" placeholder="" value="" type="text" data-mini="true">
        
-        </li>
-        <input id="addEntrySubmit" type="submit" value="Save" onclick="addEmployee()">      
-		
+        </li>        
+		<li>
+			 <input id="addEntrySubmit" type="submit" data-theme="b" value="Save" onclick="addEmployee()">    
+		</li>
 	</ul>		
 </div>    
 </div>
 </div>
 <div id="busy">Loading...</div>
-
-
+ 
+</div>
+	
 	<script src="phonegap.js"></script>
 	<script src="js/jquery.js"></script>
     <script src="js/iscroll-lite.js"></script>   
