@@ -34,7 +34,7 @@ function loaded() {
 			var target = e.target;
 			while (target.nodeType != 1) target = target.parentNode;
 
-			if (target.tagName != 'SELECT' && target.tagName != 'INPUT' && target.tagName != 'TEXTAREA')
+		if (target.tagName != 'SELECT' && target.tagName != 'INPUT' && target.tagName != 'TEXTAREA')
 				e.preventDefault();
 		}
 	});
@@ -47,6 +47,7 @@ document.addEventListener('DOMContentLoaded', loaded, false);
 </head>
 <body onload="loaded()">
 <!-- Home -->
+   
    <div data-role="page" id="page1">
    	 <div id="header" data-role="header" data-position="fixed" data-theme="b">
          <h2>Add Employee</h2>       
@@ -56,7 +57,7 @@ document.addEventListener('DOMContentLoaded', loaded, false);
     	<div id="scroller">
 	<ul>					  
        <li>       
-            <label for="firstName">
+            <label for="id">
                 Employee Id
             </label>           
             <input name="id" id="id" placeholder="" value="" type="text">            
@@ -138,7 +139,7 @@ document.addEventListener('DOMContentLoaded', loaded, false);
        
         </li>        
 		<li>
-			 <input id="addEntrySubmit" type="submit" data-theme="b" value="Save" onclick="addEmployee()">    
+			 <span class="plasticButton white" onclick="addEmployee()">Save</span>			
 		</li>
 	</ul>		
 </div>    
