@@ -47,7 +47,6 @@ document.addEventListener('DOMContentLoaded', loaded, false);
 </head>
 <body onload="loaded()">
 <!-- Home -->
-   
    <div data-role="page" id="page1">
    	 <div id="header" data-role="header" data-position="fixed" data-theme="b">
          <h2>Add Employee</h2>       
@@ -138,8 +137,8 @@ document.addEventListener('DOMContentLoaded', loaded, false);
             <input name="city" id="city" placeholder="" value="" type="text" data-mini="true">
        
         </li>        
-		<li>
-			 <span class="plasticButton white" onclick="addEmployee()">Save</span>			
+		<li>			
+			 <input id="addEntrySubmit" type="submit" data-theme="b" value="Save" onclick="addEmployee()" >    
 		</li>
 	</ul>		
 </div>    
