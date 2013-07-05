@@ -24,24 +24,44 @@
 }
 
    </script> 
+   <script type="text/javascript">
+
+var myScroll;
+function loaded() {
+	myScroll = new iScroll('wrapper', {
+		useTransform: false,
+		onBeforeScrollStart: function (e) {
+			var target = e.target;
+			while (target.nodeType != 1) target = target.parentNode;
+
+			if (target.tagName != 'SELECT' && target.tagName != 'INPUT' && target.tagName != 'TEXTAREA')
+				e.preventDefault();
+		}
+	});
+}
+
+document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+document.addEventListener('DOMContentLoaded', loaded, false);
+
+</script>
 </head>
-<body>
+<body onload="loaded()">
 <!-- Home -->
 <div data-role="page" id="page1">
     <div data-theme="b" data-role="header">     
-         <h2>Add Employee
-        </h2>       
-    </div>    
-    
-    <div id="wrapper">
+         <h2>Add Employee</h2>       
+    </div>        
+    <div id="wrapper">    	
     	<div id="scroller">
-	<ul>	    
+	<ul>					  
        <li>
         <div data-role="fieldcontain">
             <label for="firstName">
                 Employee Id
             </label>
+            <label>
             <input name="id" id="id" placeholder="" value="" type="text">
+            </label>
         </div>
       </li>
        
@@ -119,11 +139,9 @@
             <input name="city" id="city" placeholder="" value="" type="text" data-mini="true">
         </div>
         </li>
-        <input id="addEntrySubmit" type="submit" data-theme="b" value="Save" onclick="addEmployee()">
-    
-   
+        <input id="addEntrySubmit" type="submit" data-theme="b" value="Save" onclick="addEmployee()">      
 		
-	</ul>
+	</ul>	
 	</div>
 </div>    
 </div>
@@ -131,7 +149,7 @@
 
 	<script src="phonegap.js"></script>
 	<script src="js/jquery.js"></script>
-    <script src="js/iscroll.js"></script>   
+    <script src="js/iscroll-lite.js"></script>   
 	<script src="js/addemployee.js"></script>
 </body>
 </html>
