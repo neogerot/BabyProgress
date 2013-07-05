@@ -11,7 +11,7 @@
   <!-- Extra Codiqa features --> 
   <link rel="stylesheet" href="css/codiqa.ext.css">
   <!-- jQuery and jQuery Mobile -->
-  <script src="js/jquery.js"></script>
+ 
   
 
   <!-- Extra Codiqa features -->  
@@ -47,9 +47,10 @@ document.addEventListener('DOMContentLoaded', loaded, false);
 </head>
 <body onload="loaded()">
 <!-- Home -->
-   
+   <div data-role="page" id="page1">
+   	<div data-theme="b" data-role="header">
          <h2>Add Employee</h2>       
-            
+    </div>
     <div id="wrapper">    	
     	<div id="scroller">
 	<ul>					  
@@ -135,16 +136,20 @@ document.addEventListener('DOMContentLoaded', loaded, false);
             <input name="city" id="city" placeholder="" value="" type="text" data-mini="true">
        
         </li>
-        <input id="addEntrySubmit" type="submit" data-theme="b" value="Save" onclick="addEmployee()">      
+        <input id="addEntrySubmit" type="submit" value="Save" onclick="addEmployee()">      
 		
 	</ul>		
 </div>    
 </div>
-<div id="busy"/>Loading...</div>
+</div>
+<div id="busy">Loading...</div>
+
 
 	<script src="phonegap.js"></script>
 	<script src="js/jquery.js"></script>
     <script src="js/iscroll-lite.js"></script>   
 	<script src="js/addemployee.js"></script>
+	<script src="js/jquery.mobile-1.3.1.min.js"></script>
+	
 </body>
 </html>
