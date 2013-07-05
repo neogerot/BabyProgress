@@ -47,102 +47,97 @@ document.addEventListener('DOMContentLoaded', loaded, false);
 </head>
 <body onload="loaded()">
 <!-- Home -->
-<div data-role="page" id="page1">
-    <div data-theme="b" data-role="header">     
+   
          <h2>Add Employee</h2>       
-    </div>        
+            
     <div id="wrapper">    	
     	<div id="scroller">
 	<ul>					  
-       <li>
-        <div data-role="fieldcontain">
+       <li>       
             <label for="firstName">
                 Employee Id
-            </label>
-            <label>
-            <input name="id" id="id" placeholder="" value="" type="text">
-            </label>
-        </div>
+            </label>           
+            <input name="id" id="id" placeholder="" value="" type="text">            
+       
       </li>
        
        <li>
-        <div data-role="fieldcontain">
+        
             <label for="firstName">
                 First Name
             </label>
             <input name="firstName" id="firstName" placeholder="" value="" type="text" data-mini="true">
-        </div>
+       
       </li>
         <li>
-        <div data-role="fieldcontain">
+       
             <label for="lastName">
                 Last Name
             </label>
             <input name="lastName" id="lastName" placeholder="" value="" type="text" data-mini="true">
-        </div>
+       
        </li>
        <li>
-        <div data-role="fieldcontain">
+        
             <label for="managerId">
                 Manager Id
             </label>
             <input name="managerId" id="managerId" placeholder="" value="" type="number" data-mini="true">
-        </div>
+        
        </li>
        <li>
-        <div data-role="fieldcontain">
+       
             <label for="title">
                 Title
             </label>
             <input name="title" id="title" placeholder="" value="" type="text" data-mini="true">
-        </div>
+       
        </li>
        <li>
-        <div data-role="fieldcontain">
+        
             <label for="department">
                 Department
             </label>
             <input name="department" id="department" placeholder="" value="" type="text"
             data-mini="true">
-        </div>
+       
        </li>
        <li>
-        <div data-role="fieldcontain">
+        
             <label for="officePhone">
                 Office Phone
             </label>
             <input name="officePhone" id="officePhone" placeholder="" value="" type="text"
             data-mini="true">
-        </div>
+       
        </li>
        <li>
-        <div data-role="fieldcontain">
+       
             <label for="cellPhone">
                 Cell Phone
             </label>
             <input name="cellPhone" id="cellPhone" placeholder="" value="" type="text" data-mini="true">
-        </div>
+       
 		</li>
 		<li>        
-		<div data-role="fieldcontain">
+		
             <label for="email">
                 E-mail
             </label>
             <input name="email" id="email" placeholder="" value="" type="text" data-mini="true">
-        </div>
+       
         </li>
         <li>
-        <div data-role="fieldcontain">
+        
             <label for="city">
                 City
             </label>
             <input name="city" id="city" placeholder="" value="" type="text" data-mini="true">
-        </div>
+       
         </li>
         <input id="addEntrySubmit" type="submit" data-theme="b" value="Save" onclick="addEmployee()">      
 		
-	</ul>	
-	</div>
+	</ul>		
 </div>    
 </div>
 <div id="busy"/>Loading...</div>
