@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
     <head>
-        <title>Employee Directory</title>
+        <title>Grantee Directory</title>
         <meta name="viewport" content="width=device-width,initial-scale=1"/>
         <link rel="stylesheet" href="css/styles.css" />        
     </head>
@@ -9,8 +9,9 @@
     <body>
         
 	<div id="header" class="header">		
-		<h1>Employee Directory</h1>	
-		<div class="left Button" id="btnAdd">Add</div>	
+		<h1>Grantee Directory</h1>	
+		<a id="btnAdd" onclick="RedirectToPage('addemployeenew.html')" class="left">Add</a>
+			
 	</div>
 		
 	<div id="wrapper">
@@ -18,7 +19,8 @@
 	</div>
 
 	<div id="busy"/>Loading...</div>
-
+    <div id="footer">@2013</div>
+    
 	<script src="phonegap.js"></script>
     <script src="js/jquery.js"></script>
     <script src="js/iscroll-lite.js"></script>

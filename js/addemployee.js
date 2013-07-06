@@ -1,30 +1,6 @@
 var id = 0;
 var db;
 
-$(document).ready(function() {
-	    
-    var touch = function(e) {
-        if (! $(this).hasClass('ButtonPressed')) {
-        	// function to call on button click..
-        	window.location="index.html";
-            $(this).toggleClass('Button ButtonPressed');
-        }
-    };
-    
-    var untouch = function(e) {
-        if ($(this).hasClass('ButtonPressed')) {
-        	//alert('unpress');
-            $(this).toggleClass('Button ButtonPressed');
-        }
-    };
-
-    $('#header .Button').each(function() {
-        $(this).mousedown(touch).mouseleave(untouch).mouseup(untouch);
-        $(this).bind('touchstart', touch).bind('touchend', untouch);
-    });
-   
-});
-
 document.addEventListener("deviceready", onDeviceReady, false);
 
 function gotFS(fileSystem) {
@@ -74,8 +50,17 @@ function transaction_error(tx, error) {
 function addEmployeeInDB_success(tx) {
 	console.log("Employee Added");
 	$('#busy').hide();
-	window.location="index.html";
+	RedirectToPage("index.html");
 }
+  
+   	
+   	function RedirectToPage(pageUrl) {
+	$('#busy').hide();
+	//alert("Employee Deleted");		
+    window.location=pageUrl;
+}
+
+ 
 function addEmployeeInDB(tx)
 {	
 	$('#busy').show();		
@@ -105,7 +90,7 @@ function capturePhoto() {
 
 function onPhotoURISuccess(imageURI) {
     createFileEntry(imageURI);
-	$('#photofilepath').val(imageURI);
+	$('#imgCaptured').attr('src',imageURI);
 }
 
 function createFileEntry(imageURI) {

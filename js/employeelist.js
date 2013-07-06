@@ -3,33 +3,6 @@ var dbCreated = false;
 
 var scroll = new iScroll('wrapper', { vScrollbar: false, hScrollbar:false, hScroll: false });
 
-
-$(document).ready(function() {
-	    
-    var touch = function(e) {
-        if (! $(this).hasClass('ButtonPressed')) {
-        	// function to call on button click..
-        	window.location="addemployeenew.html";
-            $(this).toggleClass('Button ButtonPressed');
-        }
-    };
-    
-    var untouch = function(e) {
-        if ($(this).hasClass('ButtonPressed')) {
-        	//alert('unpress');
-            $(this).toggleClass('Button ButtonPressed');
-        }
-    };
-
-    $('#header .Button').each(function() {
-        $(this).mousedown(touch).mouseleave(untouch).mouseup(untouch);
-        $(this).bind('touchstart', touch).bind('touchend', untouch);
-    });
-   
-});
-
-
-
 document.addEventListener("deviceready", onDeviceReady, false);
 
 function onDeviceReady() {	
@@ -121,3 +94,9 @@ function populateDB(tx) {
     tx.executeSql("INSERT INTO employee (id,firstName,lastName,managerId,title,department,officePhone,cellPhone,email,city,picture) VALUES (1,'James','King',0,'President and CEO','Corporate','617-000-0001','781-000-0001','jking@fakemail.com','Boston, MA','james_king.jpg')");
    */
 }
+function RedirectToPage(pageUrl) {
+	$('#busy').hide();
+	//alert("Employee Deleted");		
+    window.location=pageUrl;
+}
+

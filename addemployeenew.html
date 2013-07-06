@@ -2,9 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title></title>
   <link rel="stylesheet" href="css/jquery.mobile-1.3.1.min.css">
   
@@ -15,15 +13,7 @@
   
 
   <!-- Extra Codiqa features -->  
-   <script>
-   	
-   	function RedirectToMain() {
-	$('#busy').hide();
-	//alert("Employee Deleted");		
-    window.location="index.html";
-}
-
-   </script> 
+ 
    <script type="text/javascript">
 
 var myScroll;
@@ -51,12 +41,18 @@ document.addEventListener('DOMContentLoaded', loaded, false);
    <div data-role="page" id="page1">
    	<div id="header">
       <h1>Add Record</h1>
-    <div class="left Button" id="home">Home</div>
+   	  <a id="btnAdd" onclick="RedirectToPage('index.html')" class="left">Home</a>
     </div>   
   
     <div id="wrapper">    	
     	<div id="scroller">
-	<ul>					  
+	<ul>	
+		<li>
+			<div id="capture">						
+			 <a id="btnCaptureImage" onclick="capturePhoto()" class="left">Capture Image</a>
+			 <img id="imgCaptured" src="pics/blank.gif"/>	
+			</div>
+		</li>				  
        <li>       
             <label for="uid">
                 Employee Id
@@ -147,7 +143,7 @@ document.addEventListener('DOMContentLoaded', loaded, false);
 </div>
 </div>
 <div id="busy">Loading...</div>
- 
+  <div id="footer">@2013</div>
 </div>
 	
 	<script src="phonegap.js"></script>
