@@ -34,6 +34,7 @@ function loaded() {
 			var target = e.target;
 			while (target.nodeType != 1) target = target.parentNode;
 
+		
 		if (target.tagName != 'SELECT' && target.tagName != 'INPUT' && target.tagName != 'TEXTAREA')
 				e.preventDefault();
 		}
@@ -48,18 +49,20 @@ document.addEventListener('DOMContentLoaded', loaded, false);
 <body onload="loaded()">
 <!-- Home -->
    <div data-role="page" id="page1">
-   	 <div id="header" data-role="header" data-position="fixed" data-theme="b">
-         <h2>Add Employee</h2>       
+   	<div id="header">
+      <h1>Add Record</h1>
+    <div class="left Button" id="hello">Hello?</div>
     </div>
+    <div id="content"></div>
     <div data-role="content">
     <div id="wrapper">    	
     	<div id="scroller">
 	<ul>					  
        <li>       
-            <label for="id">
+            <label for="uid">
                 Employee Id
             </label>           
-            <input name="id" id="id" placeholder="" value="" type="text">            
+            <input name="uid" id="uid" placeholder="" value="" type="text">            
        
       </li>
        

@@ -1,6 +1,32 @@
 var id = 0;
 var db;
 
+$(document).ready(function() {
+	
+    $('#header').append('<div class="left Button" id="hello">Home</div>');   
+
+    var touch = function(e) {
+        if (! $(this).hasClass('ButtonPressed')) {
+        	// function to call on button click..
+        	window.location="index.html";
+            $(this).toggleClass('Button ButtonPressed');
+        }
+    };
+    
+    var untouch = function(e) {
+        if ($(this).hasClass('ButtonPressed')) {
+        	//alert('unpress');
+            $(this).toggleClass('Button ButtonPressed');
+        }
+    };
+
+    $('#header .Button').each(function() {
+        $(this).mousedown(touch).mouseleave(untouch).mouseup(untouch);
+        $(this).bind('touchstart', touch).bind('touchend', untouch);
+    });
+   
+});
+
 document.addEventListener("deviceready", onDeviceReady, false);
 
 function gotFS(fileSystem) {
@@ -19,8 +45,19 @@ document.addEventListener('deviceready', function() {
 function onDeviceReady() {
 		
 	$('#busy').hide();
+	$('#uid').val(guid());
 }
-	
+
+function s4() {
+  return Math.floor((1 + Math.random()) * 0x10000)
+             .toString(16)
+             .substring(1);
+};
+
+function guid() {
+  return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+         s4() + '-' + s4() + s4() + s4();
+}
 function transaction_error(tx, error) {
 	$('#busy').hide();
     alert("Database Error: " + error);
@@ -44,9 +81,9 @@ function addEmployeeInDB_success(tx) {
 function addEmployeeInDB(tx)
 {	
 	$('#busy').show();		
-	var sql ="INSERT INTO employee (id,firstName,lastName,managerId,title,department,officePhone,cellPhone,email,city,picture) VALUES ("+ $('#id').val()+",'"+
+	var sql ="INSERT INTO employee (uid,firstName,lastName,managerId,title,department,officePhone,cellPhone,email,city,picture) VALUES ("+ "'"+$('#uid').val()+"','"+
 	$('#firstName').val() +"','"+$('#lastName').val() +"',"+$('#managerId').val() +",'"+$('#title').val() +"','"+$('#department').val() +"','"+$('#officePhone').val() +"','"+
-	$('#cellPhone').val() +"','"+$('#email').val() +"','"+$('#city').val() +"','"+$('#firstName').val()+"_"+$('#lastName').val() +".jpg')"; 
+	$('#cellPhone').val() +"','"+$('#email').val() +"','"+$('#city').val() +"','"+$('#uid').val() +".jpg')"; 
 	
 	tx.executeSql(sql);
 	//alert('Query Executed');
@@ -80,7 +117,7 @@ function createFileEntry(imageURI) {
 function copyPhoto(fileEntry) {
     window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSys) { 
         fileSys.root.getDirectory("photos", {create: true, exclusive: false}, function(dir) { 
-                fileEntry.copyTo(dir, $('#firstName').val()+"_"+$('#lastName').val() +".jpg", onCopySuccess, fail); 
+                fileEntry.copyTo(dir, $('#uid').val() +".jpg", onCopySuccess, fail); 
             }, fail); 
     }, fail); 
 }

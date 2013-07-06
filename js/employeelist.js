@@ -32,7 +32,7 @@ function populateDB_success() {
 }
 
 function getEmployees(tx) {
-	var sql = "select e.id, e.firstName, e.lastName, e.title, e.picture, count(r.id) reportCount " + 
+	var sql = "select e.id,e.uid, e.firstName, e.lastName, e.title, e.picture, count(r.id) reportCount " + 
 				"from employee e left join employee r on r.managerId = e.id " +
 				"group by e.id order by e.lastName, e.firstName";
 	tx.executeSql(sql, [], getEmployees_success);
@@ -43,7 +43,7 @@ function getEmployees_success(tx, results) {
     var len = results.rows.length;
     for (var i=0; i<len; i++) {
     	var employee = results.rows.item(i);
-		$('#employeeList').append('<li><a href="employeedetails.html?id=' + employee.id + '">' +
+		$('#employeeList').append('<li><a href="employeedetails.html?uid=' + employee.uid + '">' +
 				'<img src="pics/' + employee.picture + '" class="list-icon"/>' +
 				'<p class="line1">' + employee.firstName + ' ' + employee.lastName + '</p>' +
 				'<p class="line2">' + employee.title + '</p>' +
@@ -63,6 +63,7 @@ function populateDB(tx) {
 	var sql = 
 		"CREATE TABLE IF NOT EXISTS employee ( "+
 		"id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+		"uid VARCHAR(50), " +
 		"firstName VARCHAR(50), " +
 		"lastName VARCHAR(50), " +
 		"title VARCHAR(50), " +
@@ -76,8 +77,10 @@ function populateDB(tx) {
     tx.executeSql(sql);
 
 	/*
-	tx.executeSql("INSERT INTO employee (id,firstName,lastName,managerId,title,department,officePhone,cellPhone,email,city,picture) VALUES (13,'Vikas','Sharma',4,'Software Architect','Engineering','617-000-0012','781-000-0012','vikas@fakemail.com','Delhi, India','vikas_sharma.jpg')");
-    tx.executeSql("INSERT INTO employee (id,firstName,lastName,managerId,title,department,officePhone,cellPhone,email,city,picture) VALUES (12,'Steven','Wells',4,'Software Architect','Engineering','617-000-0012','781-000-0012','swells@fakemail.com','Boston, MA','steven_wells.jpg')");
+	tx.executeSql("INSERT INTO employee (id,uid,firstName,lastName,managerId,title,department,officePhone,cellPhone,email,city,picture) VALUES (13,'bcc9bb8b-6956-ac35-373d-eba0fd342bf3','Vikas','Sharma',4,'Software Architect','Engineering','617-000-0012','781-000-0012','vikas@fakemail.com','Delhi, India','vikas_sharma.jpg')");
+    tx.executeSql("INSERT INTO employee (id,uid,firstName,lastName,managerId,title,department,officePhone,cellPhone,email,city,picture) VALUES (12,'a01718f3-178f-43ec-9dc5-a45d2f784e9d','Steven','Wells',4,'Software Architect','Engineering','617-000-0012','781-000-0012','swells@fakemail.com','Boston, MA','steven_wells.jpg')");
+  
+    
     tx.executeSql("INSERT INTO employee (id,firstName,lastName,managerId,title,department,officePhone,cellPhone,email,city,picture) VALUES (11,'Amy','Jones',5,'Sales Representative','Sales','617-000-0011','781-000-0011','ajones@fakemail.com','Boston, MA','amy_jones.jpg')");
     tx.executeSql("INSERT INTO employee (id,firstName,lastName,managerId,title,department,officePhone,cellPhone,email,city,picture) VALUES (10,'Kathleen','Byrne',5,'Sales Representative','Sales','617-000-0010','781-000-0010','kbyrne@fakemail.com','Boston, MA','kathleen_byrne.jpg')");
     tx.executeSql("INSERT INTO employee (id,firstName,lastName,managerId,title,department,officePhone,cellPhone,email,city,picture) VALUES (9,'Gary','Donovan',2,'Marketing','Marketing','617-000-0009','781-000-0009','gdonovan@fakemail.com','Boston, MA','gary_donovan.jpg')");
