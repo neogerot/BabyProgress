@@ -55,7 +55,7 @@ function getEmployee_success(tx, results) {
 	$('#employeePic').attr('src', photopath + '/photos/' + employee.picture);
 	$('#fullName').text(employee.firstName + ' ' + employee.lastName);
 	$('#employeeTitle').text(employee.title);
-	$('#city').text(employee.city + photopath + '/photos/' + employee.picture);
+	$('#city').text(employee.city);
 	console.log(employee.officePhone);
 	
 	if (employee.email) {
@@ -116,3 +116,10 @@ function deleteEmployee_success(tx, results) {
 	//alert("Employee Deleted");		
     window.location="index.html";
 }
+
+function RedirectToPage(pageUrl) {
+	$('#busy').hide();
+	//alert("Employee Deleted");		
+    window.location=pageUrl;
+}
+

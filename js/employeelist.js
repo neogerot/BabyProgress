@@ -41,10 +41,11 @@ function getEmployees(tx) {
 function getEmployees_success(tx, results) {
 	$('#busy').hide();
     var len = results.rows.length;
+    var photopath="/sdcard";
     for (var i=0; i<len; i++) {
     	var employee = results.rows.item(i);
 		$('#employeeList').append('<li><a href="employeedetails.html?uid=' + employee.uid + '">' +
-				'<img src="pics/' + employee.picture + '" class="list-icon"/>' +
+				'<img src="'+ photopath + '/photos/' + employee.picture + '" class="list-icon"/>' +
 				'<p class="line1">' + employee.firstName + ' ' + employee.lastName + '</p>' +
 				'<p class="line2">' + employee.title + '</p>' +
 				'<span class="bubble">' + employee.reportCount + '</span></a></li>');
