@@ -2,9 +2,7 @@ var id = 0;
 var db;
 
 $(document).ready(function() {
-	
-    $('#header').append('<div class="left Button" id="hello">Home</div>');   
-
+	    
     var touch = function(e) {
         if (! $(this).hasClass('ButtonPressed')) {
         	// function to call on button click..
