@@ -18,7 +18,8 @@
 
 var myScroll;
 function loaded() {
-	myScroll = new iScroll('wrapper', {
+	setTimeout(function () { 
+                myScroll = new iScroll('wrapper', {
 		useTransform: false,
 		onBeforeScrollStart: function (e) {
 			var target = e.target;
@@ -29,6 +30,19 @@ function loaded() {
 				e.preventDefault();
 		}
 	});
+        }, 100); 
+  /*	myScroll = new iScroll('wrapper', {
+		useTransform: false,
+		onBeforeScrollStart: function (e) {
+			var target = e.target;
+			while (target.nodeType != 1) target = target.parentNode;
+
+		
+		if (target.tagName != 'SELECT' && target.tagName != 'INPUT' && target.tagName != 'TEXTAREA')
+				e.preventDefault();
+		}
+	});
+	*/
 }
 
 document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
