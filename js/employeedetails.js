@@ -77,7 +77,7 @@ function getEmployee_success(tx, results) {
 	if (employee.reportCount<1) 
 	{
 		$('#actionList').append('<li><a href="#" onClick="deleteEmployee()"><p class="line1">Delete Record</p>' +
-				'<p class="line2">.</p><img src="img/delete.gif" class="action-icon"/></a></li>');	
+				'<p class="line2">.</p><img src="img/delete.jpg" class="action-icon"/></a></li>');	
 	}
 	
 	setTimeout(function(){
