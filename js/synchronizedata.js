@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', loaded, false);
     // save the file system for later access
    // console.log(fileSystem.root.fullPath);
     window.rootFS = fileSystem.root;
-	$('#btnSynchronize').attr('onclick',"downloadFile();");
+	$('#btnSynchronize').attr('onclick',"LoadZipFile();");
 }
 
   document.addEventListener('deviceready', function() {                
@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', loaded, false);
                {
                	 alert('data/images/');
                }
-               
+               //http://107.21.201.107/ziphandler/images/010001.jpg
                 if(zipEntry.name=="data/data.txt")
                 {
                 	 // alert(zipEntry.asText());
@@ -192,7 +192,7 @@ function OpenZip()
 	var zip = new JSZip();
 	zip.load("data.zip");
 }
-
+//http://107.21.201.107/ziphandler/default.aspx
 function downloadFile(){
 	alert('download start')
         window.requestFileSystem(
@@ -204,10 +204,10 @@ function downloadFile(){
                                  var sPath = fileEntry.fullPath.replace("dummy.html","");
                                  var fileTransfer = new FileTransfer();
                                  fileEntry.remove();
- 
+ 								 alert('downloading..');
                                  fileTransfer.download(
-                                           "http://www.w3.org/2011/web-apps-ws/papers/Nitobi.pdf",
-                                           sPath + "theFile.pdf",
+                                           "http://107.21.201.107/ziphandler/default.aspx",
+                                           sPath + "theFile.zip",
                                            function(theFile) {
                                            alert('download complete');
                                            console.log("download complete: " + theFile.toURI());
@@ -242,3 +242,30 @@ function downloadFile(){
     	alert('Error');
        // console.log(evt.target.error.code);
     }
+    
+    function LoadZipFile()
+    {
+    	      alert('Start Loading Zip File');
+			  var xhr1 = new XMLHttpRequest();
+			  alert('1');
+			  xhr1.open('GET', 'metadata/data.zip', true);
+			  if (xhr1.overrideMimeType) {
+			    xhr1.overrideMimeType('text/plain; charset=x-user-defined');
+			  }
+			  alert('2');
+			  xhr1.onreadystatechange = function(e) {
+			    alert(this.readyState+'-'+this.status);
+			    if (this.readyState == 4 && this.status == 200) {
+			      alert('3');
+				  var zip = new JSZip(this.responseText);
+					  // that, or a good ol' for(var entryName in zip.files)
+		              $.each(zip.files, function (index, zipEntry) {
+		                alert(zipEntry.name);
+		                // the content is here : zipEntry.asText()
+		              });
+		              // end of the magic !
+			    }
+			  };			
+			  xhr1.send();
+    }
+    
