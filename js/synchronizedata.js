@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', loaded, false);
     window.rootFS = fileSystem.root;
 	$('#btnSynchronize').attr('onclick',"downloadFile('010001.jpg');");
 	$('#btnLoadMetadata').attr('onclick',"LoadMetadata();");
-	
+	alert("got filesystem");	   
 }
 
   document.addEventListener('deviceready', function() {                
@@ -247,7 +247,7 @@ function downloadFile(imagename){
     
     function LoadMetadata()
     {
-    	      alert('Start Loading Zip File');
+    	      alert('Start Loading Metadata..');
 			  var xhr1 = new XMLHttpRequest();
 			  alert('1');
 			  xhr1.open('GET', 'metadata/data.zip', true);
@@ -282,7 +282,21 @@ function downloadFile(imagename){
 				              		    $eventinfo.append("<div> First Name: " + this.FirstName +"<br></div>");	
 				              		    $eventinfo.append("<div> Last Name: " + this.LastName +"<br></div>");	
 				              		    $eventinfo.append("<div> UniqueID: " + this.UniqueID +"<br></div>");	
-				              		    downloadFile(this.Image);
+				              		  
+				              		  var imagelocalPath = window.rootFS.fullPath +"/"+ this.Image;
+				              		  var imageName=this.Image;
+				              		  
+				              		  $.get(imagelocalPath)
+									    .done(function() { 
+									        // exists code 
+									        // Do nothing
+									    }).fail(function() { 
+									        // not exists code
+									        // Download									        
+									         downloadFile(imageName);
+									    });
+													              		  
+				              		   
 				              		    $eventinfo.append("<div> Image:<img src='"+window.rootFS.fullPath +"/"+ this.Image+"'></img><br></div>");	
 				              		    $eventinfo.append("<div> Level: " + this.Level +"<br></div>");	
 				              		    $eventinfo.append("<div> Points: " + this.Points +"<br></div>");		
@@ -340,4 +354,6 @@ function downloadFile(imagename){
 			  };			
 			  xhr1.send();
     }
+    
+    
     
