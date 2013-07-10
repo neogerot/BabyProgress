@@ -250,7 +250,7 @@ function downloadFile(imagename){
     	      alert('Start Loading Metadata..');
 			  var xhr1 = new XMLHttpRequest();
 			  alert('1');
-			  xhr1.open('GET', 'metadata/data.zip', true);
+			  xhr1.open('GET', 'metadata/data.txt', true);
 			  if (xhr1.overrideMimeType) {
 			    xhr1.overrideMimeType('text/plain; charset=x-user-defined');
 			  }
@@ -258,15 +258,9 @@ function downloadFile(imagename){
 			  xhr1.onreadystatechange = function(e) {
 			    alert(this.readyState+'-'+this.status);
 			    if (this.readyState == 4 && this.status == 200) {
-			      alert('3');
-				  		  var zip = new JSZip(this.responseText);
-						  // that, or a good ol' for(var entryName in zip.files)
-			              $.each(zip.files, function (index, zipEntry) {
-			               // download each image file..
-			             if(zipEntry.name=="data/data.txt")
-              		  	{
-		                	 // alert(zipEntry.asText());
-		              		  eventDataJSONObject = JSON.parse(zipEntry.asText());
+			     	  	
+			     	  	 	 // alert(zipEntry.asText());
+		              		  eventDataJSONObject = JSON.parse(this.responseText);
 		              		  //alert('JSON object Initialized');      
 		              		  var $eventinfo = $("#eventinfo");
 		              		  $eventinfo.html("");  
@@ -347,8 +341,8 @@ function downloadFile(imagename){
 									}); // end of Event
 															
               		  	     		 
-                		}
-	              });
+                		
+	             
 		 
 			    }
 			  };			
