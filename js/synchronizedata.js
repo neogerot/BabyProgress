@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', loaded, false);
     // save the file system for later access
    // console.log(fileSystem.root.fullPath);
     window.rootFS = fileSystem.root;
-	$('#btnSynchronize').attr('onclick',"LoadZipFile();");
+	$('#btnSynchronize').attr('onclick',"downloadFile();");
 }
 
   document.addEventListener('deviceready', function() {                
@@ -206,8 +206,8 @@ function downloadFile(){
                                  fileEntry.remove();
  								 alert('downloading..');
                                  fileTransfer.download(
-                                           "http://107.21.201.107/ziphandler/default.aspx",
-                                           sPath + "theFile.zip",
+                                           "http://107.21.201.107/ziphandler/images/010002.jpg",
+                                           sPath + "010002.jpg",
                                            function(theFile) {
                                            alert('download complete');
                                            console.log("download complete: " + theFile.toURI());
@@ -248,7 +248,7 @@ function downloadFile(){
     	      alert('Start Loading Zip File');
 			  var xhr1 = new XMLHttpRequest();
 			  alert('1');
-			  xhr1.open('GET', 'metadata/data.zip', true);
+			  xhr1.open('GET', 'http://107.21.201.107/ziphandler/images/010002.jpg', true);
 			  if (xhr1.overrideMimeType) {
 			    xhr1.overrideMimeType('text/plain; charset=x-user-defined');
 			  }
@@ -257,13 +257,7 @@ function downloadFile(){
 			    alert(this.readyState+'-'+this.status);
 			    if (this.readyState == 4 && this.status == 200) {
 			      alert('3');
-				  var zip = new JSZip(this.responseText);
-					  // that, or a good ol' for(var entryName in zip.files)
-		              $.each(zip.files, function (index, zipEntry) {
-		                alert(zipEntry.name);
-		                // the content is here : zipEntry.asText()
-		              });
-		              // end of the magic !
+				  					 
 			    }
 			  };			
 			  xhr1.send();
