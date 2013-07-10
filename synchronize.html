@@ -1,0 +1,39 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Grantee Directory</title>
+        <meta name="viewport" content="width=device-width,initial-scale=1"/>
+        <link rel="stylesheet" href="css/styles.css" />   
+   
+    </head>
+
+   <body onload="loaded()">
+        
+	<div id="header" class="header">		
+		<h1>Grantee Directory</h1>			
+		<a id="btnSynchronize" onclick="" class="left">Open</a>		
+		 <input type="file" id="file" name="file" multiple />
+	</div>
+	<h2>Content :</h2>
+	<div id="result" style="display: none;"></div>
+  	<div id="wrapper">
+    		<div id="eventinfo"></div>
+	</div>
+	<div id="busy"/>Loading...</div>
+	<div id="ready"/>Loading...</div>
+    <div id="footer">@2013</div>
+    
+	<script src="phonegap.js"></script>
+    <script src="js/jquery.js"></script>
+    <script src="js/iscroll-lite.js"></script>
+    
+    <script src="js/synchronizedata.js"></script>
+    
+    <script src="js/jszip.js"></script>
+    <script src="js/jszip-deflate.js"></script>
+    <script src="js/jszip-load.js"></script>    
+    <script src="js/jszip-inflate.js"></script>       
+
+    </body>
+
+</html>

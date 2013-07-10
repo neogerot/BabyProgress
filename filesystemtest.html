@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FileReader Example</title>
+    <script src="phonegap.js"></script>
+    <script src="js/jquery.js"></script>
+    <script type="text/javascript" charset="utf-8">		
+		var xhr1 = new XMLHttpRequest();
+		xhr1.open('GET', 'data.zip', true);
+		xhr1.overrideMimeType('text/plain; charset=x-user-defined');
+		
+		alert('call');
+		xhr1.onreadystatechange = function(e) {
+			alert(this.readyState + '-'+this.status);
+ 		if (this.readyState == 4 && this.status == 200) {
+		alert('onreadystatechange');
+		var zip = new JSZip(this.responseText);
+		var elt = document.getElementById('xhr1_way');
+		elt.innerHTML = "<p>loaded ! (as a " + (typeof this.responseText) + ")</p>";
+		elt.innerHTML += "<p>Content = " + zip.file("Hello.txt").asText();
+ 		}
+};
+ xhr1.send();
+			
+    </script>
+</head>
+<body>
+    <h1>Example</h1>
+    <p>Read File</p>
+    <div id="xhr1_way"></div>
+</body>
+</html>
