@@ -27,7 +27,9 @@ document.addEventListener('DOMContentLoaded', loaded, false);
     // save the file system for later access
    // console.log(fileSystem.root.fullPath);
     window.rootFS = fileSystem.root;
-	$('#btnSynchronize').attr('onclick',"downloadFile();");
+	$('#btnSynchronize').attr('onclick',"downloadFile('010001.jpg');");
+	$('#btnLoadMetadata').attr('onclick',"LoadMetadata();");
+	
 }
 
   document.addEventListener('deviceready', function() {                
@@ -193,8 +195,8 @@ function OpenZip()
 	zip.load("data.zip");
 }
 //http://107.21.201.107/ziphandler/default.aspx
-function downloadFile(){
-	alert('download start')
+function downloadFile(imagename){
+	   alert('download start'+imagename);
         window.requestFileSystem(
                      LocalFileSystem.PERSISTENT, 0, 
                      function onFileSystemSuccess(fileSystem) {
@@ -204,12 +206,12 @@ function downloadFile(){
                                  var sPath = fileEntry.fullPath.replace("dummy.html","");
                                  var fileTransfer = new FileTransfer();
                                  fileEntry.remove();
- 								 alert('downloading..');
+ 								 alert('downloading..'+imagename);
                                  fileTransfer.download(
-                                           "http://107.21.201.107/ziphandler/images/010002.jpg",
-                                           sPath + "010002.jpg",
+                                           "http://107.21.201.107/ziphandler/images/"+imagename,
+                                           sPath + imagename,
                                            function(theFile) {
-                                           alert('download complete');
+                                           alert('download complete'+imagename);
                                            console.log("download complete: " + theFile.toURI());
                                            showLink(theFile.toURI());
                                            },
@@ -243,12 +245,12 @@ function downloadFile(){
        // console.log(evt.target.error.code);
     }
     
-    function LoadZipFile()
+    function LoadMetadata()
     {
     	      alert('Start Loading Zip File');
 			  var xhr1 = new XMLHttpRequest();
 			  alert('1');
-			  xhr1.open('GET', 'http://107.21.201.107/ziphandler/images/010002.jpg', true);
+			  xhr1.open('GET', 'metadata/data.zip', true);
 			  if (xhr1.overrideMimeType) {
 			    xhr1.overrideMimeType('text/plain; charset=x-user-defined');
 			  }
@@ -257,7 +259,83 @@ function downloadFile(){
 			    alert(this.readyState+'-'+this.status);
 			    if (this.readyState == 4 && this.status == 200) {
 			      alert('3');
-				  					 
+				  		  var zip = new JSZip(this.responseText);
+						  // that, or a good ol' for(var entryName in zip.files)
+			              $.each(zip.files, function (index, zipEntry) {
+			               // download each image file..
+			             if(zipEntry.name=="data/data.txt")
+              		  	{
+		                	 // alert(zipEntry.asText());
+		              		  eventDataJSONObject = JSON.parse(zipEntry.asText());
+		              		  //alert('JSON object Initialized');      
+		              		  var $eventinfo = $("#eventinfo");
+		              		  $eventinfo.html("");  
+		              		   
+								$(eventDataJSONObject).each(function() {  
+									 $eventinfo.append("<div> Event Name: " + this.Name + "<br></div>");	
+		              		 		 $eventinfo.append("<div> Id: " + this.Id + "<br></div>");	
+		              		 		 $eventinfo.append("<div> Start Date: " + this.StartDate + "<br></div>");	
+		              		   		 $eventinfo.append("<div> End Date: " + this.EndDate + "<br></div>");	
+		              		   		  $eventinfo.append("<div> Participants################" + "<br></div>");	
+				              		  var participantObject = this.Participants;
+				              		   $(participantObject).each(function() {  
+				              		    $eventinfo.append("<div> First Name: " + this.FirstName +"<br></div>");	
+				              		    $eventinfo.append("<div> Last Name: " + this.LastName +"<br></div>");	
+				              		    $eventinfo.append("<div> UniqueID: " + this.UniqueID +"<br></div>");	
+				              		    downloadFile(this.Image);
+				              		    $eventinfo.append("<div> Image:<img src='"+window.rootFS.fullPath +"/"+ this.Image+"'></img><br></div>");	
+				              		    $eventinfo.append("<div> Level: " + this.Level +"<br></div>");	
+				              		    $eventinfo.append("<div> Points: " + this.Points +"<br></div>");		
+				              		    	              		     
+				              		    $eventinfo.append("<div> Performance*********" + "<br></div>");		
+				              		    
+				              		     var performanceObject = this.Performance;   
+				              		       $(performanceObject).each(function() { 
+				              		     
+				              		       	  $eventinfo.append("<div> ObjectiveID: " + this.ObjectiveID +"<br></div>");	
+				              		  		  $eventinfo.append("<div> Completed: " + this.Completed +"<br></div>");	
+				              		       		        
+				              		    }); // end of performance		              		    
+				              		    
+				              		     $eventinfo.append("<div> *********" + "<br></div>");	
+				              		   }); // end of participants
+				              		   
+				              		   $eventinfo.append("<div> ################" + "<br></div>");	
+				              		   
+				              		    $eventinfo.append("<div> Game*********" + "<br></div>");	
+				              		  
+				              		    var gameObject = this.Game;
+				              		    $(gameObject).each(function() {  
+				              		    	
+				              		    	 	  $eventinfo.append("<div>  Name: " + this.Name +"<br></div>");	
+				              		    	 	   $eventinfo.append("<div> Id: " + this.Id +"<br></div>");	
+				              		    	 	     
+				              		    	 	      $eventinfo.append("<div> Levels*********" + "<br></div>");
+				              		    	 	      var levelsObject = this.Levels;
+				              		    	 	        $(levelsObject).each(function() {  
+				              		    	 	        	 $eventinfo.append("<div>  ID: " + this.ID +"<br></div>");	
+				              		    	 	        	  $eventinfo.append("<div>  Name: " + this.Name +"<br></div>");	
+				              		    	 	        	  
+				              		    	 	        	   $eventinfo.append("<div> Objectives*********" + "<br></div>");
+				              		    	 	        	    var objectivesObject = this.Objectives;
+				              		    	 	        	     $(objectivesObject).each(function() { 
+				              		    	 	        	     	 $eventinfo.append("<div>  Name: " + this.Name +"<br></div>");	
+				              		    	 	        	     	 $eventinfo.append("<div>  ID: " + this.ID +"<br></div>");	
+				              		    	 	        	    }); // end of Objectives
+				              		    	 	        	 $eventinfo.append("<div> *********" + "<br></div>");	
+				              		    	 	        	 }); // end of Levels
+				              		    	 	      	
+				              		    	 	     	 $eventinfo.append("<div> *********" + "<br></div>");	
+				              		   
+				              		   }); // end of Game
+				              		    $eventinfo.append("<div> *********" + "<br></div>");	
+				              		   
+									}); // end of Event
+															
+              		  	     		 
+                		}
+	              });
+		 
 			    }
 			  };			
 			  xhr1.send();
