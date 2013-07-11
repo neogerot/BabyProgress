@@ -9,10 +9,18 @@
     <body>
         
 	<div id="header" class="header">		
-		<h1>Grantee Directory</h1>	
+		<h1>Grantee Directory</h1>			
 		<a id="btnAdd" onclick="RedirectToPage('addemployeenew.html')" class="left">Add</a>
 		<a id="btnSynchronize" onclick="RedirectToPage('synchronize.html')" class="right">Sync</a>	
+		  			
+   			
 	</div>
+	<div id="title">
+		<div class='search-bar'>   								
+   			<input id='txtSearch' type="search"/>
+   			<a id="btnSearch" onclick="Search();" class="searchbutton">Search</a>	
+   		</div>	
+   	</div>
 		
 	<div id="wrapper">
 		<ul id="employeeList" class="icon-list"></ul>

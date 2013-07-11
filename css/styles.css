@@ -106,6 +106,7 @@ li .action-icon {
 	position: absolute;
 	right: 12px;
 	margin-top: -50px;
+	
 }
 
 #header {
@@ -132,9 +133,8 @@ li .action-icon {
 
 #header .left {
     position: absolute;
-    top: 48px;
-    left: 6px;
-    width:60px;
+    top: 6px;
+    left: 6px;   
     z-index: 1;
 }
 
@@ -178,7 +178,7 @@ li .action-icon {
 
 #wrapper {
 	position: absolute; 
-	top: 82px; 
+	top: 90px; 
 	bottom: 20px;
 	width: 100%;
 	overflow: auto;
@@ -241,3 +241,78 @@ li .action-icon {
     vertical-align: top;
 }
 
+.search-bar {            
+    width:100%; 
+    padding-left:6px;
+    padding-right: 6px;
+    padding-top: 6px;
+    margin-bottom: 6px;   
+}
+
+input[type="search"] {
+    width:75%;    
+	border: none;
+	border-radius: 4px;
+	padding: 4px 0px 2px 2px;
+	margin-top: 0px;
+	font-size: 16px;
+	box-shadow: inset 0 2px 2px rgba(0,0,0,.5), 0 1px #fff;	
+    -webkit-appearance:none;
+}
+
+input[type="search"]:focus {
+	outline: none;
+	box-shadow: inset 0 4px 8px rgba(0,0,0,.5), 0 1px #fff;
+}
+
+.searchbutton {
+    position: absolute;
+    top: 50px;
+    right: 6px;
+    z-index: 1;
+    width: auto;
+    min-width: 40px;    
+    height: 30px; 
+    margin: 0;
+    padding: 0 5px;
+    overflow: hidden;
+
+    line-height: 30px;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: bold;
+    text-shadow: rgba(0, 0, 0, 0.6) 0px -1px 0;
+    text-overflow: ellipsis;
+    text-decoration: none;
+    text-align: center;
+    white-space: nowrap;
+
+    color: #fff;
+    background: none;
+    background-image: -webkit-gradient(linear, left top, left bottom,
+        color-stop(0, #8ea4c1),
+        color-stop(0.5, #5877a2),
+        color-stop(0.5, #476999),
+        color-stop(1, #4a6c9b));
+    -webkit-border-radius: 6px;
+    border: 1px solid #45505d;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .25),
+                        0 1px 0 rgba(255, 255, 255, 0.25);
+}	
+
+.searchlabel
+{
+	position: absolute;
+  	top: 60px;
+    left: 6px;
+	font-family:sans-serif;	
+	font-size: 16px;
+	color: #444444;
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+#title{	
+	font-family: inherit;
+    font-size: 18px;
+    font-weight: bold;
+    height:45px;
+ }

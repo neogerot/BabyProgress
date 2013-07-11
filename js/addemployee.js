@@ -6,7 +6,7 @@ document.addEventListener("deviceready", onDeviceReady, false);
 function gotFS(fileSystem) {
     console.log("got filesystem");
     // save the file system for later access
-    console.log(fileSystem.root.fullPath);
+    //console.log(fileSystem.root.fullPath);
     window.rootFS = fileSystem.root;
 	$('#photofilepath').val(window.rootFS.fullPath);
 }
@@ -21,57 +21,7 @@ function onDeviceReady() {
 	$('#busy').hide();
 	$('#uid').val(guid());
 }
-
-function s4() {
-  return Math.floor((1 + Math.random()) * 0x10000)
-             .toString(16)
-             .substring(1);
-};
-
-function guid() {
-  return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-         s4() + '-' + s4() + s4() + s4();
-}
-function transaction_error(tx, error) {
-	$('#busy').hide();
-    alert("Database Error: " + error);
-}
-
-function addEmployee()
-{	
-	db = window.openDatabase("EmployeeDirectoryDB", "1.0", "PhoneGap Demo", 200000);
-	console.log("database opened");
-	db.transaction(addEmployeeInDB,transaction_error,addEmployeeInDB_success);	
-}
-function transaction_error(tx, error) {
-	$('#busy').hide();	
-    alert("Database Error: " + error);
-}
-function addEmployeeInDB_success(tx) {
-	console.log("Employee Added");
-	$('#busy').hide();
-	RedirectToPage("index.html");
-}
-  
-   	
-   	function RedirectToPage(pageUrl) {
-	$('#busy').hide();
-	//alert("Employee Deleted");		
-    window.location=pageUrl;
-}
-
- 
-function addEmployeeInDB(tx)
-{	
-	$('#busy').show();		
-	var sql ="INSERT INTO employee (uid,firstName,lastName,managerId,title,department,officePhone,cellPhone,email,city,picture) VALUES ("+ "'"+$('#uid').val()+"','"+
-	$('#firstName').val() +"','"+$('#lastName').val() +"',"+$('#managerId').val() +",'"+$('#title').val() +"','"+$('#department').val() +"','"+$('#officePhone').val() +"','"+
-	$('#cellPhone').val() +"','"+$('#email').val() +"','"+$('#city').val() +"','"+$('#uid').val() +".jpg')"; 
-	
-	tx.executeSql(sql);
-	//alert('Query Executed');
-}
-
+// Get querystring parameter
 function getUrlVars() {
     var vars = [], hash;
     var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
@@ -83,6 +33,60 @@ function getUrlVars() {
     }
     return vars;
 }
+
+function s4() {
+  return Math.floor((1 + Math.random()) * 0x10000)
+             .toString(16)
+             .substring(1);
+};
+
+// genrate unique Id to associate with the grantee
+function guid() {
+  return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+         s4() + '-' + s4() + s4() + s4();
+}
+
+// Redirect to the Home Page
+function RedirectToPage(pageUrl) {
+	$('#busy').hide();	
+    window.location=pageUrl;
+}
+
+/*********************** Database Operations ****************************/
+
+function transaction_error(tx, error) {
+	$('#busy').hide();
+    alert("Database Error: " + error);
+}
+   	
+// Add grantee
+function addEmployee()
+{	
+	db = window.openDatabase("GranteeDirectoryDB", "1.0", "PhoneGap Demo", 200000);
+	console.log("database opened");
+	db.transaction(addEmployeeInDB,transaction_error,addEmployeeInDB_success);	
+}
+
+function addEmployeeInDB(tx)
+{	
+	$('#busy').show();		
+	var sql ="INSERT INTO grantee (firstName,lastName,uniqueID,image,level,points,location,state,localgroup,city) VALUES ('" + $('#firstName').val() +"','"
+	+$('#lastName').val() +"',"+ "'"+$('#uid').val()+"','"+ $('#uid').val() +".jpg'"+",'"+$('#level').val() +"','0','"+$('#location').val() +"','"+
+	$('#state').val() +"','"+$('#localgroup').val() +"','"+$('#city').val() +"')"; 
+	
+	tx.executeSql(sql);
+	//alert('Query Executed');
+}
+
+function addEmployeeInDB_success(tx) {
+	console.log("Employee Added");
+	$('#busy').hide();
+	RedirectToPage("index.html");
+}
+
+/******************************************************************************************/
+
+/*------------------------- Phone Functions ---------------------------------------------*/
 
 function capturePhoto() {
     navigator.camera.getPicture(onPhotoURISuccess, fail, { quality: 25, destinationType: Camera.DestinationType.FILE_URI ,saveToPhotoAlbum: true});
@@ -112,3 +116,5 @@ function onCopySuccess(entry) {
 function fail(error) {
     console.log(error.code);
 }
+
+/*------------------------- --------------------------------------------------------------*/

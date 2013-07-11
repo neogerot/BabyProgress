@@ -1,5 +1,5 @@
 /* Perform Synchornization functions here*/
-  var myScroll;
+var myScroll;
 function loaded() {
 	setTimeout(function () { 
                 myScroll = new iScroll('wrapper', {
@@ -19,6 +19,13 @@ function loaded() {
 document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
 document.addEventListener('DOMContentLoaded', loaded, false);
 
+function RedirectToPage(pageUrl) {
+	$('#busy').hide();
+	//alert("Employee Deleted");		
+    window.location=pageUrl;
+}
+
+
   /*  File System 
    * 
    */
@@ -29,7 +36,7 @@ document.addEventListener('DOMContentLoaded', loaded, false);
     window.rootFS = fileSystem.root;
 	$('#btnSynchronize').attr('onclick',"downloadFile('010001.jpg');");
 	$('#btnLoadMetadata').attr('onclick',"LoadMetadata();");
-	alert("got filesystem");	   
+	//alert("got filesystem");	   
 }
 
   document.addEventListener('deviceready', function() {                
@@ -183,17 +190,14 @@ document.addEventListener('DOMContentLoaded', loaded, false);
 function SynchronizeDevice()
 {
 	// This function will synchronize the data for the event
-	var zip = new JSZip();
-	zip.file("Hello.txt", "Hello World\n");
-	zip.file("hello1.txt", "Hello First World\n");
-	var content = zip.generate();
-	location.href="data:application/zip;base64,"+content;      	
+	  	
 }
 function OpenZip()
 {
 	var zip = new JSZip();
 	zip.load("data.zip");
 }
+
 //http://107.21.201.107/ziphandler/default.aspx
 function downloadFile(imagename){
 	   alert('download start'+imagename);
@@ -207,6 +211,7 @@ function downloadFile(imagename){
                                  var fileTransfer = new FileTransfer();
                                  fileEntry.remove();
  								 alert('downloading..'+imagename);
+                                
                                  fileTransfer.download(
                                            "http://107.21.201.107/ziphandler/images/"+imagename,
                                            sPath + imagename,
@@ -226,26 +231,14 @@ function downloadFile(imagename){
                      }, 
                      fail);
  
-    }
+    }    
+
+function fail(error) {
+    console.log(error.code);
+}
+
     
-    function showLink(url){
-        alert(url);
-        var divEl = document.getElementById("ready");
-        var aElem = document.createElement("a");
-        aElem.setAttribute("target", "_blank");
-        aElem.setAttribute("href", url);
-        aElem.appendChild(document.createTextNode("Ready! Click To Open."))
-        divEl.appendChild(aElem);
- 
-    }
- 
- 
-    function fail(evt) {
-    	alert('Error');
-       // console.log(evt.target.error.code);
-    }
-    
-    function LoadMetadata()
+function LoadMetadata()
     {
     	      alert('Start Loading Metadata..');
 			  var xhr1 = new XMLHttpRequest();

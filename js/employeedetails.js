@@ -22,7 +22,7 @@ document.addEventListener("deviceready", onDeviceReady, false);
 
 function onDeviceReady() {
 	console.log("opening database");
-    db = window.openDatabase("EmployeeDirectoryDB", "1.0", "PhoneGap Demo", 200000);
+    db = window.openDatabase("GranteeDirectoryDB", "1.0", "PhoneGap Demo", 200000);
 	console.log("database opened");
     db.transaction(getEmployee, transaction_error);
 }
@@ -39,10 +39,10 @@ function transaction_error(tx, error) {
 
 function getEmployee(tx) {
 	$('#busy').show();
-	var sql = "select e.id, e.firstName, e.lastName, e.managerId, e.title, e.department, e.city, e.officePhone, e.cellPhone, " +
-				"e.email, e.picture, m.firstName managerFirstName, m.lastName managerLastName, count(r.id) reportCount " +
-				"from employee e left join employee r on r.managerId = e.id left join employee m on e.managerId = m.id " +
-				"where e.uid=:uid group by e.lastName order by e.lastName, e.firstName";
+	var sql ="select e.id,e.firstName, e.lastName, e.uniqueID, e.image,e.level, e.points,e.location,e.state,e.localgroup,e.city " + 
+				"from grantee e " +
+				" where e.uniqueID=:uid "+
+				" order by e.lastName, e.firstName";
 	tx.executeSql(sql, [uid], getEmployee_success);
 }
 
@@ -52,38 +52,39 @@ function getEmployee_success(tx, results) {
 	var employee = results.rows.item(0);
 	
 	var photopath="/sdcard";
-	$('#employeePic').attr('src', photopath + '/photos/' + employee.picture);
+	$('#employeePic').attr('src', photopath + '/photos/' + employee.image);
 	$('#fullName').text(employee.firstName + ' ' + employee.lastName);
-	$('#employeeTitle').text(employee.title);
+	$('#location').text(employee.location);
 	$('#city').text(employee.city);
-	console.log(employee.officePhone);
+	$('#state').text(employee.state);
+		
+	$('#actionList').append('<li>Objectives</li>');
+				
+	$('#actionList').append('<li><a href="#"><p class="line1">Level</p>' +
+				'<p class="line2">' + employee.level + '</p><img src="img/level.png" class="action-icon"/></a></li>');
 	
-	if (employee.email) {
-		$('#actionList').append('<li><a href="mailto:' + employee.email + '"><p class="line1">Email</p>' +
-				'<p class="line2">' + employee.email + '</p><img src="img/mail.png" class="action-icon"/></a></li>');
-	}
-	if (employee.officePhone) {
-		$('#actionList').append('<li><a href="tel:' + employee.officePhone + '"><p class="line1">Call Office</p>' +
-				'<p class="line2">' + employee.officePhone + '</p><img src="img/phone.png" class="action-icon"/></a></li>');
-	}
-	if (employee.cellPhone) {
-		$('#actionList').append('<li><a href="tel:' + employee.cellPhone + '"><p class="line1">Call Cell</p>' +
-				'<p class="line2">' + employee.cellPhone + '</p><img src="img/phone.png" class="action-icon"/></a></li>');
-		$('#actionList').append('<li><a href="sms:' + employee.cellPhone + '"><p class="line1">SMS</p>' +
-				'<p class="line2">' + employee.cellPhone + '</p><img src="img/sms.png" class="action-icon"/></a></li>');
-	}
+	
+	$('#actionList').append('<li><a href="#"><p class="line1">Points</p>' +
+				'<p class="line2">' + employee.points + '</p><img src="img/points.png" class="action-icon"/></a></li>');
 
+	$('#actionList').append('<li><a href="tel:' + employee.localgroup + '"><p class="line1">Group</p>' +
+				'<p class="line2">' + employee.localgroup + '</p><img src="img/phone.png" class="action-icon"/></a></li>');
 	
-	if (employee.reportCount<1) 
-	{
-		$('#actionList').append('<li><a href="#" onClick="deleteEmployee()"><p class="line1">Delete Record</p>' +
-				'<p class="line2">.</p><img src="img/delete.jpg" class="action-icon"/></a></li>');	
-	}
+	$('#actionList').append('<li><a href="#" onClick="deleteEmployee()"><p class="line1">Delete Record</p>' +
+				'<p class="line2"></p><img src="img/delete.jpg" class="action-icon"/></a></li>');	
+
 	
 	setTimeout(function(){
 		scroll.refresh();
 	});
-	db = null;
+	//db = null;
+	
+	db.transaction(loadObjectives, transaction_error);
+}
+
+// load Objectives of the grantee
+function loadObjectives(){
+	
 }
 
 function getUrlVars() {
@@ -99,21 +100,17 @@ function getUrlVars() {
 }
 
 function deleteEmployee(){
-    console.log("opening database");
-    db = window.openDatabase("EmployeeDirectoryDB", "1.0", "PhoneGap Demo", 200000);
-	console.log("database opened");
-    db.transaction(deleteEmployeeDB, transaction_error);
+      db.transaction(deleteEmployeeDB, transaction_error);
 }
 function deleteEmployeeDB(tx)
 {
-   $('#busy').show();
-	var sql = "delete from employee where uid=?";
+    $('#busy').show();
+	var sql = "delete from grantee where uniqueID=?";
 	tx.executeSql(sql, [uid], deleteEmployee_success);
 }
 
 function deleteEmployee_success(tx, results) {
-	$('#busy').hide();
-	//alert("Employee Deleted");		
+	$('#busy').hide();	
     window.location="index.html";
 }
 
