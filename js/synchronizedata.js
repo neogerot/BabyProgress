@@ -317,15 +317,13 @@ function LoadMetadata()
 			  $('#busy').hide();
     }
     
-    function SaveGrantee(granteeObj)
+    function SaveGrantee(participantObj)
     {
     	//alert(granteeObj.FirstName);
-    	var sql ="INSERT INTO Grantee (firstName,lastName,uniqueID,image,level,points,location,state,localgroup,city) VALUES ('" + granteeObj.FirstName +"','"
-		+ granteeObj.LastName +"',"+ "'"+granteeObj.UniqueID+"','"+ granteeObj.Image +"'"+",'"+granteeObj.Level+"','0','"+granteeObj.FirstName+"','"+
-		granteeObj.FirstName +"','"+granteeObj.FirstName+"','"+granteeObj.FirstName +"')"; 
+    	var sql ="INSERT INTO Participants (FirstName,LastName,UniqueID,Image,Level,Points,LocationID,GroupID,IsNew,IsUpdate) VALUES ('" + participantObj.FirstName +"','"
+		+ participantObj.LastName +"',"+ "'"+participantObj.UniqueID+"','"+ participantObj.Image +"'"+",'"+participantObj.Level+"','0','"+participantObj.LocationID+"','"+
+		participantObj.GroupID +"','"+participantObj.IsNew +"','"+participantObj.IsUpdate +"')"; 
 	
-	   
-	    
 	     db.transaction(function(tx)
 	     {	     	
 	     	tx.executeSql(sql);	     	
@@ -338,7 +336,7 @@ function LoadMetadata()
     {
     	//alert(userUniqueId + '#'+ granteePerformanceObj.ObjectiveID + '-' + granteePerformanceObj.Completed );
     	    	
-    	var sql ="INSERT INTO Performance (uniqueID,objectiveID,completed) VALUES ('" + userUniqueId +"','"
+    	var sql ="INSERT INTO Performance (UniqueID,ObjectiveID,Completed) VALUES ('" + userUniqueId +"','"
 		+ granteePerformanceObj.ObjectiveID +"',"+ "'"+granteePerformanceObj.Completed +"')"; 
 		       
 	     db.transaction(function(tx)
@@ -434,28 +432,27 @@ function  CleanTables()
     	// Delete and Recreate grantee Table 
     	db.transaction(function(tx)
 	     {	     	
-	     	tx.executeSql('DROP TABLE IF EXISTS Grantee');    	
+	     	tx.executeSql('DROP TABLE IF EXISTS Participants');    	
 	     }
 	     , transaction_error, SaveDB_success);
     	
-    	var sqlDeleteGrantee = 
-						"CREATE TABLE IF NOT EXISTS Grantee ( "+
-						"id INTEGER PRIMARY KEY AUTOINCREMENT, " +		
-						"firstName VARCHAR(50), " +
-						"lastName VARCHAR(50), " +
-						"uniqueID VARCHAR(50), " +
-						"image VARCHAR(100), " + 
-						"level INTEGER, " +
-						"points INTEGER, " +
-						"location VARCHAR(100), " +
-						"state VARCHAR(100), " +
-						"localgroup VARCHAR(100), " +
-						"city VARCHAR(100), " +
-						"isnew INTEGER)";
+    	var sqlDeleteParticipants = 
+						"CREATE TABLE IF NOT EXISTS Participants ( "+
+						"ID INTEGER PRIMARY KEY AUTOINCREMENT, " +		
+						"FirstName VARCHAR(50), " +
+						"LastName VARCHAR(50), " +
+						"UniqueID VARCHAR(50), " +
+						"Image VARCHAR(100), " + 
+						"Level INTEGER, " +
+						"Points INTEGER, " +
+						"LocationID VARCHAR(10), " +						
+						"GroupID VARCHAR(10), " +						
+						"IsNew INTEGER, " +
+						"IsUpdate INTEGER)";
 		
 		db.transaction(function(tx)
 	     {	     	
-	     	tx.executeSql(sqlDeleteGrantee);    	
+	     	tx.executeSql(sqlDeleteParticipants);    	
 	     }
 	     , transaction_error, DeleteTable_success);
     	
@@ -470,10 +467,10 @@ function  CleanTables()
     	
     	var sqlDeleteGranteePerformance = 
 						"CREATE TABLE IF NOT EXISTS Performance ( "+
-						"performanceid INTEGER PRIMARY KEY AUTOINCREMENT, " +							
-						"uniqueID VARCHAR(50), " +
-						"objectiveID  VARCHAR(10), " +						
-						"completed INTEGER)";
+						"ID INTEGER PRIMARY KEY AUTOINCREMENT, " +							
+						"UniqueID VARCHAR(50), " +
+						"ObjectiveID  VARCHAR(10), " +						
+						"Completed INTEGER)";
 		
 		
 		db.transaction(function(tx)
@@ -600,7 +597,15 @@ function  CleanTables()
 	     , transaction_error, DeleteTableComplete_success);  
 	     
 	     //**********************************************************************************************  
-    	
+	       
+	        	
+    	// Delete EXTRA
+    	db.transaction(function(tx)
+	     {	     	
+	     	tx.executeSql('DROP TABLE IF EXISTS Grantee');    	
+	     }
+	     , transaction_error, SaveDB_success);
+	     
     }
     
     // function to be called at last

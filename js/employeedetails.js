@@ -39,53 +39,74 @@ function transaction_error(tx, error) {
 
 function getEmployee(tx) {
 	$('#busy').show();
-	var sql ="select e.id,e.firstName, e.lastName, e.uniqueID, e.image,e.level, e.points,e.location,e.state,e.localgroup,e.city " + 
-				"from grantee e " +
-				" where e.uniqueID=:uid "+
-				" order by e.lastName, e.firstName";
+	
+	var  sql = "select e.ID,e.FirstName, e.LastName, e.UniqueID, e.Image,e.Level, e.Points,e.LocationID,e.GroupID,e.IsNew,e.IsUpdate " + 
+				"from Participants e " +
+				" where e.UniqueID=:uid "+
+				" order by e.LastName, e.FirstName";
+				
 	tx.executeSql(sql, [uid], getEmployee_success);
 }
 
 function getEmployee_success(tx, results) {
 	//alert('employee details retreived');
 	$('#busy').hide();
+	
 	var employee = results.rows.item(0);
 	
 	var photopath="/sdcard";
-	$('#employeePic').attr('src', photopath + '/photos/' + employee.image);
-	$('#fullName').text(employee.firstName + ' ' + employee.lastName);
-	$('#location').text(employee.location);
-	$('#city').text(employee.city);
-	$('#state').text(employee.state);
+	$('#employeePic').attr('src', photopath + '/photos/' + employee.Image);
+	$('#fullName').text(employee.FirstName + ' ' + employee.LastName);
+	$('#location').text(employee.LocationID);
+	//$('#city').text(employee.city);
+	//$('#state').text(employee.state);
 		
 	$('#actionList').append('<li>Objectives</li>');
 				
-	$('#actionList').append('<li><a href="#"><p class="line1">Level</p>' +
-				'<p class="line2">' + employee.level + '</p><img src="img/level.png" class="action-icon"/></a></li>');
-	
-	
-	$('#actionList').append('<li><a href="#"><p class="line1">Points</p>' +
-				'<p class="line2">' + employee.points + '</p><img src="img/points.png" class="action-icon"/></a></li>');
-
-	$('#actionList').append('<li><a href="tel:' + employee.localgroup + '"><p class="line1">Group</p>' +
-				'<p class="line2">' + employee.localgroup + '</p><img src="img/phone.png" class="action-icon"/></a></li>');
-	
-	$('#actionList').append('<li><a href="#" onClick="deleteEmployee()"><p class="line1">Delete Record</p>' +
-				'<p class="line2"></p><img src="img/delete.jpg" class="action-icon"/></a></li>');	
-
-	
+		
 	setTimeout(function(){
 		scroll.refresh();
 	});
 	//db = null;
 	
-	db.transaction(loadObjectives, transaction_error);
+	db.transaction(getObjectives, transaction_error);
 }
 
-// load Objectives of the grantee
-function loadObjectives(){
+// load Objectives of the Participant
+function getObjectives(tx) {
+	$('#busy').show();
+	var  sql = "select obj.ID,obj.Name,per.Completed " +
+				"from Participants p  " +
+				" JOIN Performance per on p.UniqueID = per.UniqueID " +
+				" JOIN Objectives obj on per.ObjectiveId = obj.ID " +
+				" where p.UniqueID=:uid " +
+				" order by obj.ID";
+				
+	tx.executeSql(sql, [uid], getObjectives_success);	
+}
+
+function getObjectives_success(tx, results) {
+	//alert('employee details retreived');
+	$('#busy').hide();
+	//alert('getObjectives_success');
+	var len = results.rows.length;
+	// Traverse all the Objectives	
+	 for (var i=0; i<len; i++) {
+	 	var objective = results.rows.item(i);
+	 	
+	 	$('#actionList').append('<li><a href="#"><p class="line1"></a>'+objective.ID +'</p>' +
+				'<p class="line2">' + objective.Name +'</p>'
+				+'</li>');
+	 	
+	 }
+	
+	
+	setTimeout(function(){
+		scroll.refresh();
+	});
 	
 }
+
 
 function getUrlVars() {
     var vars = [], hash;
@@ -105,7 +126,7 @@ function deleteEmployee(){
 function deleteEmployeeDB(tx)
 {
     $('#busy').show();
-	var sql = "delete from grantee where uniqueID=?";
+	var sql = "delete from Participants where uniqueID=?";
 	tx.executeSql(sql, [uid], deleteEmployee_success);
 }
 
