@@ -19,6 +19,7 @@
 
 var myScroll;
 function loaded() {
+	//alert('loaded');
 	setTimeout(function () { 
                 myScroll = new iScroll('wrapper', {
 		useTransform: false,
@@ -32,31 +33,24 @@ function loaded() {
 		}
 	});
         }, 100); 
-  /*	myScroll = new iScroll('wrapper', {
-		useTransform: false,
-		onBeforeScrollStart: function (e) {
-			var target = e.target;
-			while (target.nodeType != 1) target = target.parentNode;
-
-		
-		if (target.tagName != 'SELECT' && target.tagName != 'INPUT' && target.tagName != 'TEXTAREA')
-				e.preventDefault();
-		}
-	});
-	*/
-}
+ }
 
 document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
 document.addEventListener('DOMContentLoaded', loaded, false);
 
+document.getElementById('btnAdd').addEventListener('touchstart', function (e) {
+	alert('touchstart');
+RedirectToPage('index.html');
+}, false);
+
 </script>
 </head>
-<body onload="loaded()">
+<body>
 <!-- Home -->
    <div data-role="page" id="page1">
    	<div id="header">
       <h1>Grantee Directory</h1>
-   	  <a id="btnAdd" onclick="RedirectToPage('index.html')" class="left">Back</a>
+   	  <a id="btnAdd" class="left">Back</a>
     </div>   
    <div id="title">
 		Add Record

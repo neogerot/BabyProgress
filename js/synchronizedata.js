@@ -111,7 +111,7 @@ function fail(error) {
     
 function LoadMetadata()
     {
-    	    //  alert('Start Loading Metadata..');
+    	    alert('Start Loading Metadata..');
     	    $('#busy').show();		
 			  var xhr1 = new XMLHttpRequest();
 			  //alert('1');
@@ -315,6 +315,7 @@ function LoadMetadata()
 			  };			
 			  xhr1.send();
 			  $('#busy').hide();
+			  alert('Loading Metadata Completed..');
     }
     
     function SaveGrantee(participantObj)
