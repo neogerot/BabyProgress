@@ -1,11 +1,17 @@
 var id = 0;
 var db;
 
-$('#btnAdd').bind("vclick", function (ev) {
-      // Do Some stuff
-    //  alert('hi');
-      ev.preventDefault();
-      RedirectToPage('index.html'); 
+var clickOk = true;
+$('#btnAdd').on('vclick', function () {
+    if (clickOk === true) {
+        clickOk = false;
+        setTimeout(function () {
+            clickOk = true;
+        }, 350);
+        //run click code now
+         RedirectToPage('index.html'); 
+    }
+    return false;
 });
 
 document.addEventListener("deviceready", onDeviceReady, false);
