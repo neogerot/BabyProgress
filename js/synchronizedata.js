@@ -197,7 +197,7 @@ function LoadMetadata()
 				              		  var imageName=this.Image;
 				              		  
 				              		 // Uncomment before deploying to Device..
-				              		 /* $.get(imagelocalPath)
+				              		  $.get(imagelocalPath)
 									    .done(function() { 
 									        // exists code 
 									        // Do nothing
@@ -207,7 +207,7 @@ function LoadMetadata()
 									         downloadFile(imageName);
 									    });
 													              		  
-				              		   */
+				              		  
 				              		    $eventinfo.append("<div> Image:<img src='"+window.rootFS.fullPath +"/"+ this.Image+"'></img><br></div>");	
 				              		    $eventinfo.append("<div> Level: " + this.Level +"<br></div>");	
 				              		    $eventinfo.append("<div> Points: " + this.Points +"<br></div>");		
