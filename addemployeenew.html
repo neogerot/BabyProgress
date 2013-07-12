@@ -38,15 +38,17 @@ function loaded() {
 document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
 document.addEventListener('DOMContentLoaded', loaded, false);
 
+
+
 </script>
 </head>
-<body onload="initFastButtons();">
+<body>
 <!-- Home -->
 <span id="fastclick">
    <div data-role="page" id="page1">
    	<div id="header">
       <h1>Grantee Directory</h1>
-   	  <a id="btnAdd" onclick="RedirectToPage('index.html');" class="left">Back</a>
+   	  <a id="btnAdd" class="left">Back</a>
     </div>   
    <div id="title">
 		Add Record
@@ -120,13 +122,13 @@ document.addEventListener('DOMContentLoaded', loaded, false);
 <div id="busy">Loading...</div>
   <div id="footer">@2013</div>
 </div>
-	</span> <!-- end fastclick -->
+	
 	<script src="phonegap.js"></script>
 	<script src="js/jquery.js"></script>
     <script src="js/iscroll-lite.js"></script>   
 	<script src="js/addemployee.js"></script>
 	<script src="js/jquery.mobile-1.3.1.min.js"></script>
-	<script src="js/fastclick.js"></script>
+	
 	 
 </body>
 </html>

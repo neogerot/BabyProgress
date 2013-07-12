@@ -1,6 +1,13 @@
 var id = 0;
 var db;
 
+$('#btnAdd').bind("vclick", function (ev) {
+      // Do Some stuff
+    //  alert('hi');
+      ev.preventDefault();
+      RedirectToPage('index.html'); 
+});
+
 document.addEventListener("deviceready", onDeviceReady, false);
 
 function gotFS(fileSystem) {
