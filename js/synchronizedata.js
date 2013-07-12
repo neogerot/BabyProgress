@@ -1,4 +1,5 @@
 /* Perform Synchornization functions here*/
+var db;
 var myScroll;
 function loaded() {
 	setTimeout(function () { 
@@ -36,6 +37,8 @@ function RedirectToPage(pageUrl) {
     window.rootFS = fileSystem.root;
 	$('#btnSynchronize').attr('onclick',"downloadFile('010001.jpg');");
 	$('#btnLoadMetadata').attr('onclick',"LoadMetadata();");
+	$('#btnCleanTables').attr('onclick',"CleanTables();");
+	
 	//alert("got filesystem");	   
 }
 
@@ -44,149 +47,17 @@ function RedirectToPage(pageUrl) {
     window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS, fail);
 }, false);
   
+document.addEventListener("deviceready", onDeviceReady, false);
+
+function onDeviceReady() {	
+    db = window.openDatabase("GranteeDirectoryDB", "1.0", "PhoneGap Demo", 200000);
+    
+}
+  
   
   var eventDataJSONObject;
  
-   $(function () {
-    if (!window.FileReader || !window.ArrayBuffer) {
-      alert("You will need a recent browser to use this demo :(");
-      return;
-    }
-
-
-    var $result = $("#result");
-    $("#file").on("change", function(evt) {
-      // remove content
-      $result.html("");
-
-      // see http://www.html5rocks.com/en/tutorials/file/dndfiles/
-
-      var files = evt.target.files;
-     // alert(files);
-      for (var i = 0, f; f = files[i]; i++) {
-
-        if (f.type != "application/zip") {
-          $result.append("<div class='warning'>" + f.name + " isn't a 'application/zip', opening it as a zip file may not work :-)</div>");
-        }
-        var reader = new FileReader();
-
-        // Closure to capture the file information.
-        reader.onload = (function(theFile) {
-          return function(e) {
-            var $title = $("<h3>", {
-              text : theFile.name
-            });
-            $result.append($title);
-            var $ul = $("<ul>");
-            try {
-
-              var dateBefore = new Date();
-              // read the content of the file with JSZip
-              var zip = new JSZip(e.target.result);
-              var dateAfter = new Date();
-
-              $title.append($("<span>", {
-                text:" (parsed in " + (dateAfter - dateBefore) + "ms)"
-              }));
-
-              // that, or a good ol' for(var entryName in zip.files)
-              $.each(zip.files, function (index, zipEntry) {
-                $ul.append("<li>" + zipEntry.name + "</li>");
-               if(zipEntry.name=="data/images")
-               {
-               	 alert('data/images/');
-               }
-               //http://107.21.201.107/ziphandler/images/010001.jpg
-                if(zipEntry.name=="data/data.txt")
-                {
-                	 // alert(zipEntry.asText());
-              		  eventDataJSONObject = JSON.parse(zipEntry.asText());
-              		  //alert('JSON object Initialized');      
-              		  var $eventinfo = $("#eventinfo");
-              		  $eventinfo.html("");  
-              		   
-						$(eventDataJSONObject).each(function() {  
-							 $eventinfo.append("<div> Event Name: " + this.Name + "<br></div>");	
-              		 		 $eventinfo.append("<div> Id: " + this.Id + "<br></div>");	
-              		 		 $eventinfo.append("<div> Start Date: " + this.StartDate + "<br></div>");	
-              		   		 $eventinfo.append("<div> End Date: " + this.EndDate + "<br></div>");	
-              		   		  $eventinfo.append("<div> Participants################" + "<br></div>");	
-		              		  var participantObject = this.Participants;
-		              		   $(participantObject).each(function() {  
-		              		    $eventinfo.append("<div> First Name: " + this.FirstName +"<br></div>");	
-		              		    $eventinfo.append("<div> Last Name: " + this.LastName +"<br></div>");	
-		              		    $eventinfo.append("<div> UniqueID: " + this.UniqueID +"<br></div>");	
-		              		    $eventinfo.append("<div> Image:<img src='images/" + this.Image+"'></img><br></div>");	
-		              		    $eventinfo.append("<div> Level: " + this.Level +"<br></div>");	
-		              		    $eventinfo.append("<div> Points: " + this.Points +"<br></div>");		
-		              		    	              		     
-		              		    $eventinfo.append("<div> Performance*********" + "<br></div>");		
-		              		    
-		              		     var performanceObject = this.Performance;   
-		              		       $(performanceObject).each(function() { 
-		              		     
-		              		       	  $eventinfo.append("<div> ObjectiveID: " + this.ObjectiveID +"<br></div>");	
-		              		  		  $eventinfo.append("<div> Completed: " + this.Completed +"<br></div>");	
-		              		       		        
-		              		    }); // end of performance		              		    
-		              		    
-		              		     $eventinfo.append("<div> *********" + "<br></div>");	
-		              		   }); // end of participants
-		              		   
-		              		   $eventinfo.append("<div> ################" + "<br></div>");	
-		              		   
-		              		    $eventinfo.append("<div> Game*********" + "<br></div>");	
-		              		  
-		              		    var gameObject = this.Game;
-		              		    $(gameObject).each(function() {  
-		              		    	
-		              		    	 	  $eventinfo.append("<div>  Name: " + this.Name +"<br></div>");	
-		              		    	 	   $eventinfo.append("<div> Id: " + this.Id +"<br></div>");	
-		              		    	 	     
-		              		    	 	      $eventinfo.append("<div> Levels*********" + "<br></div>");
-		              		    	 	      var levelsObject = this.Levels;
-		              		    	 	        $(levelsObject).each(function() {  
-		              		    	 	        	 $eventinfo.append("<div>  ID: " + this.ID +"<br></div>");	
-		              		    	 	        	  $eventinfo.append("<div>  Name: " + this.Name +"<br></div>");	
-		              		    	 	        	  
-		              		    	 	        	   $eventinfo.append("<div> Objectives*********" + "<br></div>");
-		              		    	 	        	    var objectivesObject = this.Objectives;
-		              		    	 	        	     $(objectivesObject).each(function() { 
-		              		    	 	        	     	 $eventinfo.append("<div>  Name: " + this.Name +"<br></div>");	
-		              		    	 	        	     	 $eventinfo.append("<div>  ID: " + this.ID +"<br></div>");	
-		              		    	 	        	    }); // end of Objectives
-		              		    	 	        	 $eventinfo.append("<div> *********" + "<br></div>");	
-		              		    	 	        	 }); // end of Levels
-		              		    	 	      	
-		              		    	 	     	 $eventinfo.append("<div> *********" + "<br></div>");	
-		              		   
-		              		   }); // end of Game
-		              		    $eventinfo.append("<div> *********" + "<br></div>");	
-		              		   
-							}); // end of Event
-													
-              		  	     		 
-                }
-                // the content is here : zipEntry.asText()
-              });
-              // end of the magic !
-
-            } catch(e) {
-              $ul.append("<li class='error'>Error reading " + theFile.name + " : " + e.message + "</li>");
-            }
-            $result.append($ul);
-          }
-        })(f);
-
-        // read the file !
-        // readAsArrayBuffer and readAsBinaryString both produce valid content for JSZip.
-        reader.readAsArrayBuffer(f);
-        // reader.readAsBinaryString(f);
-      }
-    });
-  });
-
-
+  
 function SynchronizeDevice()
 {
 	// This function will synchronize the data for the event
@@ -240,21 +111,24 @@ function fail(error) {
     
 function LoadMetadata()
     {
-    	      alert('Start Loading Metadata..');
+    	    //  alert('Start Loading Metadata..');
+    	    $('#busy').show();		
 			  var xhr1 = new XMLHttpRequest();
-			  alert('1');
+			  //alert('1');
 			  xhr1.open('GET', 'metadata/data.txt', true);
 			  if (xhr1.overrideMimeType) {
 			    xhr1.overrideMimeType('text/plain; charset=x-user-defined');
 			  }
-			  alert('2');
+			 // alert('2');
 			  xhr1.onreadystatechange = function(e) {
-			    alert(this.readyState+'-'+this.status);
+			  //  alert(this.readyState+'-'+this.status);
 			    if (this.readyState == 4 && this.status == 200) {
 			     	  	
-			     	  	 	 // alert(zipEntry.asText());
+			     	  	 	 //****************************** EVENT OBJECT *************************************
 		              		  eventDataJSONObject = JSON.parse(this.responseText);
-		              		  //alert('JSON object Initialized');      
+		              		  //alert('JSON object Initialized');   
+		              		 
+		              		 
 		              		  var $eventinfo = $("#eventinfo");
 		              		  $eventinfo.html("");  
 		              		   
@@ -263,8 +137,57 @@ function LoadMetadata()
 		              		 		 $eventinfo.append("<div> Id: " + this.Id + "<br></div>");	
 		              		 		 $eventinfo.append("<div> Start Date: " + this.StartDate + "<br></div>");	
 		              		   		 $eventinfo.append("<div> End Date: " + this.EndDate + "<br></div>");	
-		              		   		  $eventinfo.append("<div> Participants################" + "<br></div>");	
+		              		   		 
+		              		   		 $eventinfo.append("<div> Locations ######################<br></div>");	
+		              		   		 
+		              		   		  //****************************** Locations OBJECT *************************************
+		              		   		  var locationObject = this.Locations;
+		              		   		   //------------------------ Traverse Locations : START----------------------------
+				              		       $(locationObject).each(function() { 				              		     
+				              		     
+				              		       	  $eventinfo.append("<div> ID: " + this.ID +"<br></div>");	
+				              		  		  $eventinfo.append("<div> Name: " + this.Name +"<br></div>");	
+				              		  		  $eventinfo.append("<div> City: " + this.City +"<br></div>");	
+				              		  		  $eventinfo.append("<div> State: " + this.State +"<br></div>");					              		  		  
+				              		  	  //********************* Save Performance  **************************
+				              		 	  SaveLocation(this);	
+				              		 	  //******************************************************************* 
+				              		 	  
+				              		 	  
+				              		 	   //****************************** Groups OBJECT *************************************
+				              		 	   var groupObject = this.Groups;
+				              		 	   var locationId=this.ID ;
+				              		 	   //------------------------ Traverse Groups : START----------------------------
+				              		       $(groupObject).each(function() { 				              		     
+				              		     
+				              		       	  $eventinfo.append("<div> ID: " + this.ID +"<br></div>");	
+				              		  		  $eventinfo.append("<div> Size: " + this.Size +"<br></div>");	
+				              		  		  $eventinfo.append("<div> Name: " + this.Name +"<br></div>");	
+				              		  					              		  		  
+				              		  		  
+				              		  	  //********************* Save Groups  **************************
+				              		 	   SaveGroup(this,locationId);	
+				              		 	  //******************************************************************* 
+				              		       		        
+				              		    }); // end of Groups	
+				              		    	
+				              		    //------------------------ Traverse Groups : END---------------------------- 
+				              		 	  				              		 	  
+				              		       		        
+				              		    }); // end of Locations		
+				              		    
+				              		    //------------------------ Traverse Locations : END----------------------------   
+		              		   		  
+		              		   		  //************************************Participants END************************************
+		              		   		 
+		              		   		 
+		              		   		  $eventinfo.append("<div> Participants################" + "<br></div>");					              		  
+				              		  
+				              //****************************** Participants OBJECT *************************************
+				              
 				              		  var participantObject = this.Participants;
+				              		
+				              		//------------------------ Traverse Participant : START----------------------------
 				              		   $(participantObject).each(function() {  
 				              		    $eventinfo.append("<div> First Name: " + this.FirstName +"<br></div>");	
 				              		    $eventinfo.append("<div> Last Name: " + this.LastName +"<br></div>");	
@@ -273,7 +196,8 @@ function LoadMetadata()
 				              		  var imagelocalPath = window.rootFS.fullPath +"/"+ this.Image;
 				              		  var imageName=this.Image;
 				              		  
-				              		  $.get(imagelocalPath)
+				              		 // Uncomment before deploying to Device..
+				              		 /* $.get(imagelocalPath)
 									    .done(function() { 
 									        // exists code 
 									        // Do nothing
@@ -283,52 +207,102 @@ function LoadMetadata()
 									         downloadFile(imageName);
 									    });
 													              		  
-				              		   
+				              		   */
 				              		    $eventinfo.append("<div> Image:<img src='"+window.rootFS.fullPath +"/"+ this.Image+"'></img><br></div>");	
 				              		    $eventinfo.append("<div> Level: " + this.Level +"<br></div>");	
 				              		    $eventinfo.append("<div> Points: " + this.Points +"<br></div>");		
-				              		    	              		     
+				              		    	              
+				              		    //************** Save grantee  ********************************
+				              		    var userUniqueId = this.UniqueID;
+				              		    SaveGrantee(this);	
+				              		   //**************************************************************            
+				              		    	              	     
 				              		    $eventinfo.append("<div> Performance*********" + "<br></div>");		
 				              		    
+				              		    
+				              		     //****************************** Performance OBJECT *************************************
 				              		     var performanceObject = this.Performance;   
-				              		       $(performanceObject).each(function() { 
+				              		     
+				              		     //------------------------ Traverse Performance : START----------------------------
+				              		       $(performanceObject).each(function() { 				              		     
 				              		     
 				              		       	  $eventinfo.append("<div> ObjectiveID: " + this.ObjectiveID +"<br></div>");	
 				              		  		  $eventinfo.append("<div> Completed: " + this.Completed +"<br></div>");	
+				              		  		  
+				              		  	  //********************* Save Performance  **************************
+				              		 	   SaveGranteePerformance(this,userUniqueId);	
+				              		 	  //******************************************************************* 
 				              		       		        
-				              		    }); // end of performance		              		    
+				              		    }); // end of performance		
+				              		    //------------------------ Traverse Performance : END----------------------------              		    
 				              		    
 				              		     $eventinfo.append("<div> *********" + "<br></div>");	
 				              		   }); // end of participants
+
+
+				              		   
+				              		  //------------------------ Traverse Participant : END----------------------------
+				              		  
+				              		  
 				              		   
 				              		   $eventinfo.append("<div> ################" + "<br></div>");	
 				              		   
 				              		    $eventinfo.append("<div> Game*********" + "<br></div>");	
 				              		  
+				              		  
+				              		   //****************************** Game OBJECT *************************************
 				              		    var gameObject = this.Game;
+				              		    
+				              		    //------------------------ Traverse Game : START----------------------------
 				              		    $(gameObject).each(function() {  
 				              		    	
-				              		    	 	  $eventinfo.append("<div>  Name: " + this.Name +"<br></div>");	
-				              		    	 	   $eventinfo.append("<div> Id: " + this.Id +"<br></div>");	
+				              		    	 	   $eventinfo.append("<div>  Name: " + this.Name +"<br></div>");	
+				              		    	 	   $eventinfo.append("<div> Id: " + this.ID +"<br></div>");	
+				              		    	 	     
+				              		    	 	      //********************* Save Game  **************************
+				              		 	   				SaveGame(this);	
+				              		 	 			 //************************************************************* 
 				              		    	 	     
 				              		    	 	      $eventinfo.append("<div> Levels*********" + "<br></div>");
+				              		    	 	      
+				              		    //****************************** Levels OBJECT *************************************
 				              		    	 	      var levelsObject = this.Levels;
+				              		    	 	      
+				              		    	 	      
+				              		    //------------------------ Traverse Levels : START----------------------------
 				              		    	 	        $(levelsObject).each(function() {  
 				              		    	 	        	 $eventinfo.append("<div>  ID: " + this.ID +"<br></div>");	
 				              		    	 	        	  $eventinfo.append("<div>  Name: " + this.Name +"<br></div>");	
 				              		    	 	        	  
+				              		    	 	        	  var levelId=this.ID;
+				              		    	 	        	   //********************* Save Level  **************************
+				              		 	   						SaveLevel(this);	
+				              		 	 					   //************************************************************* 
+				              		    	 	        	  
 				              		    	 	        	   $eventinfo.append("<div> Objectives*********" + "<br></div>");
+				              		    	 	        	   
+				              		    //****************************** Objectives OBJECT *************************************
 				              		    	 	        	    var objectivesObject = this.Objectives;
+				              		    	 	        	    
+				              		   //------------------------ Traverse Objectives : START-----------------------------------
 				              		    	 	        	     $(objectivesObject).each(function() { 
 				              		    	 	        	     	 $eventinfo.append("<div>  Name: " + this.Name +"<br></div>");	
 				              		    	 	        	     	 $eventinfo.append("<div>  ID: " + this.ID +"<br></div>");	
+				              		    	 	        	     	
+				              		    	 	        	     	 //********************* Save Objective  **************************
+				              		 	   									SaveObjective(this,levelId);	
+				              		 	 					  		 //****************************************************************
 				              		    	 	        	    }); // end of Objectives
+				              		    	 	        	    
+				              		  //------------------------ Traverse Objectives : END-----------------------------------
 				              		    	 	        	 $eventinfo.append("<div> *********" + "<br></div>");	
 				              		    	 	        	 }); // end of Levels
-				              		    	 	      	
+				              		    	 	        	 
+				              		  //------------------------ Traverse Levels : END----------------------------
 				              		    	 	     	 $eventinfo.append("<div> *********" + "<br></div>");	
 				              		   
 				              		   }); // end of Game
+				              		    //------------------------ Traverse Game : END----------------------------
 				              		    $eventinfo.append("<div> *********" + "<br></div>");	
 				              		   
 									}); // end of Event
@@ -340,7 +314,312 @@ function LoadMetadata()
 			    }
 			  };			
 			  xhr1.send();
+			  $('#busy').hide();
     }
     
+    function SaveGrantee(granteeObj)
+    {
+    	//alert(granteeObj.FirstName);
+    	var sql ="INSERT INTO Grantee (firstName,lastName,uniqueID,image,level,points,location,state,localgroup,city) VALUES ('" + granteeObj.FirstName +"','"
+		+ granteeObj.LastName +"',"+ "'"+granteeObj.UniqueID+"','"+ granteeObj.Image +"'"+",'"+granteeObj.Level+"','0','"+granteeObj.FirstName+"','"+
+		granteeObj.FirstName +"','"+granteeObj.FirstName+"','"+granteeObj.FirstName +"')"; 
+	
+	   
+	    
+	     db.transaction(function(tx)
+	     {	     	
+	     	tx.executeSql(sql);	     	
+	     }
+	     , transaction_error, SaveDB_success);
+			
+    }    
     
+    function SaveGranteePerformance(granteePerformanceObj,userUniqueId)
+    {
+    	//alert(userUniqueId + '#'+ granteePerformanceObj.ObjectiveID + '-' + granteePerformanceObj.Completed );
+    	    	
+    	var sql ="INSERT INTO Performance (uniqueID,objectiveID,completed) VALUES ('" + userUniqueId +"','"
+		+ granteePerformanceObj.ObjectiveID +"',"+ "'"+granteePerformanceObj.Completed +"')"; 
+		       
+	     db.transaction(function(tx)
+	     {	     	
+	     	tx.executeSql(sql);	     	
+	     }
+	     , transaction_error, SaveDB_success);
+	     
+		
+    }   
+    function SaveGame(gameObj)
+    {
+    	   	    	
+    	var sql ="INSERT INTO Game (ID,Name) VALUES ('" + gameObj.ID +"','"
+		+ gameObj.Name +"')"; 
+		       
+	     db.transaction(function(tx)
+	     {	     	
+	     	tx.executeSql(sql);	     	
+	     }
+	     , transaction_error, SaveDB_success);
+    }   
+    
+    function SaveLevel(levelObj)
+    {
+    	   	    	
+    	var sql ="INSERT INTO Levels (ID,Name) VALUES ('" + levelObj.ID +"','"
+		+ levelObj.Name +"')"; 
+		       
+	     db.transaction(function(tx)
+	     {	     	
+	     	tx.executeSql(sql);	     	
+	     }
+	     , transaction_error, SaveDB_success);
+    }   
+    
+    function SaveObjective(objectiveObj,levelId)
+    {
+    	   	    	
+    	var sql ="INSERT INTO Objectives (ID,Name,LevelId) VALUES ('" + objectiveObj.ID 
+    	+"','"+ objectiveObj.Name +"','"+ levelId +"')"; 
+		       
+	     db.transaction(function(tx)
+	     {	     	
+	     	tx.executeSql(sql);	     	
+	     }
+	     , transaction_error, SaveDB_success);
+    }  
+    
+    function SaveLocation(locationObj)
+    {
+    	   	    	
+    	var sql ="INSERT INTO Locations (ID,Name,City,State) VALUES ('" + locationObj.ID +"','"
+		+ locationObj.Name +"','" + locationObj.City +"','" + locationObj.State +  "')"; 
+		       
+	     db.transaction(function(tx)
+	     {	     	
+	     	tx.executeSql(sql);	     	
+	     }
+	     , transaction_error, SaveDB_success);
+    } 
+    
+    function SaveGroup(groupObj,locationId)
+    {
+    	   	    	
+    	var sql ="INSERT INTO Groups (ID,Name,Size,LocationId) VALUES ('" + groupObj.ID +"','"
+		+ groupObj.Name +"','"+ groupObj.Size +"','"+ locationId +   "')"; 
+		
+	     db.transaction(function(tx)
+	     {	     	
+	     	tx.executeSql(sql);	     	
+	     }
+	     , transaction_error, SaveDB_success);
+    } 
+     
+    
+function SaveDB_success() {
+	//alert('SaveGranteeDB_success');	
+}
+
+    
+function transaction_error(tx, error) {
+	$('#busy').hide();
+    alert("Database Error: " + error);
+}
+
+function  CleanTables()
+    {
+    	//alert('Clean Tables');
+    	$('#busy').show();
+    	/*------------------ delete and recreate all the tables ----------------------------------*/
+    	
+    	// Delete and Recreate grantee Table 
+    	db.transaction(function(tx)
+	     {	     	
+	     	tx.executeSql('DROP TABLE IF EXISTS Grantee');    	
+	     }
+	     , transaction_error, SaveDB_success);
+    	
+    	var sqlDeleteGrantee = 
+						"CREATE TABLE IF NOT EXISTS Grantee ( "+
+						"id INTEGER PRIMARY KEY AUTOINCREMENT, " +		
+						"firstName VARCHAR(50), " +
+						"lastName VARCHAR(50), " +
+						"uniqueID VARCHAR(50), " +
+						"image VARCHAR(100), " + 
+						"level INTEGER, " +
+						"points INTEGER, " +
+						"location VARCHAR(100), " +
+						"state VARCHAR(100), " +
+						"localgroup VARCHAR(100), " +
+						"city VARCHAR(100), " +
+						"isnew INTEGER)";
+		
+		db.transaction(function(tx)
+	     {	     	
+	     	tx.executeSql(sqlDeleteGrantee);    	
+	     }
+	     , transaction_error, DeleteTable_success);
+    	
+    	
+    	// Delete and Recreate granteeperformance Table 
+    	
+    	db.transaction(function(tx)
+	     {	     	
+	     	tx.executeSql('DROP TABLE IF EXISTS Performance');    	
+	     }
+	     , transaction_error, SaveDB_success);
+    	
+    	var sqlDeleteGranteePerformance = 
+						"CREATE TABLE IF NOT EXISTS Performance ( "+
+						"performanceid INTEGER PRIMARY KEY AUTOINCREMENT, " +							
+						"uniqueID VARCHAR(50), " +
+						"objectiveID  VARCHAR(10), " +						
+						"completed INTEGER)";
+		
+		
+		db.transaction(function(tx)
+	     {	     	
+	     	tx.executeSql(sqlDeleteGranteePerformance);    	
+	     }
+	     , transaction_error, DeleteTable_success);    	    		
+    	
+    	
+    	//********************************* Delete and Recreate game Table ******************************
+    	
+    	db.transaction(function(tx)
+	     {	     	
+	     	tx.executeSql('DROP TABLE IF EXISTS Game');    	
+	     }
+	     , transaction_error, SaveDB_success);
+    	
+    	var sqlDeleteGame = 
+						"CREATE TABLE IF NOT EXISTS Game ( "+												
+						"ID VARCHAR(10), " +										
+						"Name VARCHAR(100))";
+		
+		
+		db.transaction(function(tx)
+	     {	     	
+	     	tx.executeSql(sqlDeleteGame);    	
+	     }
+	     , transaction_error, DeleteTable_success);  
+	     
+	     //**********************************************************************************************
+	     
+	     //********************************* Delete and Recreate game Table ******************************
+    	
+    	db.transaction(function(tx)
+	     {	     	
+	     	tx.executeSql('DROP TABLE IF EXISTS Levels');    	
+	     }
+	     , transaction_error, SaveDB_success);
+    	
+    	var sqlDeleteLevels = 
+						"CREATE TABLE IF NOT EXISTS Levels ( "+												
+						"ID VARCHAR(10), " +										
+						"Name VARCHAR(100))";
+		
+		
+		db.transaction(function(tx)
+	     {	     	
+	     	tx.executeSql(sqlDeleteLevels);    	
+	     }
+	     , transaction_error, DeleteTable_success);  
+	     
+	     //**********************************************************************************************
+	     
+	     //********************************* Delete and Recreate game Table ******************************
+    	
+    	db.transaction(function(tx)
+	     {	     	
+	     	tx.executeSql('DROP TABLE IF EXISTS Objectives');    	
+	     }
+	     , transaction_error, SaveDB_success);
+    	
+    	var sqlDeleteObjectives = 
+						"CREATE TABLE IF NOT EXISTS Objectives ( "+												
+						"ID VARCHAR(10), " +		
+						"Name VARCHAR(100), " +									
+						"LevelId VARCHAR(10))";
+		
+		
+		db.transaction(function(tx)
+	     {	     	
+	     	tx.executeSql(sqlDeleteObjectives);    	
+	     }
+	     , transaction_error, DeleteTable_success);  
+	     
+	     //**********************************************************************************************    
+	     
+	     
+	     
+	    //********************************* Delete and Recreate Locations Table ******************************
+    	
+    	db.transaction(function(tx)
+	     {	     	
+	     	tx.executeSql('DROP TABLE IF EXISTS Locations');    	
+	     }
+	     , transaction_error, SaveDB_success);
+    	
+    	var sqlDeleteLocations = 
+						"CREATE TABLE IF NOT EXISTS Locations ( "+												
+						"ID VARCHAR(10), " +
+						"Name VARCHAR(100), " +		
+						"City VARCHAR(100), " +							
+						"State VARCHAR(100))";
+		
+		
+		db.transaction(function(tx)
+	     {	     	
+	     	tx.executeSql(sqlDeleteLocations);    	
+	     }
+	     , transaction_error, DeleteTable_success);  
+	     
+	     //**********************************************************************************************    
+	     	     
+	     	     
+	     //********************************* Delete and Recreate Groups Table ******************************
+    	
+    	db.transaction(function(tx)
+	     {	     	
+	     	tx.executeSql('DROP TABLE IF EXISTS Groups');    	
+	     }
+	     , transaction_error, SaveDB_success);
+    	
+    	var sqlDeleteGroups = 
+						"CREATE TABLE IF NOT EXISTS Groups ( "+												
+						"ID VARCHAR(10), " +
+						"Name VARCHAR(100), " +		
+						"Size INTEGER, " +								
+						"LocationId VARCHAR(10))";
+		
+		
+		db.transaction(function(tx)
+	     {	     	
+	     	tx.executeSql(sqlDeleteGroups);    	
+	     }
+	     , transaction_error, DeleteTableComplete_success);  
+	     
+	     //**********************************************************************************************  
+    	
+    }
+    
+    // function to be called at last
+    function DeleteTable_success() {
+	
+}
+ function DeleteTableComplete_success() {
+	$('#busy').hide();
+}
+
+/*
+ * 
+var myObject = new Object();
+myObject.name = "John";
+myObject.age = 12;
+myObject.pets = ["cat", "dog"];
+
+var myString = JSON.stringify(myObject);
+ * 
+ */
+
     

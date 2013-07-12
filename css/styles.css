@@ -145,6 +145,20 @@ li .action-icon {
     z-index: 1;
 }
 
+#header .right1 {
+    position: absolute;
+    top: 7px;
+    right: 6px;
+    z-index: 1;
+}
+
+#header .right2 {
+    position: absolute;
+    top: 7px;
+    right: 70px;
+    z-index: 1;
+}
+
 #header a {
     width: auto;
     min-width: 40px;    

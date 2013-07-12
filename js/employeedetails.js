@@ -119,4 +119,8 @@ function RedirectToPage(pageUrl) {
 	//alert("Employee Deleted");		
     window.location=pageUrl;
 }
-
+/*<select name="toggleswitch1" id="toggleswitch1" data-theme="b" data-role="slider" class="ui-slider-switch">
+      <option value="off">Off</option>
+      <option value="on">On</option>
+    </select>
+    */

@@ -65,19 +65,20 @@ function populateDB(tx) {
 	$('#busy').show();
    // tx.executeSql('DROP TABLE IF EXISTS grantee');
 	var sql = 
-		"CREATE TABLE IF NOT EXISTS grantee ( "+
-		"id INTEGER PRIMARY KEY AUTOINCREMENT, " +		
-		"firstName VARCHAR(50), " +
-		"lastName VARCHAR(50), " +
-		"uniqueID VARCHAR(50), " +
-		"image VARCHAR(100), " + 
-		"level INTEGER, " +
-		"points INTEGER, " +
-		"location VARCHAR(100), " +
-		"state VARCHAR(100), " +
-		"localgroup VARCHAR(100), " +
-		"city VARCHAR(100))";
-    tx.executeSql(sql);
+						"CREATE TABLE IF NOT EXISTS grantee ( "+
+						"id INTEGER PRIMARY KEY AUTOINCREMENT, " +		
+						"firstName VARCHAR(50), " +
+						"lastName VARCHAR(50), " +
+						"uniqueID VARCHAR(50), " +
+						"image VARCHAR(100), " + 
+						"level INTEGER, " +
+						"points INTEGER, " +
+						"location VARCHAR(100), " +
+						"state VARCHAR(100), " +
+						"localgroup VARCHAR(100), " +
+						"city VARCHAR(100), " +
+						"isnew INTEGER)";
+		
 
 	
 	/*

@@ -72,7 +72,7 @@ function addEmployeeInDB(tx)
 	$('#busy').show();		
 	var sql ="INSERT INTO grantee (firstName,lastName,uniqueID,image,level,points,location,state,localgroup,city) VALUES ('" + $('#firstName').val() +"','"
 	+$('#lastName').val() +"',"+ "'"+$('#uid').val()+"','"+ $('#uid').val() +".jpg'"+",'"+$('#level').val() +"','0','"+$('#location').val() +"','"+
-	$('#state').val() +"','"+$('#localgroup').val() +"','"+$('#city').val() +"')"; 
+	$('#state').val() +"','"+$('#localgroup').val() +"','"+$('#city').val() +"',1"')"; 
 	
 	tx.executeSql(sql);
 	//alert('Query Executed');
