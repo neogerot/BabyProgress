@@ -40,6 +40,12 @@ body {
     z-index: 1;
 }
 
+#header .left2 {
+    position: absolute;
+    top: 6px;
+    left: 100px;   
+    z-index: 1;
+}
 
 #header .right {
     position: absolute;

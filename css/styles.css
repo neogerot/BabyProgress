@@ -138,6 +138,13 @@ li .action-icon {
     z-index: 1;
 }
 
+#header .left2 {
+    position: absolute;
+    top: 6px;
+    left: 80px;   
+    z-index: 1;
+}
+
 #header .right {
     position: absolute;
     top: 7px;
