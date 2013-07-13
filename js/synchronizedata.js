@@ -50,7 +50,7 @@ function RedirectToPage(pageUrl) {
 document.addEventListener("deviceready", onDeviceReady, false);
 
 function onDeviceReady() {	
-    db = window.openDatabase("GranteeDirectoryDB", "1.0", "PhoneGap Demo", 200000);
+    db = window.openDatabase("GranteeDirectoryDB", "1.0", "PhoneGap Demo", 200000);    
     
 }
   
@@ -71,7 +71,7 @@ function OpenZip()
 
 //http://107.21.201.107/ziphandler/default.aspx
 function downloadFile(imagename){
-	   alert('download start'+imagename);
+	 //  alert('download start'+imagename);
         window.requestFileSystem(
                      LocalFileSystem.PERSISTENT, 0, 
                      function onFileSystemSuccess(fileSystem) {
@@ -81,13 +81,13 @@ function downloadFile(imagename){
                                  var sPath = fileEntry.fullPath.replace("dummy.html","");
                                  var fileTransfer = new FileTransfer();
                                  fileEntry.remove();
- 								 alert('downloading..'+imagename);
+ 								// alert('downloading..'+imagename);
                                 
                                  fileTransfer.download(
                                            "http://107.21.201.107/ziphandler/images/"+imagename,
                                            sPath + imagename,
                                            function(theFile) {
-                                           alert('download complete'+imagename);
+                                         //  alert('download complete'+imagename);
                                            console.log("download complete: " + theFile.toURI());
                                            showLink(theFile.toURI());
                                            },
@@ -314,9 +314,13 @@ function LoadMetadata()
 			    }
 			  };			
 			  xhr1.send();
-			  $('#busy').hide();
-			  alert('Loading Metadata Completed..');
+			
     }
+ 
+function MetadataLoadComplete_success() {
+	$('#busy').hide();
+	alert('Loading Metadata Completed..');
+}
     
     function SaveGrantee(participantObj)
     {
@@ -384,7 +388,7 @@ function LoadMetadata()
 	     {	     	
 	     	tx.executeSql(sql);	     	
 	     }
-	     , transaction_error, SaveDB_success);
+	     , transaction_error, MetadataLoadComplete_success);
     }  
     
     function SaveLocation(locationObj)
@@ -616,6 +620,7 @@ function  CleanTables()
  function DeleteTableComplete_success() {
 	$('#busy').hide();
 }
+
 
 /*
  * 

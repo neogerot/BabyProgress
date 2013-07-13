@@ -1,6 +1,7 @@
 var id = 0;
 var db;
 
+/*
 var clickOk = true;
 $('#btnAdd').on('vclick', function () {
     if (clickOk === true) {
@@ -13,6 +14,7 @@ $('#btnAdd').on('vclick', function () {
     }
     return false;
 });
+*/
 
 document.addEventListener("deviceready", onDeviceReady, false);
 
@@ -33,7 +35,10 @@ function onDeviceReady() {
 		
 	$('#busy').hide();
 	$('#uid').val(guid());
+	
 }
+
+
 // Get querystring parameter
 function getUrlVars() {
     var vars = [], hash;
