@@ -59,7 +59,7 @@ function getEmployee_success(tx, results) {
 	
 	var photopath="/sdcard";
 	var imagelocalPath = window.rootFS.fullPath +"/"+ employee.Image;
-	alert(imagelocalPath);
+	//alert(imagelocalPath);
 	
 	
 	 // Uncomment before deploying to Device..
@@ -67,6 +67,8 @@ function getEmployee_success(tx, results) {
 	    .done(function() { 
 	        // exists code 
 	    photopath=imagelocalPath;
+	    if(employee.Image=='')
+	        photopath ="img/person_blank.png";
 	    }).fail(function() { 
 	        // not exists code
 	       photopath ="img/person_blank.png";
