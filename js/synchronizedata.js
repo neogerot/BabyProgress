@@ -73,17 +73,18 @@ function OpenZip()
 //http://107.21.201.107/ziphandler/default.aspx
 function downloadFile(imagename){
 	   alert('download start'+imagename);      
-	    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSys) { 
-       fileSys.root.getDirectory("photos", {create: true, exclusive: false}, function(dir) { 
+	   
+       window.rootFS.getDirectory("photos", {create: true, exclusive: false}, function(dir) { 
                 // Directory for downloaded photos created..
                 fileTransfer.download(
                                            "http://107.21.201.107/ziphandler/images/"+imagename,
-                                           dir +"/"+ imagename,
+                                           dir + imagename,
                                            function(theFile) {
                                            alert("download complete");
                                            console.log("download complete: " + theFile.toURI());                                          
                                            },
                                            function(error) {
+                                           	alert(error.code);
                                            console.log("download error source " + error.source);
                                            console.log("download error target " + error.target);
                                            console.log("upload error code: " + error.code);
@@ -92,7 +93,6 @@ function downloadFile(imagename){
                 
                 
             }, fail); 
-          },fail);
         
        /*
         window.requestFileSystem(
