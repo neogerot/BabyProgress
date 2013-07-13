@@ -319,7 +319,7 @@ function LoadMetadata()
  
 function MetadataLoadComplete_success() {
 	$('#busy').hide();
-	alert('Loading Metadata Completed..');
+	//alert('Loading Metadata Completed..');
 }
     
     function SaveGrantee(participantObj)
