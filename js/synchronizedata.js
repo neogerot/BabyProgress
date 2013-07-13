@@ -42,7 +42,7 @@ function RedirectToPage(pageUrl) {
 	//alert("got filesystem");	   
 }
 
-  document.addEventListener('deviceready', function() {                
+    document.addEventListener('deviceready', function() {                
     window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
     window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS, fail);
 }, false);

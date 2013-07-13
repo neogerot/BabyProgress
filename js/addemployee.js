@@ -1,20 +1,45 @@
 var id = 0;
 var db;
+var scroll;
+function loaded() {
+	//alert('loaded');
+	setTimeout(function () { 
+                scroll = new iScroll('wrapper', {
+		useTransform: false,
+		onBeforeScrollStart: function (e) {
+			var target = e.target;
+			while (target.nodeType != 1) target = target.parentNode;
 
-/*
-var clickOk = true;
-$('#btnAdd').on('vclick', function () {
-    if (clickOk === true) {
-        clickOk = false;
-        setTimeout(function () {
-            clickOk = true;
-        }, 350);
-        //run click code now
-         RedirectToPage('index.html'); 
-    }
-    return false;
-});
-*/
+		
+		if (target.tagName != 'SELECT' && target.tagName != 'INPUT' && target.tagName != 'TEXTAREA')
+				e.preventDefault();
+		}
+	});
+        }, 100); 
+ }
+
+document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+document.addEventListener('DOMContentLoaded', loaded, false);
+
+
+window.addEventListener('load', function() {
+		var buttonBack;	
+		var buttonCapture;	
+		buttonBack = document.getElementById('btnBack');
+		buttonCapture = document.getElementById('btnCaptureImage');
+
+		// Android 2.2 needs FastClick to be instantiated before the other listeners so that the stopImmediatePropagation hack can work.
+		FastClick.attach(buttonBack);		
+
+		buttonBack.addEventListener('touchend', function(event) {
+			 RedirectToPage('index.html'); 
+		}, false);
+		
+		buttonCapture.addEventListener('touchend', function(event) {
+			 capturePhoto();
+		}, false);
+		
+	}, false);
 
 document.addEventListener("deviceready", onDeviceReady, false);
 
@@ -62,6 +87,10 @@ function s4() {
 function guid() {
   return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
          s4() + '-' + s4() + s4() + s4();
+ 
+   setTimeout(function(){
+		scroll.refresh();
+	},100);
 }
 
 // Redirect to the Home Page

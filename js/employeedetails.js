@@ -67,8 +67,10 @@ function getEmployee_success(tx, results) {
 	    .done(function() { 
 	        // exists code 
 	    photopath=imagelocalPath;
-	    if(employee.Image=='')
-	        photopath ="img/person_blank.png";
+	    alert(photopath);
+	    if(endsWith(imagelocalPath,'/'))
+	      photopath ="img/person_blank.png";
+	   
 	    }).fail(function() { 
 	        // not exists code
 	       photopath ="img/person_blank.png";
@@ -89,6 +91,10 @@ function getEmployee_success(tx, results) {
 	//db = null;
 	
 	db.transaction(getObjectives, transaction_error);
+}
+
+function endsWith(str, suffix) {
+    return str.indexOf(suffix, str.length - suffix.length) !== -1;
 }
 
 // load Objectives of the Participant

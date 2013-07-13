@@ -14,46 +14,7 @@
   
 
   <!-- Extra Codiqa features -->  
- 
-   <script type="text/javascript">
-
-var myScroll;
-function loaded() {
-	//alert('loaded');
-	setTimeout(function () { 
-                myScroll = new iScroll('wrapper', {
-		useTransform: false,
-		onBeforeScrollStart: function (e) {
-			var target = e.target;
-			while (target.nodeType != 1) target = target.parentNode;
-
-		
-		if (target.tagName != 'SELECT' && target.tagName != 'INPUT' && target.tagName != 'TEXTAREA')
-				e.preventDefault();
-		}
-	});
-        }, 100); 
- }
-
-document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
-document.addEventListener('DOMContentLoaded', loaded, false);
-
-
-window.addEventListener('load', function() {
-		var testB;	
-		testB = document.getElementById('btnBack');
-
-		// Android 2.2 needs FastClick to be instantiated before the other listeners so that the stopImmediatePropagation hack can work.
-		FastClick.attach(testB);		
-
-		testB.addEventListener('touchend', function(event) {
-			 RedirectToPage('index.html'); 
-		}, false);
-		
-	}, false);
-
-
-</script>
+  
 </head>
 <body>
 <!-- Home -->
@@ -71,8 +32,8 @@ window.addEventListener('load', function() {
 	<ul>	
 		<li>
 			<div id="capture">						
-			 <a id="btnCaptureImage" onclick="capturePhoto()" class="left">Capture Image</a>
-			 <img id="imgCaptured" src="pics/blank.gif"/>	
+				 <a id="btnCaptureImage" class="left">Capture Image</a>
+				 <img id="imgCaptured" src="pics/blank.gif"/>	
 			</div>
 		</li>				  
        <li>       
