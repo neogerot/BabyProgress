@@ -11,7 +11,7 @@ body {
 }
 
 #header {
-    height: 45px;
+    height: 100px;
     width: 100%;
     margin: 0;
     padding: 0;
@@ -43,7 +43,7 @@ body {
 #header .left2 {
     position: absolute;
     top: 6px;
-    left: 100px;   
+    left: 20px;   
     z-index: 1;
 }
 
@@ -57,13 +57,13 @@ body {
 
 #header a {
     width: auto;
-    min-width: 40px;    
-    height: 30px; 
+    min-width: 90px;    
+    height: 70px; 
     margin: 0;
     padding: 0 5px;
     overflow: hidden;
 
-    line-height: 30px;
+    line-height: 70px;
     font-family: inherit;
     font-size: 12px;
     font-weight: bold;
