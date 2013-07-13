@@ -35,11 +35,12 @@ function RedirectToPage(pageUrl) {
     // save the file system for later access
    // console.log(fileSystem.root.fullPath);
     window.rootFS = fileSystem.root;
-	$('#btnSynchronize').attr('onclick',"downloadFile('010001.jpg');");
+	//$('#btnSynchronize').attr('onclick',"downloadFile('010001.jpg');");
 	$('#btnLoadMetadata').attr('onclick',"LoadMetadata();");
 	$('#btnCleanTables').attr('onclick',"CleanTables();");
 	
-	//alert("got filesystem");	   
+	//alert("got filesystem");	  
+	downloadFile('010001.jpg'); 
 }
 
     document.addEventListener('deviceready', function() {                
@@ -71,7 +72,29 @@ function OpenZip()
 
 //http://107.21.201.107/ziphandler/default.aspx
 function downloadFile(imagename){
-	 //  alert('download start'+imagename);
+	   alert('download start'+imagename);      
+	    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSys) { 
+       fileSys.root.getDirectory("photos", {create: true, exclusive: false}, function(dir) { 
+                // Directory for downloaded photos created..
+                fileTransfer.download(
+                                           "http://107.21.201.107/ziphandler/images/"+imagename,
+                                           dir +"/"+ imagename,
+                                           function(theFile) {
+                                           alert("download complete");
+                                           console.log("download complete: " + theFile.toURI());                                          
+                                           },
+                                           function(error) {
+                                           console.log("download error source " + error.source);
+                                           console.log("download error target " + error.target);
+                                           console.log("upload error code: " + error.code);
+                                           }
+                                           );
+                
+                
+            }, fail); 
+          },fail);
+        
+       /*
         window.requestFileSystem(
                      LocalFileSystem.PERSISTENT, 0, 
                      function onFileSystemSuccess(fileSystem) {
@@ -101,6 +124,7 @@ function downloadFile(imagename){
                                  fail);
                      }, 
                      fail);
+                */
  
     }    
 
@@ -196,16 +220,19 @@ function LoadMetadata()
 				              		  var imagelocalPath = window.rootFS.fullPath +"/"+ this.Image;
 				              		  var imageName=this.Image;
 				              		  
-				              		 // Uncomment before deploying to Device..
-				              		  $.get(imagelocalPath)
-									    .done(function() { 
-									        // exists code 
-									        // Do nothing
-									    }).fail(function() { 
-									        // not exists code
-									        // Download									        
-									         downloadFile(imageName);
-									    });
+				              		  if(imageName!='')
+				              		  {
+						              		 // Uncomment before deploying to Device..
+						              		  $.get(imagelocalPath)
+											    .done(function() { 
+											        // exists code 
+											        // Do nothing
+											    }).fail(function() { 
+											        // not exists code
+											        // Download									        
+											         downloadFile(imageName);
+											    });
+									    }
 													              		  
 				              		  
 				              		    $eventinfo.append("<div> Image:<img src='"+window.rootFS.fullPath +"/"+ this.Image+"'></img><br></div>");	

@@ -73,7 +73,7 @@ function getEmployee_success(tx, results) {
 	   
 	    }).fail(function() { 
 	        // not exists code
-	       photopath ="img/person_blank.png";
+	        photopath ="img/person_blank.png";
 	    });
 
 	$('#employeePic').attr('src', photopath);
