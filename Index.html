@@ -3,15 +3,37 @@
     <head>
         <title>Grantee Directory</title>
         <meta name="viewport" content="width=device-width,initial-scale=1"/>
-        <link rel="stylesheet" href="css/styles.css" />        
+        <link rel="stylesheet" href="css/styles.css" />      
+          <script type="text/javascript">
+		    window.addEventListener('load', function() {
+				var buttonAdd;	
+				var buttonSynchronize;
+				buttonAdd = document.getElementById('btnAdd');
+				buttonSynchronize = document.getElementById('btnSynchronize');
+		
+				// Android 2.2 needs FastClick to be instantiated before the other listeners so that the stopImmediatePropagation hack can work.
+				FastClick.attach(buttonAdd);	
+				FastClick.attach(buttonSynchronize);			
+		
+				buttonAdd.addEventListener('touchend', function(event) {
+					RedirectToPage('addemployeenew.html');
+				}, false);
+				
+				buttonSynchronize.addEventListener('touchend', function(event) {
+					RedirectToPage('synchronize.html');
+				}, false);
+				
+			}, false);
+    	
+    </script>  
     </head>
 
     <body>
         
 	<div id="header" class="header">		
 		<h1>Grantee Directory</h1>			
-		<a id="btnAdd" onclick="RedirectToPage('addemployeenew.html')" class="right2">Add</a>
-		<a id="btnSynchronize" onclick="RedirectToPage('synchronize.html')" class="right">Sync</a>	
+		<a id="btnAdd" class="right2">Add</a>
+		<a id="btnSynchronize" class="right">Sync</a>	
 		  			
    			
 	</div>
@@ -26,13 +48,14 @@
 		<ul id="employeeList" class="icon-list"></ul>
 	</div>
 
-	<div id="busy"/>Loading...</div>
+	<div id="busy">Loading...</div>
     <div id="footer">@2013</div>
     
 	<script src="phonegap.js"></script>
     <script src="js/jquery.js"></script>
     <script src="js/iscroll-lite.js"></script>
     <script src="js/employeelist.js"></script>
+    <script src="js/fastclick.js"></script> 
 
     </body>
 
