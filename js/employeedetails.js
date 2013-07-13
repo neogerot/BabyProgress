@@ -6,19 +6,22 @@ var db;
 
 document.addEventListener("deviceready", onDeviceReady, false);
 
-// function gotFS(fileSystem) {
-    // console.log("got filesystem");
-	// alert("got filesystem");
-    // // save the file system for later access
-    // console.log(fileSystem.root.fullPath);
-    // window.rootFS = fileSystem.root;	
-	// alert("assigned filesystem");
-// }
+/*  File System 
+   * 
+   */
+  function gotFS(fileSystem) {
+    console.log("got filesystem");
+    // save the file system for later access
+   // console.log(fileSystem.root.fullPath);
+    window.rootFS = fileSystem.root;	
+	//alert("got filesystem");	   
+}
 
-// document.addEventListener('deviceready', function() {                
-    // window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
-    // window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS, fail);
-// }, false);
+  document.addEventListener('deviceready', function() {                
+    window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
+    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS, fail);
+}, false);
+  
 
 function onDeviceReady() {
 	console.log("opening database");
@@ -55,7 +58,21 @@ function getEmployee_success(tx, results) {
 	var employee = results.rows.item(0);
 	
 	var photopath="/sdcard";
-	$('#employeePic').attr('src', photopath + '/photos/' + employee.Image);
+	var imagelocalPath = window.rootFS.fullPath +"/"+ employee.Image;
+	alert(imagelocalPath);
+	
+	
+	 // Uncomment before deploying to Device..
+	$.get(imagelocalPath)
+	    .done(function() { 
+	        // exists code 
+	    photopath=imagelocalPath;
+	    }).fail(function() { 
+	        // not exists code
+	       photopath ="img/person_blank.png";
+	    });
+
+	$('#employeePic').attr('src', photopath);
 	$('#fullName').text(employee.FirstName + ' ' + employee.LastName);
 	$('#location').text(employee.LocationID);
 	//$('#city').text(employee.city);
