@@ -111,7 +111,7 @@ function fail(error) {
     
 function LoadMetadata()
     {
-    	    alert('Start Loading Metadata..');
+    	   // alert('Start Loading Metadata..');
     	    $('#busy').show();		
 			  var xhr1 = new XMLHttpRequest();
 			  //alert('1');

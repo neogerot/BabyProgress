@@ -4,7 +4,21 @@
         <title>Grantee Directory</title>
         <meta name="viewport" content="width=device-width,initial-scale=1"/>
         <link rel="stylesheet" href="css/styles.css" />   
-   
+	   <script type="text/javascript">
+	    	window.addEventListener('load', function() {
+			var testB;	
+			testB = document.getElementById('btnBack');
+	
+			// Android 2.2 needs FastClick to be instantiated before the other listeners so that the stopImmediatePropagation hack can work.
+			FastClick.attach(testB);		
+	
+			testB.addEventListener('touchend', function(event) {
+				 RedirectToPage('index.html'); 
+			}, false);
+			
+		}, false);
+	    	
+	    </script>
     </head>
 
    <body onload="loaded()">
@@ -27,13 +41,9 @@
 	<script src="phonegap.js"></script>
     <script src="js/jquery.js"></script>
     <script src="js/iscroll-lite.js"></script>
-    
     <script src="js/synchronizedata.js"></script>
-    
-    <script src="js/jszip.js"></script>
-    <script src="js/jszip-deflate.js"></script>
-    <script src="js/jszip-load.js"></script>    
-    <script src="js/jszip-inflate.js"></script>       
+    <script src="js/fastclick.js"></script> 
+        
 
     </body>
 

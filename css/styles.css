@@ -110,7 +110,7 @@ li .action-icon {
 }
 
 #header {
-    height: 45px;
+    height: 100px;
     width: 100%;
     margin: 0;
     padding: 0;
@@ -119,6 +119,7 @@ li .action-icon {
     background-image: -webkit-gradient(linear, left top, left bottom, from(#ccc), to(#999));
     border-bottom: 1px solid #666;
 }
+
 #header h1 {
     margin: 0;
     padding: 10px 0;
@@ -126,6 +127,7 @@ li .action-icon {
     display: block;
     font-size: 20px;
     font-weight: bold;
+    line-height: 70px;
     text-align: center;
     text-decoration: none;
     text-shadow: 0px 1px 0px #fff;
@@ -162,19 +164,19 @@ li .action-icon {
 #header .right2 {
     position: absolute;
     top: 7px;
-    right: 70px;
+    right: 120px;
     z-index: 1;
 }
 
 #header a {
     width: auto;
-    min-width: 40px;    
-    height: 30px; 
+    min-width: 80px;    
+    height: 70px; 
     margin: 0;
     padding: 0 5px;
     overflow: hidden;
 
-    line-height: 30px;
+    line-height: 70px;
     font-family: inherit;
     font-size: 12px;
     font-weight: bold;
@@ -199,11 +201,38 @@ li .action-icon {
 
 #wrapper {
 	position: absolute; 
-	top: 90px; 
+	top: 150px; 
 	bottom: 20px;
 	width: 100%;
 	overflow: auto;
 } 
+
+#scroller {
+	 position:absolute; 
+	 z-index:1;
+/*  -webkit-touch-callout:none;*/
+    -webkit-tap-highlight-color:rgba(0,0,0,0);
+    width:100%;
+    padding:0;	
+    background: #ccc;
+}
+
+#scroller ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	text-align: left;
+}
+
+#scroller li {
+	padding: 0 10px;	
+	line-height: 40px;
+	border-bottom: 1px solid #ccc;
+	border-top: 1px solid #fff;
+	background-color: #fafafa;
+	font-size: 14px;
+}
 
 #busy {
 	display:none;
@@ -287,11 +316,10 @@ input[type="search"]:focus {
 }
 
 .searchbutton {
-    position: absolute;
-    top: 50px;
+    position: absolute;  
     right: 6px;
     z-index: 1;
-    width: auto;
+    width: 20%;
     min-width: 40px;    
     height: 30px; 
     margin: 0;
@@ -337,3 +365,12 @@ input[type="search"]:focus {
     font-weight: bold;
     height:45px;
  }
+ 
+#objectivetitle{
+	width:100%;
+	background: #DCDCDC;font-family: inherit;
+    font-size: 20px;
+    font-weight: bold;    
+    background: #DCDCDC;
+	height:45px;
+}
