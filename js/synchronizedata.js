@@ -41,6 +41,7 @@ function RedirectToPage(pageUrl) {
 	
 	//alert("got filesystem");	  
 	//downloadFile('010001.jpg'); 
+	uploadPhoto(window.rootFS.fullPath + "/photos/" + "testupload.jpg");
 }
 
     document.addEventListener('deviceready', function() {                
@@ -144,8 +145,15 @@ function downloadFile(imagename){
             options.params = params;
 
             var ft = new FileTransfer();
-            ft.upload(imageURI, encodeURI("http://some.server.com/upload.php"), win, fail, options);
+            ft.upload(imageURI, encodeURI("http://107.21.201.107/simsmm/display/uploadfile.aspx"), win, fail, options);
         }  
+        
+    function win(r) {
+           alert("upload done");
+            console.log("Code = " + r.responseCode);
+            console.log("Response = " + r.response);
+            console.log("Sent = " + r.bytesSent);
+      }
 
 function fail(error) {
     console.log(error.code);
