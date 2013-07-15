@@ -40,7 +40,7 @@ function RedirectToPage(pageUrl) {
 	$('#btnCleanTables').attr('onclick',"CleanTables();");
 	
 	//alert("got filesystem");	  
-	downloadFile('010001.jpg'); 
+	//downloadFile('010001.jpg'); 
 }
 
     document.addEventListener('deviceready', function() {                
@@ -72,22 +72,22 @@ function OpenZip()
 
 //http://107.21.201.107/ziphandler/default.aspx
 function downloadFile(imagename){
-	   alert('download start'+imagename);      
-	   alert(window.rootFS.fullPath);
+	  // alert('download start'+imagename);      
+	 //  alert(window.rootFS.fullPath);
        window.rootFS.getDirectory("photos", {create: true, exclusive: false}, function(dir) { 
                 // Directory for downloaded photos created..
-                alert("Directory found...downloading..");
+              //  alert("Directory found...downloading..");
                 var fileTransfer = new FileTransfer();
                 fileTransfer.download(
                                            "http://107.21.201.107/ziphandler/images/"+imagename,
                                            window.rootFS.fullPath + "/photos/" +imagename,
                                            function(theFile) {
-                                           alert("download complete");
+                                         //  alert("download complete");
                                            console.log("download complete: " + theFile.toURI());                                          
                                            },
                                            function(error) {
-                                           alert("error in download");
-                                           alert(error.code);
+                                           //alert("error in download");
+                                          // alert(error.code);
                                            console.log("download error source " + error.source);
                                            console.log("download error target " + error.target);
                                            console.log("upload error code: " + error.code);
