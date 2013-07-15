@@ -288,6 +288,7 @@ li .action-icon {
 	float: left;
 	margin-right: 8px;
     height: 100px;
+    width:100px;
     vertical-align: top;
 }
 
@@ -414,5 +415,23 @@ input[type="search"]:focus {
     -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .25),
                         0 1px 0 rgba(255, 255, 255, 0.25);
      
+}
+
+#objectives {
+	position:absolute;
+	top:300px;
+	width:100%;
+}
+.objectiveslabel {
+	font-size: 20px;	
+	margin-top:0px;
+	margin-bottom:0px;
+	padding-top:10px;
+	padding-bottom:0px;
+	padding-left: 10px;
+	font-weight: bold;
+}
+#objectives left {
+	left:30px;
 }
 
