@@ -80,7 +80,7 @@ function downloadFile(imagename){
                 var fileTransfer = new FileTransfer();
                 fileTransfer.download(
                                            "http://107.21.201.107/ziphandler/images/"+imagename,
-                                           window.rootFS.fullPath + "/" +imagename,
+                                           window.rootFS.fullPath + "/photos/" +imagename,
                                            function(theFile) {
                                            alert("download complete");
                                            console.log("download complete: " + theFile.toURI());                                          

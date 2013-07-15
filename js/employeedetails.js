@@ -58,7 +58,7 @@ function getEmployee_success(tx, results) {
 	var employee = results.rows.item(0);
 	
 	var photopath="/sdcard";
-	var imagelocalPath = window.rootFS.fullPath +"/"+ employee.Image;
+	var imagelocalPath = window.rootFS.fullPath +"/photos/"+ employee.Image;
 	//alert(imagelocalPath);
 	
 	
