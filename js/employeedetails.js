@@ -58,10 +58,18 @@ function transaction_error(tx, error) {
 function getEmployee(tx) {
 	$('#busy').show();
 	
+	/*
 	var  sql = "select e.ID,e.FirstName, e.LastName, e.UniqueID, e.Image,e.Level, e.Points,e.LocationID,e.GroupID,e.IsNew,e.IsUpdate " + 
 				"from Participants e " +
 				" where e.UniqueID=:uid "+
 				" order by e.LastName, e.FirstName";
+		*/		
+   var  sql = "select e.ID,e.FirstName, e.LastName, e.UniqueID, e.Image,e.Level, e.Points,e.LocationID,e.GroupID,e.IsNew,e.IsUpdate,loc.Name as locationname,g.Name as groupname "
+  			  + 	" from Participants e " 
+  			  +    " join Locations loc on loc.ID=e.LocationID "
+  			  +   " join Groups g on g.LocationId=loc.ID "
+			  +  " where e.UniqueID=:uid "
+			  + " order by e.LastName, e.FirstName";
 				
 	tx.executeSql(sql, [uid], getEmployee_success);
 }
@@ -90,8 +98,8 @@ function getEmployee_success(tx, results) {
 
 	$('#employeePic').attr('src', photopath);
 	$('#fullName').text(employee.FirstName + ' ' + employee.LastName);
-	$('#level').text("Level:"+employee.Level);
-	$('#location').text("Location:"+ employee.LocationID + " Group:"+ employee.GroupID );
+	$('#level').html("<strong>Level:</strong>"+employee.Level + ",<strong>Points:</strong>"+ employee.Points);
+	$('#location').html("<strong>Location:</strong>"+ employee.locationname + ",<strong>Group:</strong>"+ employee.groupname );
 	//$('#group').text("Group:"+ employee.GroupID);
 	//$('#city').text(employee.city);
 	//$('#state').text(employee.state);
@@ -110,7 +118,7 @@ function endsWith(str, suffix) {
 // load Objectives of the Participant
 function getObjectives(tx) {
 	$('#busy').show();
-	var  sql = "select obj.ID,obj.Name,per.Completed " +
+	var  sql = "select obj.ID,obj.Name,obj.PlusPoints,obj.MinusPoints,per.Completed " +
 				"from Participants p  " +
 				" JOIN Performance per on p.UniqueID = per.UniqueID " +
 				" JOIN Objectives obj on per.ObjectiveId = obj.ID " +
@@ -133,22 +141,27 @@ function getObjectives_success(tx, results) {
 	 	var objective = results.rows.item(i);	 	
 	 	
 	 	
-	 $('#objectives').append('<li><h2>'+objective.Name+'</h2><p>Additional Info</p><p class="ui-li-aside"><select name="checkbox-'+objective.ID +'" id="checkbox-'+objective.ID +'" data-role="slider" class="left"><option value="off">Off</option><option value="on">On</option></select></p></li>');
+	 $('#objectives').append('<li><h2>'+objective.Name+'</h2><p>(+'+objective.PlusPoints+',-'+objective.MinusPoints+')</p><p class="ui-li-aside"><select name="checkbox-'+objective.ID +'" id="checkbox-'+objective.ID +'" data-role="slider" class="left"><option value="off">Off</option><option value="on">On</option></select></p></li>');
 	 
  
 	 // Set value of status of objective
 	$('#checkbox-'+objective.ID).val(objective.Completed==1?'on':'off');
 	
-	 }
+	// Assign the on change function
+	/*
+	$('#checkbox-'+objective.ID).on('click',function(){
+		  alert($('#checkbox-'+objective.ID).attr('id')+": "+ $('#checkbox-'+objective.ID).val()); 
+		});
+		*/
+	 } // End of for loop
 	 
-	$('#objectives').trigger( "create" );
-	
+	$('#objectives').trigger( "create" );	
 	
 	setTimeout(function(){
 		scroll.refresh();
 	});
 	
-	
+		
 }
 
 

@@ -435,8 +435,8 @@ function MetadataLoadComplete_success() {
     function SaveObjective(objectiveObj,levelId)
     {
     	   	    	
-    	var sql ="INSERT INTO Objectives (ID,Name,LevelId) VALUES ('" + objectiveObj.ID 
-    	+"','"+ objectiveObj.Name +"','"+ levelId +"')"; 
+    	var sql ="INSERT INTO Objectives (ID,Name,PlusPoints,MinusPoints,LevelId) VALUES ('" + objectiveObj.ID 
+    	+"','"+ objectiveObj.Name +"','"+  objectiveObj.PlusPoints +"','"+  objectiveObj.MinusPoints +"','"+levelId +"')"; 
 		       
 	     db.transaction(function(tx)
 	     {	     	
@@ -594,7 +594,9 @@ function  CleanTables()
     	var sqlDeleteObjectives = 
 						"CREATE TABLE IF NOT EXISTS Objectives ( "+												
 						"ID VARCHAR(10), " +		
-						"Name VARCHAR(100), " +									
+						"Name VARCHAR(100), " +		
+						"PlusPoints INTEGER, " +		
+						"MinusPoints INTEGER, " +									
 						"LevelId VARCHAR(10))";
 		
 		
