@@ -1,6 +1,7 @@
-//var scroll = new iScroll('wrapper', { vScrollbar: false, hScrollbar:false, hScroll: false });
+var scroll = new iScroll('wrapper', { vScrollbar: false, hScrollbar:false, hScroll: false });
 
 var uid = getUrlVars()["uid"];
+
 //alert('id:'+id);
 var db;
 
@@ -93,18 +94,13 @@ function getEmployee_success(tx, results) {
 	$('#employeePic').attr('src', photopath);
 	$('#fullName').text(employee.FirstName + ' ' + employee.LastName);
 	$('#level').text("Level:"+employee.Level);
-	$('#location').text("Location:"+ employee.LocationID );//+ " Group:"+ employee.GroupID );
-	$('#group').text("Group:"+ employee.GroupID);
+	$('#location').text("Location:"+ employee.LocationID + " Group:"+ employee.GroupID );
+	//$('#group').text("Group:"+ employee.GroupID);
 	//$('#city').text(employee.city);
 	//$('#state').text(employee.state);
 		
-	$('#actionList').append('<li>Objectives</li>');
-				
-		/*
-	setTimeout(function(){
-		scroll.refresh();
-	});
-	*/
+			
+	
 	//db = null;
 	
 	db.transaction(getObjectives, transaction_error);
@@ -133,36 +129,28 @@ function getObjectives_success(tx, results) {
 	//alert('getObjectives_success');
 	var len = results.rows.length;
 	// Traverse all the Objectives	
+	
+	 $('#objectives').append('<li data-role="list-divider"><strong>Objectives</strong> <span class="ui-li-count">'+len+'</span></li>');
+	 
 	 for (var i=0; i<len; i++) {
 	 	var objective = results.rows.item(i);	 	
 	 	
-	 	/*
-	 	$('#actionList').append('<li><a href="#">'+'<p class="line1">' + objective.Name +'</p>'
-	 	+'<div data-role="fieldcontain"><fieldset data-role="controlgroup"><legend>Agree to the terms:</legend><input type="checkbox" name="checkbox-'+objective.ID +'" id="checkbox-'+objective.ID +'" class="custom" /><label for="checkbox-1">I agree</label></fieldset></div>'
-				+'</li>');
-				*/
-		/*$('#objectives').append('<hr><b><label class="line1">' + objective.Name + '</label></b><input type="checkbox" name="checkbox-'+objective.ID +'" id="checkbox-'+ objective.ID 
-		+  '" class="line2"/>');
-		*/
-	 $('#objectives').append('<div class="ui-grid-a"><div class="ui-block-a"><lable class="objectiveslabel">'+ objective.Name +'</lable></div><div class="ui-block-b"><select name="checkbox-'+objective.ID +'" id="checkbox-'+objective.ID +'" data-role="slider" class="left"><option value="off">Off</option><option value="on">On</option></select></div></div>'
-	 );
+	 	
+	 $('#objectives').append('<li><a href="index.html"><h2>'+objective.Name+'</h2><p>Additional Info</p><p class="ui-li-aside"><select name="checkbox-'+objective.ID +'" id="checkbox-'+objective.ID +'" data-role="slider" class="left"><option value="off">Off</option><option value="on">On</option></select></p></a></li>');
 	 
-	// $('#objectives').append('<div class="ui-grid-a"><div class="ui-block-a"><strong>text</strong> </div><div class="ui-block-b"><strong>check</strong></div></div>');
-	 
+ 
 	 // Set value of status of objective
-	 $('#checkbox-'+objective.ID).val(objective.Completed==1?'on':'off');
-	  // $('#checkbox-'+objective.ID).prop("checked", objective.Completed);
-	  // alert(objective.Completed);
-	 // alert($('#checkbox-'+objective.ID).val());
+	$('#checkbox-'+objective.ID).val(objective.Completed==1?'on':'off');
+	
 	 }
 	 
 	$('#objectives').trigger( "create" );
 	
-	/*
+	
 	setTimeout(function(){
 		scroll.refresh();
 	});
-	*/
+	
 	
 }
 

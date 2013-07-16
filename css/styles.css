@@ -281,7 +281,8 @@ li .action-icon {
 
 #employeeDetails {
 	padding: 8px;
-	padding-bottom: 0px;
+	padding-bottom: 5px;
+	 border-bottom: 1px solid #666;
 }
 
 #employeeDetails img {
@@ -367,6 +368,7 @@ input[type="search"]:focus {
     font-size: 18px;
     font-weight: bold;
     height:45px;
+    vertical-align: top;
  }
  
 #objectivetitle{
@@ -418,9 +420,13 @@ input[type="search"]:focus {
 }
 
 #objectives {
-	position:absolute;
-	top:300px;
-	width:100%;
+	width:100%;	
+}
+
+.objectiveentry
+{
+	width:100%;	
+  
 }
 .objectiveslabel {
 	font-size: 20px;	
@@ -429,9 +435,10 @@ input[type="search"]:focus {
 	padding-top:10px;
 	padding-bottom:0px;
 	padding-left: 10px;
-	font-weight: bold;
+	font-weight: bold;	
+	
 }
 #objectives left {
-	left:30px;
+		left:100px;
 }
 
