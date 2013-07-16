@@ -3,6 +3,35 @@ var dbCreated = false;
 var filter='';
 var scroll = new iScroll('wrapper', { vScrollbar: false, hScrollbar:false, hScroll: false });
 
+//Add Button Events
+  window.addEventListener('load', function() {
+				var buttonAdd;	
+				var buttonSynchronize;
+				var buttonSearch;
+				buttonAdd = document.getElementById('btnAdd');
+				buttonSynchronize = document.getElementById('btnSynchronize');
+				buttonSearch = document.getElementById('btnSearch');
+		
+				// Android 2.2 needs FastClick to be instantiated before the other listeners so that the stopImmediatePropagation hack can work.
+				FastClick.attach(buttonAdd);	
+				FastClick.attach(buttonSynchronize);			
+		
+				buttonAdd.addEventListener('touchend', function(event) {
+					RedirectToPage('addemployeenew.html');
+				}, false);
+				
+				buttonSynchronize.addEventListener('touchend', function(event) {
+					RedirectToPage('synchronize.html');
+				}, false);
+  /*				
+				buttonSearch.addEventListener('touchend', function(event) {
+					Search();
+				}, false);
+				*/
+				
+			}, false);
+
+
 document.addEventListener("deviceready", onDeviceReady, false);
 
 function onDeviceReady() {	
@@ -47,14 +76,22 @@ function getEmployees_success(tx, results) {
 	$('#busy').hide();
     var len = results.rows.length;
     var photopath="/sdcard";
+     $('#employeeList').append('<li data-role="list-divider"><strong>List of Grantees</strong> <span class="ui-li-count">'+len+'</span></li>');
+     
     for (var i=0; i<len; i++) {
     	var employee = results.rows.item(i);
+		/*
 		$('#employeeList').append('<li><a href="employeedetails.html?uid=' + employee.UniqueID + '">' +
 				'<img src="'+ photopath + '/photos/' + employee.Image + '" class="list-icon"/>' +
 				'<p class="line1">' + employee.FirstName + ' ' + employee.LastName + '</p>' +
 				'<p class="line2">Level:' + employee.Level + '</p>' +
 				'<span class="bubble">' + employee.Points + '</span></a></li>');
+				*/
+	 $('#employeeList').append('<li><a href="employeedetails.html?uid='+ employee.UniqueID + '" target="_self">' +
+				'<img src="'+ photopath + '/photos/' + employee.Image + '" class="list-icon"/>' +
+	 '<h2>'+ employee.FirstName + ' ' + employee.LastName +'</h2><p>(Level:'+employee.Level+') Point:</p></a></li>');
     }
+    
 	setTimeout(function(){
 		scroll.refresh();
 	},100);
