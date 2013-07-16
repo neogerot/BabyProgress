@@ -81,10 +81,7 @@ function getEmployee_success(tx, results) {
 	$.get(imagelocalPath)
 	    .done(function() { 
 	        // exists code 
-	    photopath=imagelocalPath;
-	    alert(photopath);
-	    if(endsWith(imagelocalPath,'/'))
-	      photopath ="img/person_blank.png";
+	    photopath=imagelocalPath; 
 	   
 	    }).fail(function() { 
 	        // not exists code
@@ -136,7 +133,7 @@ function getObjectives_success(tx, results) {
 	 	var objective = results.rows.item(i);	 	
 	 	
 	 	
-	 $('#objectives').append('<li><a href="index.html"><h2>'+objective.Name+'</h2><p>Additional Info</p><p class="ui-li-aside"><select name="checkbox-'+objective.ID +'" id="checkbox-'+objective.ID +'" data-role="slider" class="left"><option value="off">Off</option><option value="on">On</option></select></p></a></li>');
+	 $('#objectives').append('<li><h2>'+objective.Name+'</h2><p>Additional Info</p><p class="ui-li-aside"><select name="checkbox-'+objective.ID +'" id="checkbox-'+objective.ID +'" data-role="slider" class="left"><option value="off">Off</option><option value="on">On</option></select></p></li>');
 	 
  
 	 // Set value of status of objective
