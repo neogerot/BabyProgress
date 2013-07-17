@@ -32,6 +32,7 @@ function RedirectToPage(pageUrl) {
    */
   function gotFS(fileSystem) {
     console.log("got filesystem");
+    alert("file system loaded");
     $('#busy').hide();
     // save the file system for later access
    // console.log(fileSystem.root.fullPath);
@@ -60,13 +61,14 @@ window.addEventListener('load', function() {
 				 RedirectToPage('index.html'); 
 			}, false);
 			
+			
 		}, false);
   
 document.addEventListener("deviceready", onDeviceReady, false);
 
 function onDeviceReady() {	
     db = window.openDatabase("GranteeDirectoryDB", "1.0", "PhoneGap Demo", 200000);    
-    
+    $('#busy').hide();
 }
   
   
@@ -257,10 +259,11 @@ function LoadMetadata()
 				              		    $eventinfo.append("<div> Last Name: " + this.LastName +"<br></div>");	
 				              		    $eventinfo.append("<div> UniqueID: " + this.UniqueID +"<br></div>");	
 				              		  
-				              		  var imagelocalPath = window.rootFS.fullPath +"/photos/"+ this.Image;
-				              		 // var imagelocalPath = "/photos/"+ this.Image;
+				              		 // var imagelocalPath = window.rootFS.fullPath +"/photos/"+ this.Image;
+				              		  var imagelocalPath = "/photos/"+ this.Image;
 				              		  var imageName=this.Image;
 				              		  
+				              		  /*
 				              		  if(imageName!='')
 				              		  {
 						              		 // Uncomment before deploying to Device..
@@ -274,7 +277,7 @@ function LoadMetadata()
 											         downloadFile(imageName);
 											    });
 									    }
-													              		  
+											*/		              		  
 				              		  
 				              		    $eventinfo.append("<div> Image:<img src='#'" + this.Image+"'></img><br></div>");	
 				              		    $eventinfo.append("<div> Level: " + this.Level +"<br></div>");	
