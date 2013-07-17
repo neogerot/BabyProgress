@@ -26,12 +26,11 @@
    
     <body>
     	
-    <div data-role="page" id="page1" data-theme="a">
-    	
-	<div id="header" class="header">		
-		<h1>Grantee Directory</h1>	
-		<a id="btnBack" class="left">Back</a>			
+    <div data-role="header" data-theme="a">	
+    	<h1>Grantee Directory</h1>	
+		<a href="#" data-role="button" data-inline="true" data-theme="b" id="btnBack" >Back</a>	
 	</div>
+	
 	<div id="title">
 		Details
 	</div>
@@ -49,7 +48,7 @@
 	  		<ul id="objectives" data-role="listview" data-inset="true">	  				  			
 	  		</ul>   	
 	  		<ul>
-	  			<input type="submit" data-role="button" id="btnSubmit" name="btnSubmit" value="Submit" data-theme="b"/>	  			
+	  			<input type="submit" data-role="button" id="btnSubmit" name="btnSubmit" value="Submit" data-theme="b" onclick="SubmitPerformance();"/>	  			
 	  		</ul>
 	  		</div>
 	  	</div>

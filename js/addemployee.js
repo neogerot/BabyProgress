@@ -1,10 +1,13 @@
 var id = 0;
 var db;
 var scroll;
+var levelUser;
+var insertedUniqueId;
+
 function loaded() {
 	//alert('loaded');
 	setTimeout(function () { 
-                scroll = new iScroll('wrapper', {
+        scroll = new iScroll('wrapper', {
 		useTransform: false,
 		onBeforeScrollStart: function (e) {
 			var target = e.target;
@@ -15,7 +18,9 @@ function loaded() {
 				e.preventDefault();
 		}
 	});
-        }, 100); 
+        }, 100);         
+    
+    
  }
 
 document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
@@ -40,6 +45,12 @@ window.addEventListener('load', function() {
 		}, false);
 		
 	}, false);
+	
+window.addEventListener("orientationchange", function() {
+   setTimeout(function(){
+		scroll.refresh();
+	});	 
+}, false);
 
 document.addEventListener("deviceready", onDeviceReady, false);
 
@@ -61,6 +72,7 @@ function onDeviceReady() {
 	$('#busy').hide();
 	$('#uid').val(guid());
 	
+	db = window.openDatabase("GranteeDirectoryDB", "1.0", "PhoneGap Demo", 200000);
 }
 
 
@@ -87,10 +99,7 @@ function s4() {
 function guid() {
   return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
          s4() + '-' + s4() + s4() + s4();
- 
-   setTimeout(function(){
-		scroll.refresh();
-	},100);
+   
 }
 
 // Redirect to the Home Page
@@ -108,29 +117,61 @@ function transaction_error(tx, error) {
    	
 // Add grantee
 function addEmployee()
-{	
-	db = window.openDatabase("GranteeDirectoryDB", "1.0", "PhoneGap Demo", 200000);
-	console.log("database opened");
-	db.transaction(addEmployeeInDB,transaction_error,addEmployeeInDB_success);	
+{
+	db.transaction(addEmployeeInDB);	
 }
 
 function addEmployeeInDB(tx)
 {	
+	levelUser=$('#level').val();	
 	$('#busy').show();		
 	var sql = "INSERT INTO Participants (FirstName,LastName,UniqueID,Image,Level,Points,LocationID,GroupID,IsNew,IsUpdate) VALUES ('" + $('#firstName').val() +"','"
 		+ $('#lastName').val() +"',"+ "'"+$('#uid').val()+"','"+ $('#uid').val() +".jpg'" +",'"+$('#level').val() +"','0','"+$('#locationId').val()+"','"+
 		$('#groupId').val() +"','1','0')"; 
+		
+	tx.executeSql(sql,[],addEmployeeInDB_success);
 	
 	
-	tx.executeSql(sql);
 	//alert('Query Executed');
 }
 
-function addEmployeeInDB_success(tx) {
-	console.log("Employee Added");
-	$('#busy').hide();
+function addEmployeeInDB_success(tx,results) {
+	console.log("Employee Added"+results.insertId);
+	insertedUniqueId=$('#uid').val();
+	
+	// Insert the performance of User in the Performance Table 
+	// Get all the associated Objectives with the Level
+	
+	var sqlPerformance="select ID,Name,LevelId from objectives o"
+			  +  " where o.LevelId=:levelUser ";
+			 
+				
+	tx.executeSql(sqlPerformance, [levelUser], getObjectives_success);	
+	
+	//RedirectToPage("index.html");
+}
+
+function getObjectives_success(tx, results) {
+	
+	var len = results.rows.length;
+	
+	for (var i=0; i<len; i++) {
+		var objective = results.rows.item(i);	 
+			
+		var sqlObjective="INSERT INTO Performance (UniqueID,ObjectiveID,Completed) VALUES ('" + insertedUniqueId +"','"
+		+ objective.ID +"',"+ "'0')"; 
+		       
+		       
+		       tx.executeSql(sqlObjective);    
+		
+	}
+	
+	$('#busy').hide();	
 	RedirectToPage("index.html");
 }
+
+
+
 
 /******************************************************************************************/
 

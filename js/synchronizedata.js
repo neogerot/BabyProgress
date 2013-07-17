@@ -36,8 +36,8 @@ function RedirectToPage(pageUrl) {
    // console.log(fileSystem.root.fullPath);
     window.rootFS = fileSystem.root;
 	//$('#btnSynchronize').attr('onclick',"downloadFile('010001.jpg');");
-	$('#btnLoadMetadata').attr('onclick',"LoadMetadata();");
-	$('#btnCleanTables').attr('onclick',"CleanTables();");
+	//$('#btnLoadMetadata').attr('onclick',"LoadMetadata();");
+	//$('#btnCleanTables').attr('onclick',"CleanTables();");
 	
 	//alert("got filesystem");	  
 	//downloadFile('010001.jpg'); 
@@ -46,8 +46,20 @@ function RedirectToPage(pageUrl) {
 
     document.addEventListener('deviceready', function() {                
     window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
-    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS, fail);
 }, false);
+
+window.addEventListener('load', function() {
+			var testB;	
+			testB = document.getElementById('btnBack');
+	
+			// Android 2.2 needs FastClick to be instantiated before the other listeners so that the stopImmediatePropagation hack can work.
+			FastClick.attach(testB);		
+	
+			testB.addEventListener('touchend', function(event) {
+				 RedirectToPage('index.html'); 
+			}, false);
+			
+		}, false);
   
 document.addEventListener("deviceready", onDeviceReady, false);
 
@@ -244,7 +256,8 @@ function LoadMetadata()
 				              		    $eventinfo.append("<div> Last Name: " + this.LastName +"<br></div>");	
 				              		    $eventinfo.append("<div> UniqueID: " + this.UniqueID +"<br></div>");	
 				              		  
-				              		  var imagelocalPath = window.rootFS.fullPath +"/photos/"+ this.Image;
+				              		  //var imagelocalPath = window.rootFS.fullPath +"/photos/"+ this.Image;
+				              		  var imagelocalPath = "/photos/"+ this.Image;
 				              		  var imageName=this.Image;
 				              		  
 				              		  if(imageName!='')
@@ -262,7 +275,7 @@ function LoadMetadata()
 									    }
 													              		  
 				              		  
-				              		    $eventinfo.append("<div> Image:<img src='"+window.rootFS.fullPath +"/"+ this.Image+"'></img><br></div>");	
+				              		    $eventinfo.append("<div> Image:<img src='#'" + this.Image+"'></img><br></div>");	
 				              		    $eventinfo.append("<div> Level: " + this.Level +"<br></div>");	
 				              		    $eventinfo.append("<div> Points: " + this.Points +"<br></div>");		
 				              		    	              
@@ -660,12 +673,7 @@ function  CleanTables()
 	     //**********************************************************************************************  
 	       
 	        	
-    	// Delete EXTRA
-    	db.transaction(function(tx)
-	     {	     	
-	     	tx.executeSql('DROP TABLE IF EXISTS Grantee');    	
-	     }
-	     , transaction_error, SaveDB_success);
+    	
 	     
     }
     

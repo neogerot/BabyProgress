@@ -4,35 +4,32 @@
         <title>Grantee Directory</title>
         <meta name="viewport" content="width=device-width,initial-scale=1"/>
         <link rel="stylesheet" href="css/styles.css" />   
+        <link rel="stylesheet" href="css/jquery.mobile-1.3.1.min.css">  
 	   <script type="text/javascript">
-	    	window.addEventListener('load', function() {
-			var testB;	
-			testB = document.getElementById('btnBack');
-	
-			// Android 2.2 needs FastClick to be instantiated before the other listeners so that the stopImmediatePropagation hack can work.
-			FastClick.attach(testB);		
-	
-			testB.addEventListener('touchend', function(event) {
-				 RedirectToPage('index.html'); 
-			}, false);
-			
-		}, false);
+	    	
 	    	
 	    </script>
     </head>
 
    <body onload="loaded()">
         
-	<div id="header" class="header">		
-		<h1>Grantee Directory</h1>			
-		<a id="btnBack" onclick="RedirectToPage('index.html')" class="left">Back</a>		
-		<a id="btnCleanTables" onclick="" class="right2">Clean</a>
-		<a id="btnLoadMetadata" onclick="" class="right1">Load</a>		  
+     <div data-role="header" data-theme="a">	
+			<p>		
+				<h1>Grantee Directory</h1>			
+	  			<a href="#" data-role="button" data-inline="true" data-theme="b" id="btnBack" onclick="RedirectToPage('index.html')">Back</a>
+				<a href="#" data-role="button" data-inline="true" data-theme="b" id="btnCleanTables" onclick="CleanTables();">Clean</a>		
+				<a href="#" data-role="button" data-inline="true" data-theme="b" id="btnLoadMetadata" onclick="LoadMetadata();">LoadMetadata</a>	
+  		 	</p>
+   	   </div>	
+	<div id="title">
+		Metadata
 	</div>
-	<h2>Content :</h2>
 	<div id="result" style="display: none;"></div>
+	
   	<div id="wrapper">
+  		<div id="scroller">
     		<div id="eventinfo"></div>
+    	</div>		
 	</div>
 	<div id="busy">Loading...</div>
 	<div id="ready">Loading...</div>
@@ -43,7 +40,7 @@
     <script src="js/iscroll-lite.js"></script>
     <script src="js/synchronizedata.js"></script>
     <script src="js/fastclick.js"></script> 
-        
+    <script src="js/jquery.mobile-1.3.1.min.js"></script>
 
     </body>
 

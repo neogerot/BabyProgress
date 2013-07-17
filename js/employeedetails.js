@@ -20,6 +20,11 @@ window.addEventListener('load', function() {
 		
 	}, false);
     	
+window.addEventListener("orientationchange", function() {
+   setTimeout(function(){
+		scroll.refresh();
+	});	 
+}, false);
 
 /*  File System 
    * 
@@ -118,7 +123,7 @@ function endsWith(str, suffix) {
 // load Objectives of the Participant
 function getObjectives(tx) {
 	$('#busy').show();
-	var  sql = "select obj.ID,obj.Name,obj.PlusPoints,obj.MinusPoints,per.Completed " +
+	var  sql = "select per.ID,obj.Name,obj.PlusPoints,obj.MinusPoints,per.Completed " +
 				"from Participants p  " +
 				" JOIN Performance per on p.UniqueID = per.UniqueID " +
 				" JOIN Objectives obj on per.ObjectiveId = obj.ID " +
@@ -140,13 +145,19 @@ function getObjectives_success(tx, results) {
 	 for (var i=0; i<len; i++) {
 	 	var objective = results.rows.item(i);	 	
 	 	
-	 	
-	 $('#objectives').append('<li><h2>'+objective.Name+'</h2><p>(+'+objective.PlusPoints+',-'+objective.MinusPoints+')</p><p class="ui-li-aside"><select name="checkbox-'+objective.ID +'" id="checkbox-'+ objective.ID 
-	 +'" data-role="slider" class="left"><option value="off">Off</option><option value="on">On</option></select></p></li>');
+	 /*	
+	 $('#objectives').append('<li><div class="ui-grid-a"><div class="ui-block-a"><h2>'+objective.Name+'</h2><p>(+'+objective.PlusPoints+',-'+objective.MinusPoints+')</p>'
+	 +'</div><div class="ui-block-b"><select name="checkbox-'+objective.ID +'" id="checkbox-'+ objective.ID 
+	 +'" data-role="slider" class="floatright"><option value="off">Off</option><option value="on">On</option></select></div></div></li>');
+	 */
+	
+	 $('#objectives').append('<li><fieldset data-role="controlgroup" data-iconpos="right"><input type="checkbox" name="'+objective.ID +'" id="'+ objective.ID 
+	 +'"><label for="'+objective.ID+'">'+objective.Name+' (<small>+'+objective.PlusPoints+',-'+objective.MinusPoints+'</small>)</label></fieldset></li>');
 	 
  
 	 // Set value of status of objective
-	$('#checkbox-'+objective.ID).val(objective.Completed==1?'on':'off');
+	$('#'+objective.ID).prop('checked', objective.Completed);
+
 	
 	// Assign the on change function
 	/*
@@ -198,8 +209,42 @@ function RedirectToPage(pageUrl) {
 	//alert("Employee Deleted");		
     window.location=pageUrl;
 }
-/*<select name="toggleswitch1" id="toggleswitch1" data-theme="b" data-role="slider" class="ui-slider-switch">
-      <option value="off">Off</option>
-      <option value="on">On</option>
-    </select>
-    */
+
+// This function will update the performance of the participant 
+function SubmitPerformance()
+{
+	db.transaction(SubmitPerformanceDB, transaction_error,Submit_success);	
+}
+
+function SubmitPerformanceDB(tx)
+{
+	var hashtable = {};		
+	$('#objectives input').each(function() {
+   // selected.push($(this).attr('name')+':'+($(this).prop('checked')==true?1:0));
+  	  hashtable[$(this).attr('name')]=($(this).prop('checked')==true?1:0);
+	});
+for ( key_name in hashtable){
+	// Update each performance in database
+	//alert(hashtable[key_name]);
+	var sql = "update Performance set Completed=:completedstatus"
+				+ " where ID=:id";
+	tx.executeSql(sql, [hashtable[key_name],key_name], SubmitPerformanceDB_success);
+	
+	
+}
+	/*
+	
+	*/
+}
+function Submit_success(tx)
+{
+	// Insert all the new records	
+	//alert('updated all');
+	RedirectToPage('index.html'); 
+}
+function SubmitPerformanceDB_success(tx)
+{
+	// Insert all the new records
+	
+	//alert('updated');
+}

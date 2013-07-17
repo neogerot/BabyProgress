@@ -23,13 +23,21 @@ var scroll = new iScroll('wrapper', { vScrollbar: false, hScrollbar:false, hScro
 				buttonSynchronize.addEventListener('touchend', function(event) {
 					RedirectToPage('synchronize.html');
 				}, false);
-  /*				
+  				
+  							
 				buttonSearch.addEventListener('touchend', function(event) {
-					Search();
-				}, false);
-				*/
+						Search();
+					}, false);
+				
 				
 			}, false);
+			
+window.addEventListener("orientationchange", function() {
+   setTimeout(function(){
+		scroll.refresh();
+	});	 
+}, false);
+
 
 
 document.addEventListener("deviceready", onDeviceReady, false);
@@ -89,7 +97,7 @@ function getEmployees_success(tx, results) {
 				*/
 	 $('#employeeList').append('<li><a href="employeedetails.html?uid='+ employee.UniqueID + '" target="_self">' +
 				'<img src="'+ photopath + '/photos/' + employee.Image + '" class="list-icon"/>' +
-	 '<h2>'+ employee.FirstName + ' ' + employee.LastName +'</h2><p>(Level:'+employee.Level+') Point:</p></a></li>');
+	 '<h2>'+ employee.FirstName + ' ' + employee.LastName +'</h2><p class="bubble">Level:'+employee.Level+'</p></a></li>');
     }
     
 	setTimeout(function(){
