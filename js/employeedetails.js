@@ -8,14 +8,18 @@ var db;
 document.addEventListener("deviceready", onDeviceReady, false);
 
 window.addEventListener('load', function() {
-		var testB;	
+		var testB,buttonSubmit;	
 		testB = document.getElementById('btnBack');
-
+		buttonSubmit=	document.getElementById('btnSubmit'); 
 		// Android 2.2 needs FastClick to be instantiated before the other listeners so that the stopImmediatePropagation hack can work.
 		FastClick.attach(testB);		
 
 		testB.addEventListener('touchend', function(event) {
 			 RedirectToPage('index.html'); 
+		}, false);
+		
+		buttonSubmit.addEventListener('touchend', function(event) {
+			SubmitPerformance();
 		}, false);
 		
 	}, false);

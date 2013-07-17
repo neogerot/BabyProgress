@@ -32,6 +32,7 @@ function RedirectToPage(pageUrl) {
    */
   function gotFS(fileSystem) {
     console.log("got filesystem");
+    $('#busy').hide();
     // save the file system for later access
    // console.log(fileSystem.root.fullPath);
     window.rootFS = fileSystem.root;
@@ -256,8 +257,8 @@ function LoadMetadata()
 				              		    $eventinfo.append("<div> Last Name: " + this.LastName +"<br></div>");	
 				              		    $eventinfo.append("<div> UniqueID: " + this.UniqueID +"<br></div>");	
 				              		  
-				              		  //var imagelocalPath = window.rootFS.fullPath +"/photos/"+ this.Image;
-				              		  var imagelocalPath = "/photos/"+ this.Image;
+				              		  var imagelocalPath = window.rootFS.fullPath +"/photos/"+ this.Image;
+				              		 // var imagelocalPath = "/photos/"+ this.Image;
 				              		  var imageName=this.Image;
 				              		  
 				              		  if(imageName!='')
@@ -393,7 +394,7 @@ function MetadataLoadComplete_success() {
     {
     	//alert(granteeObj.FirstName);
     	var sql ="INSERT INTO Participants (FirstName,LastName,UniqueID,Image,Level,Points,LocationID,GroupID,IsNew,IsUpdate) VALUES ('" + participantObj.FirstName +"','"
-		+ participantObj.LastName +"',"+ "'"+participantObj.UniqueID+"','"+ participantObj.Image +"'"+",'"+participantObj.Level+"','0','"+participantObj.LocationID+"','"+
+		+ participantObj.LastName +"',"+ "'"+participantObj.UniqueID+"','"+ participantObj.Image +"'"+",'"+participantObj.Level+"','"+participantObj.Points+"','"+participantObj.LocationID+"','"+
 		participantObj.GroupID +"','"+participantObj.IsNew +"','"+participantObj.IsUpdate +"')"; 
 	
 	     db.transaction(function(tx)
