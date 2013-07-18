@@ -119,15 +119,25 @@ function downloadFile(imagename){
     
  function  UploadParticipantImages()
  {
+ 	
+ 	window.rootFS.getDirectory("photos", {create: false, exclusive: false}, getDirSuccess, fail);
  	// Upload all the participant Images.
- 	alert('Upload Start..');
- 	var reader = window.rootFS.createReader();
-    reader.readEntries(gotList, fail);
+ 	alert('Upload Start..');	
  	
  }  
   
- function gotList(entries) {
-  alert('Entries Read:'+entries.length);
+ function getDirSuccess(dirEntry) {
+    alert('dirEntry');
+   // Get a directory reader
+    var directoryReader = dirEntry.createReader();
+
+    // Get a list of all the entries in the directory
+    directoryReader.readEntries(readerSuccess,fail);
+    
+  }
+  
+function readerSuccess(entries) {
+    alert('entries')
     var i;
     for (i=0; i<entries.length; i++) {
         if (entries[i].name.indexOf(".jpg") != -1) {
@@ -135,7 +145,7 @@ function downloadFile(imagename){
             uploadPhoto(entries[i].fullPath);
         }
     }
-  }
+}
     
  function uploadPhoto(imageURI) {
             var options = new FileUploadOptions();
