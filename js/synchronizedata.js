@@ -112,43 +112,29 @@ function downloadFile(imagename){
                                            );
                 
                 
-            }, fail); 
-        
-       /*
-        window.requestFileSystem(
-                     LocalFileSystem.PERSISTENT, 0, 
-                     function onFileSystemSuccess(fileSystem) {
-                     fileSystem.root.getFile(
-                                 "dummy.html", {create: true, exclusive: false}, 
-                                 function gotFileEntry(fileEntry){
-                                 var sPath = fileEntry.fullPath.replace("dummy.html","");
-                                 var fileTransfer = new FileTransfer();
-                                 fileEntry.remove();
- 								// alert('downloading..'+imagename);
-                                
-                                 fileTransfer.download(
-                                           "http://107.21.201.107/ziphandler/images/"+imagename,
-                                           sPath + imagename,
-                                           function(theFile) {
-                                         //  alert('download complete'+imagename);
-                                           console.log("download complete: " + theFile.toURI());
-                                           showLink(theFile.toURI());
-                                           },
-                                           function(error) {
-                                           console.log("download error source " + error.source);
-                                           console.log("download error target " + error.target);
-                                           console.log("upload error code: " + error.code);
-                                           }
-                                           );
-                                 }, 
-                                 fail);
-                     }, 
-                     fail);
-                */
+            }, fail);        
+      
  
     }  
     
-     function uploadPhoto(imageURI) {
+ function  UploadParticipantImages()
+ {
+ 	// Upload all the participant Images.
+ 	var reader = window.rootFS.createReader();
+    reader.readEntries(gotList, fail);
+ 	
+ }  
+  
+ function gotList(entries) {
+    var i;
+    for (i=0; i<entries.length; i++) {
+        if (entries[i].name.indexOf(".jpg") != -1) {
+            uploadPhoto(entries[i].fullPath);
+        }
+    }
+  }
+    
+ function uploadPhoto(imageURI) {
             var options = new FileUploadOptions();
             options.fileKey="file";
             options.fileName=imageURI.substr(imageURI.lastIndexOf('/')+1);
@@ -201,9 +187,11 @@ function LoadMetadata()
 		              		   
 								$(eventDataJSONObject).each(function() {  
 									 $eventinfo.append("<div> Event Name: " + this.Name + "<br></div>");	
-		              		 		 $eventinfo.append("<div> Id: " + this.Id + "<br></div>");	
+		              		 		 $eventinfo.append("<div> Id: " + this.ID + "<br></div>");	
 		              		 		 $eventinfo.append("<div> Start Date: " + this.StartDate + "<br></div>");	
 		              		   		 $eventinfo.append("<div> End Date: " + this.EndDate + "<br></div>");	
+		              		   		 
+		              		   		 SaveEvent(this);	
 		              		   		 
 		              		   		 $eventinfo.append("<div> Locations ######################<br></div>");	
 		              		   		 
@@ -481,6 +469,19 @@ function MetadataLoadComplete_success() {
 	     , transaction_error, MetadataLoadComplete_success);
     }  
     
+    function SaveEvent(eventObj)
+    {
+    	   	    	
+    	var sql ="INSERT INTO Events (ID,Name,StartDate,EndDate) VALUES ('" + eventObj.ID +"','"
+		+ eventObj.Name +"','" + eventObj.StartDate +"','" + eventObj.EndDate +  "')"; 
+		       
+	     db.transaction(function(tx)
+	     {	     	
+	     	tx.executeSql(sql);	     	
+	     }
+	     , transaction_error, SaveDB_success);
+    } 
+    
     function SaveLocation(locationObj)
     {
     	   	    	
@@ -548,6 +549,28 @@ function  CleanTables()
 		db.transaction(function(tx)
 	     {	     	
 	     	tx.executeSql(sqlDeleteParticipants);    	
+	     }
+	     , transaction_error, DeleteTable_success);
+    	
+    	
+    	
+    	// Delete and Recreate Event Table 
+    	db.transaction(function(tx)
+	     {	     	
+	     	tx.executeSql('DROP TABLE IF EXISTS Events');    	
+	     }
+	     , transaction_error, SaveDB_success);
+    	
+    	var sqlDeleteEvents = 
+						"CREATE TABLE IF NOT EXISTS Events ( "+
+						"ID INTEGER PRIMARY KEY, " +		
+						"Name VARCHAR(50), " +
+						"StartDate VARCHAR(50), " +											
+						"EndDate VARCHAR(50))";
+		
+		db.transaction(function(tx)
+	     {	     	
+	     	tx.executeSql(sqlDeleteEvents);    	
 	     }
 	     , transaction_error, DeleteTable_success);
     	
