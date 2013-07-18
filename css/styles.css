@@ -65,6 +65,8 @@ li .bubble {
 	bottom: 20px;
 	width: 100%;
 	overflow: auto;
+	border-top: 1px solid #fff;
+	
 } 
 
 #scroller {
@@ -115,6 +117,7 @@ li .bubble {
     border-radius: 10px;
 	
 }
+
 
 #footer
 {

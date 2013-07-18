@@ -109,13 +109,7 @@ function getEmployee_success(tx, results) {
 	$('#fullName').text(employee.FirstName + ' ' + employee.LastName);
 	$('#level').html("<strong>Level:</strong>"+employee.Level + ",<strong>Points:</strong>"+ employee.Points);
 	$('#location').html("<strong>Location:</strong>"+ employee.locationname + ",<strong>Group:</strong>"+ employee.groupname );
-	//$('#group').text("Group:"+ employee.GroupID);
-	//$('#city').text(employee.city);
-	//$('#state').text(employee.state);
-		
-			
 	
-	//db = null;
 	
 	db.transaction(getObjectives, transaction_error);
 }
@@ -162,7 +156,16 @@ function getObjectives_success(tx, results) {
 	 // Set value of status of objective
 	$('#'+objective.ID).prop('checked', objective.Completed);
 
-	
+
+	var checkClick;
+	checkClick=	document.getElementById(objective.ID); 
+	FastClick.attach(checkClick);		
+
+		checkClick.addEventListener('touchend', function(event) {
+			alert('clicked');
+		}, false);
+		
+		
 	// Assign the on change function
 	/*
 	$('#checkbox-'+objective.ID).on('click',function(){
@@ -171,7 +174,9 @@ function getObjectives_success(tx, results) {
 		*/
 	 } // End of for loop
 	 
+	 
 	$('#objectives').trigger( "create" );	
+	
 	
 	setTimeout(function(){
 		scroll.refresh();

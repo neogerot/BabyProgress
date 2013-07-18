@@ -1,6 +1,7 @@
 /* Perform Synchornization functions here*/
 var db;
 var myScroll;
+var arrImagesToDownload = [];
 function loaded() {
 	setTimeout(function () { 
                 myScroll = new iScroll('wrapper', {
@@ -260,24 +261,14 @@ function LoadMetadata()
 				              		    $eventinfo.append("<div> UniqueID: " + this.UniqueID +"<br></div>");	
 				              		  
 				              		 // var imagelocalPath = window.rootFS.fullPath +"/photos/"+ this.Image;
-				              		  var imagelocalPath = "/photos/"+ this.Image;
-				              		  var imageName=this.Image;
+				              		//  var imagelocalPath = "/photos/"+ this.Image;
+				              		 // var imageName=this.Image;
 				              		  
-				              		  /*
-				              		  if(imageName!='')
-				              		  {
-						              		 // Uncomment before deploying to Device..
-						              		  $.get(imagelocalPath)
-											    .done(function() { 
-											        // exists code 
-											        // Do nothing
-											    }).fail(function() { 
-											        // not exists code
-											        // Download									        
-											         downloadFile(imageName);
-											    });
-									    }
-											*/		              		  
+				              		  // Add into the image collection to download..
+				              		  				              		  
+				              		    arrImagesToDownload.push(this.Image);
+				              		  
+				              		 	              		  
 				              		  
 				              		    $eventinfo.append("<div> Image:<img src='#'" + this.Image+"'></img><br></div>");	
 				              		    $eventinfo.append("<div> Level: " + this.Level +"<br></div>");	
@@ -380,12 +371,40 @@ function LoadMetadata()
 															
               		  	     		 
                 		
-	             
+	           			 			 // Now Download Images
+								DownloadParticipantImages();
+			
 		 
 			    }
 			  };			
 			  xhr1.send();
 			
+			
+    }
+    
+ function DownloadParticipantImages(){
+    //	alert(arrImagesToDownload);
+    	$.each(arrImagesToDownload, function(i, val) {
+    				// Download Images...
+    				//alert(val);
+    				var imageName=val.value;
+    				 var imagelocalPath =window.rootFS.fullPath + "/photos/"+ imageName;
+    	 				if(imageName!='')
+				              		  {
+						              		 // Uncomment before deploying to Device..
+						              		  $.get(imagelocalPath)
+											    .done(function() { 
+											        // exists code 
+											        // Do nothing
+											    }).fail(function() { 
+											        // not exists code
+											        // Download									        
+											         downloadFile(imageName);
+											    });
+									    }
+    			});
+    			
+    	
     }
  
 function MetadataLoadComplete_success() {
