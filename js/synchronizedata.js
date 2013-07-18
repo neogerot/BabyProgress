@@ -389,7 +389,7 @@ function LoadMetadata()
     	$.each(arrImagesToDownload, function(i, val) {
     				// Download Images...
     				//alert(val);
-    				var imageName=val.value;
+    				var imageName=val;
     				 var imagelocalPath =window.rootFS.fullPath + "/photos/"+ imageName;
     	 				if(imageName!='')
 				              		  {
