@@ -120,15 +120,18 @@ function downloadFile(imagename){
  function  UploadParticipantImages()
  {
  	// Upload all the participant Images.
+ 	alert('Upload Start..');
  	var reader = window.rootFS.createReader();
     reader.readEntries(gotList, fail);
  	
  }  
   
  function gotList(entries) {
+  alert('Entries Read:'+entries.length);
     var i;
     for (i=0; i<entries.length; i++) {
         if (entries[i].name.indexOf(".jpg") != -1) {
+           alert(entries[i].name);
             uploadPhoto(entries[i].fullPath);
         }
     }
@@ -371,7 +374,7 @@ function LoadMetadata()
     }
     
  function DownloadParticipantImages(){
-    //	alert(arrImagesToDownload);
+    	alert(arrImagesToDownload);
     	$.each(arrImagesToDownload, function(i, val) {
     				// Download Images...
     				//alert(val);
