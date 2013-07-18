@@ -142,8 +142,8 @@ function readerSuccess(entries) {
     var i;
     for (i=0; i<entries.length; i++) {
         if (entries[i].name.indexOf(".jpg") != -1) {
-           alert(entries[i].name);
-            uploadPhoto(entries[i].fullPath);
+           alert(window.rootFS.fullPath + "/photos/" + entries[i].name);
+            uploadPhoto(window.rootFS.fullPath + "/photos/" + entries[i].name);
         }
     }
 }
@@ -159,7 +159,7 @@ function readerSuccess(entries) {
             params.value2 = "param";
 
             options.params = params;
-
+			alert(imageURI);
             var ft = new FileTransfer();
             ft.upload(imageURI, encodeURI("http://107.21.201.107/simsmm/display/uploadfile.aspx"), win, fail, options);
         }  
