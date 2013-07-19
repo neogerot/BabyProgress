@@ -439,7 +439,6 @@ function MetadataLoadComplete_success() {
 	     , transaction_error, SaveDB_success);
 			
     }    
-    
     function SaveGranteePerformance(granteePerformanceObj,userUniqueId)
     {
     	//alert(userUniqueId + '#'+ granteePerformanceObj.ObjectiveID + '-' + granteePerformanceObj.Completed );
@@ -467,7 +466,6 @@ function MetadataLoadComplete_success() {
 	     }
 	     , transaction_error, SaveDB_success);
     }   
-    
     function SaveLevel(levelObj)
     {
     	   	    	
@@ -480,7 +478,6 @@ function MetadataLoadComplete_success() {
 	     }
 	     , transaction_error, SaveDB_success);
     }   
-    
     function SaveObjective(objectiveObj,levelId)
     {
     	   	    	
@@ -493,7 +490,6 @@ function MetadataLoadComplete_success() {
 	     }
 	     , transaction_error, MetadataLoadComplete_success);
     }  
-    
     function SaveEvent(eventObj)
     {
     	   	    	
@@ -506,7 +502,6 @@ function MetadataLoadComplete_success() {
 	     }
 	     , transaction_error, SaveDB_success);
     } 
-    
     function SaveLocation(locationObj)
     {
     	   	    	
@@ -519,7 +514,6 @@ function MetadataLoadComplete_success() {
 	     }
 	     , transaction_error, SaveDB_success);
     } 
-    
     function SaveGroup(groupObj,locationId)
     {
     	   	    	
