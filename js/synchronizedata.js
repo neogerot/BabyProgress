@@ -44,7 +44,8 @@ function RedirectToPage(pageUrl) {
 	
 	//alert("got filesystem");	  
 	//downloadFile('010001.jpg'); 
-	uploadPhoto(window.rootFS.fullPath + "/photos/" + "testupload18.jpg");
+	alert(window.rootFS.fullPath);
+	uploadPhoto(window.rootFS.fullPath + "photos/" + "testupload18.jpg");
 }
 
     document.addEventListener('deviceready', function() {                
@@ -159,7 +160,7 @@ function readerSuccess(entries) {
             params.value2 = "param";
 
             options.params = params;
-			alert(options.fileName);
+			alert(imageURI);
 			
             var ft = new FileTransfer();
             ft.upload(imageURI, encodeURI("http://107.21.201.107/simsmm/display/uploadfile.aspx"), win, fail, options);
