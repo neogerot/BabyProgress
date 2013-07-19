@@ -1,7 +1,14 @@
 /* Perform Synchornization functions here*/
 var db;
 var myScroll;
+var eventDataJSONObject;
 var arrImagesToDownload = [];
+var eventJson = {};
+eventJson.ID = "4";
+eventJson.Name = "Masema Drive";
+eventJson.Participants = [];
+
+
 function loaded() {
 	setTimeout(function () { 
                 myScroll = new iScroll('wrapper', {
@@ -44,8 +51,8 @@ function RedirectToPage(pageUrl) {
 	
 	//alert("got filesystem");	  
 	//downloadFile('010001.jpg'); 
-	alert(window.rootFS.fullPath);
-	uploadPhoto(window.rootFS.fullPath + "/photos/" + "testupload18.jpg");
+	//alert(window.rootFS.fullPath);
+	//uploadPhoto(window.rootFS.fullPath + "/photos/" + "testupload18.jpg");
 }
 
     document.addEventListener('deviceready', function() {                
@@ -75,7 +82,7 @@ function onDeviceReady() {
 }
   
   
-  var eventDataJSONObject;
+  
  
   
 function SynchronizeDevice()
@@ -124,12 +131,12 @@ function downloadFile(imagename){
  	
  	window.rootFS.getDirectory("photos", {create: false, exclusive: false}, getDirSuccess, fail);
  	// Upload all the participant Images.
- 	alert('Upload Start..');	
+ 	//alert('Upload Start..');	
  	
  }  
   
  function getDirSuccess(dirEntry) {
-    alert('dirEntry');
+   // alert('dirEntry');
    // Get a directory reader
     var directoryReader = dirEntry.createReader();
 
@@ -139,7 +146,7 @@ function downloadFile(imagename){
   }
   
 function readerSuccess(entries) {
-    alert('entries')
+  //  alert('entries')
     var i;
     for (i=0; i<entries.length; i++) {
         if (entries[i].name.indexOf(".jpg") != -1) {
@@ -160,7 +167,7 @@ function readerSuccess(entries) {
             params.value2 = "param";
 
             options.params = params;
-			alert(imageURI);
+			//alert(imageURI);
 			
             var ft = new FileTransfer();
             ft.upload(imageURI, encodeURI("http://107.21.201.107/simsmm/display/uploadfile.aspx"), win, fail, options);
@@ -184,7 +191,9 @@ function LoadMetadata()
     	    $('#busy').show();		
 			  var xhr1 = new XMLHttpRequest();
 			  //alert('1');
-			  xhr1.open('GET', 'metadata/data.txt', true);
+			 // xhr1.open('GET', 'metadata/data.txt', true);
+			 xhr1.open('GET', 'http://masema.org/sync/sync.aspx?type=download&id=4&username=testgrantor@masema.com&password=abc123&bypass=', true);
+			 // Event Data Download :'http://masema.org/sync/sync.aspx?type=download&id=4&username=testgrantor@masema.com&password=abc123&bypass='
 			  if (xhr1.overrideMimeType) {
 			    xhr1.overrideMimeType('text/plain; charset=x-user-defined');
 			  }
@@ -387,7 +396,7 @@ function LoadMetadata()
     }
     
  function DownloadParticipantImages(){
-    	alert(arrImagesToDownload);
+    	//alert(arrImagesToDownload);
     	$.each(arrImagesToDownload, function(i, val) {
     				// Download Images...
     				//alert(val);
@@ -748,15 +757,69 @@ function  CleanTables()
 }
 
 
-/*
- * 
-var myObject = new Object();
-myObject.name = "John";
-myObject.age = 12;
-myObject.pets = ["cat", "dog"];
+function UploadData()
+{
+	db.transaction(UploadParticipantData, transaction_error);
+}
+function UploadParticipantData(tx)
+{       
+     var sql = "Select FirstName,LastName,UniqueID,Image,Level,Points,LocationID,GroupID,IsNew,IsUpdate from Participants";
+     var pLen,DTO;
+     
+     
+     tx.executeSql(sql, [], function(tx, results) {
+                pLen = results.rows.length;
+                eventJson.Participants = [];
+                for (var i = 0; i < pLen; i++) {
+                    var participant = results.rows.item(i);
+                    eventJson.Participants.push(participant);
 
-var myString = JSON.stringify(myObject);
- * 
- */
+                    tx.executeSql('Select ObjectiveID, Completed from Performance where UniqueID = ?',
+                    [participant.UniqueID],
+                    function(innerId, index) {
+                        return (
+                          function(tx, results) {
+                              //alert(innerId);
+                              var len = results.rows.length;
+                              eventJson.Participants[index].Performance = [];
+                              for (var j = 0; j < len; j++) {
+                                  var performance = results.rows.item(j);
+                                  eventJson.Participants[index].Performance.push(performance);
+                              }
+                              if(index==pLen-1)
+                              {
+                                 DTO = JSON.stringify(eventJson);
+           					     UploadtoServer(DTO);
+           					     alert(DTO);
+           					   }
+                          }
+                       );
+                    } (participant.UniqueID, i)
+                );
+                }
+            });
+}
 
-    
+function UploadtoServer(participantPerformance)
+{
+	
+	var uploadurl='http://www.masema.org/sync/sync.aspx';
+	
+	$.ajax({
+    type       : "POST",
+    url        : uploadurl,
+    crossDomain: true,
+    beforeSend : function() {$('#busy').show();},
+    complete   : function() {$('#busy').hide();},
+    data       : {username : 'admin', password : 'admin',bypass:'1',type:'upload',upload:participantPerformance},
+    dataType   : 'json',
+    success    : function(response) {
+        //console.error(JSON.stringify(response));
+       // alert('Works!');
+    },
+    error      : function() {
+        //console.error("error");
+        alert('Problem Uploading Data');                  
+    }
+}); 
+}
