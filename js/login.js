@@ -56,9 +56,13 @@ window.addEventListener('load', function() {
   
  // ----------------------------------------------------------------------------------------------
  function RedirectToPage(pageUrl) {
-	$('#busy').hide();
-	//alert("Employee Deleted");		
+	$('#busy').html('Redirecting...');	
+	
+	setTimeout(function(){ 	
     window.location=pageUrl;
+}, 10000);
+ 	
+   
 }  
  
 // This function will authenticate the User from the Server and Get the Events information to choose for the Device..
@@ -114,29 +118,58 @@ function Authenticate(){
  
  //------------------------------------ Event Data Download Starts-------------------------------------------------------------------
 function DownloadEventData(){ 	
+	
+	$('#busy').html('Database...');
+	$('#busy').show();
  	CleanTables();
- 	LoadMetadata();
+ 
+ 	setTimeout(function(){
+ 	$('#busy').html('Event...');
+    LoadMetadata();
+}, 10000);
+ 	
  	// Redirect to Index Page....
  	
  }
  
  //------------------------------------ Images Download -----------------------------------------------------------------------------
- function DownloadParticipantImages(){
+ 	function DownloadParticipantImages(){
     	//alert(arrImagesToDownload);
+    	$('#busy').show();			
+		$('#busy').html('Images...');
     	$.each(arrImagesToDownload, function(i, val) {
     				// Download Images...
     				//alert(val);
     				var imageName=val;    				
     				downloadFile(imageName);
     	 	});
-    	
+    	 	
+    	/*
     	setTimeout(function(){
      RedirectToPage("index.html");
-}, 10000);		
+}, 10000);
+*/	
+ 			 
+		   
+			setTimeout(function(){ 	
+    RedirectToPage("index.html");
+}, 20000);
+			
+			/*
+			window.setInterval(function() {
+                    var timeCounter = $("busy").html();
+                    var updateTime = eval(timeCounter)- eval(1);
+                    $("busy").html(updateTime);
+
+                    if(updateTime == 0){
+                        window.location = ("index.html");
+                    }
+                }, 1000);
+                */
     	
     }
  //http://107.21.201.107/ziphandler/default.aspx
-function downloadFile(imagename){
+	function downloadFile(imagename){
 	  // alert('download start'+imagename);      
 	 //  alert(window.rootFS.fullPath);
        window.rootFS.getDirectory("photos", {create: true, exclusive: false}, function(dir) { 
@@ -167,10 +200,10 @@ function downloadFile(imagename){
     
     
 //----------------------------------------- Database Operations Start -----------------------------------
-function  CleanTables()
+	function  CleanTables()
     {
     	//alert('Clean Tables');
-    	$('#busy').show();
+    	//$('#busy').show();
     	/*------------------ delete and recreate all the tables ----------------------------------*/
     	
     	// Delete and Recreate grantee Table 
@@ -371,10 +404,11 @@ function  CleanTables()
 	     
     }
    
-function LoadMetadata()
+	function LoadMetadata()
     {
+    	$("#eventinfo").hide();
     	   // alert('Start Loading Metadata..');
-    	    $('#busy').show();		
+    	  //  $('#busy').show();		
 			  var xhr1 = new XMLHttpRequest();
 			  //alert('1');
 			 // xhr1.open('GET', 'metadata/data.txt', true);
@@ -691,8 +725,7 @@ function fail(error) {
     console.log(error.code);
 }
 function MetadataLoadComplete_success() {
-	$('#busy').hide();
-	// Now Download Images	
+	
 }
 function SaveDB_success() {
 	//alert('SaveGranteeDB_success');	
@@ -702,7 +735,7 @@ function transaction_error(tx, error) {
     alert("Database Error: " + error);
 }
 function DeleteTableComplete_success() {
-	$('#busy').hide();
+	//$('#busy').html('Database Created');
 }
  // function to be called at last
  function DeleteTable_success() {
