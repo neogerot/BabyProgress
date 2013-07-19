@@ -45,7 +45,7 @@ function RedirectToPage(pageUrl) {
 	//alert("got filesystem");	  
 	//downloadFile('010001.jpg'); 
 	alert(window.rootFS.fullPath);
-	uploadPhoto(window.rootFS.fullPath + "photos/" + "testupload18.jpg");
+	uploadPhoto(window.rootFS.fullPath + "/photos/" + "testupload18.jpg");
 }
 
     document.addEventListener('deviceready', function() {                
