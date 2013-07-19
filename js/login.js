@@ -2,6 +2,12 @@
 var db;
 var arrImagesToDownload = [];
 var eventDataJSONObject;
+
+//-----------Mutex-----------
+var mutexDB=0;
+var mutexImages;
+//---------------------
+
 //------------------------------ Initialize System Resources---------------------------------------------------
 //------------------------------ File System Initialization Starts---------------------------------------------
  document.addEventListener('deviceready', function() {                
@@ -123,10 +129,7 @@ function DownloadEventData(){
 	$('#busy').show();
  	CleanTables();
  
- 	setTimeout(function(){
- 	$('#busy').html('Event...');
-    LoadMetadata();
-}, 10000);
+ 	
  	
  	// Redirect to Index Page....
  	
@@ -137,35 +140,14 @@ function DownloadEventData(){
     	//alert(arrImagesToDownload);
     	$('#busy').show();			
 		$('#busy').html('Images...');
+		mutexImages=arrImagesToDownload.length;
+		alert(mutexImages);
     	$.each(arrImagesToDownload, function(i, val) {
     				// Download Images...
     				//alert(val);
     				var imageName=val;    				
     				downloadFile(imageName);
-    	 	});
-    	 	
-    	/*
-    	setTimeout(function(){
-     RedirectToPage("index.html");
-}, 10000);
-*/	
- 			 
-		   
-			setTimeout(function(){ 	
-    RedirectToPage("index.html");
-}, 20000);
-			
-			/*
-			window.setInterval(function() {
-                    var timeCounter = $("busy").html();
-                    var updateTime = eval(timeCounter)- eval(1);
-                    $("busy").html(updateTime);
-
-                    if(updateTime == 0){
-                        window.location = ("index.html");
-                    }
-                }, 1000);
-                */
+    	 	});  	 	
     	
     }
  //http://107.21.201.107/ziphandler/default.aspx
@@ -181,9 +163,19 @@ function DownloadEventData(){
                                            window.rootFS.fullPath + "/photos/" +imagename,
                                            function(theFile) {
                                          //  alert("download complete");
+                                         
+                                         	if(--mutexImages==0)
+                                         	{
+                                         		RedirectToPage('index.html');
+                                         	}
                                            console.log("download complete: " + theFile.toURI());                                          
                                            },
                                            function(error) {
+                                           	
+                                           	if(--mutexImages==0)
+                                         	{
+                                         		RedirectToPage('index.html');
+                                         	}
                                            //alert("error in download");
                                           // alert(error.code);
                                            console.log("download error source " + error.source);
@@ -202,6 +194,7 @@ function DownloadEventData(){
 //----------------------------------------- Database Operations Start -----------------------------------
 	function  CleanTables()
     {
+    	mutexDB=16;
     	//alert('Clean Tables');
     	//$('#busy').show();
     	/*------------------ delete and recreate all the tables ----------------------------------*/
@@ -231,7 +224,7 @@ function DownloadEventData(){
 	     {	     	
 	     	tx.executeSql(sqlDeleteParticipants);    	
 	     }
-	     , transaction_error, DeleteTable_success);
+	     , transaction_error, SaveDB_success);
     	
     	
     	
@@ -253,7 +246,7 @@ function DownloadEventData(){
 	     {	     	
 	     	tx.executeSql(sqlDeleteEvents);    	
 	     }
-	     , transaction_error, DeleteTable_success);
+	     , transaction_error, SaveDB_success);
     	
     	
     	// Delete and Recreate granteeperformance Table 
@@ -276,7 +269,7 @@ function DownloadEventData(){
 	     {	     	
 	     	tx.executeSql(sqlDeleteGranteePerformance);    	
 	     }
-	     , transaction_error, DeleteTable_success);    	    		
+	     , transaction_error, SaveDB_success);    	    		
     	
     	
     	//********************************* Delete and Recreate game Table ******************************
@@ -297,7 +290,7 @@ function DownloadEventData(){
 	     {	     	
 	     	tx.executeSql(sqlDeleteGame);    	
 	     }
-	     , transaction_error, DeleteTable_success);  
+	     , transaction_error, SaveDB_success);  
 	     
 	     //**********************************************************************************************
 	     
@@ -319,7 +312,7 @@ function DownloadEventData(){
 	     {	     	
 	     	tx.executeSql(sqlDeleteLevels);    	
 	     }
-	     , transaction_error, DeleteTable_success);  
+	     , transaction_error, SaveDB_success);  
 	     
 	     //**********************************************************************************************
 	     
@@ -344,7 +337,7 @@ function DownloadEventData(){
 	     {	     	
 	     	tx.executeSql(sqlDeleteObjectives);    	
 	     }
-	     , transaction_error, DeleteTable_success);  
+	     , transaction_error, SaveDB_success);  
 	     
 	     //**********************************************************************************************    
 	     
@@ -370,7 +363,7 @@ function DownloadEventData(){
 	     {	     	
 	     	tx.executeSql(sqlDeleteLocations);    	
 	     }
-	     , transaction_error, DeleteTable_success);  
+	     , transaction_error, SaveDB_success);  
 	     
 	     //**********************************************************************************************    
 	     	     
@@ -395,13 +388,98 @@ function DownloadEventData(){
 	     {	     	
 	     	tx.executeSql(sqlDeleteGroups);    	
 	     }
-	     , transaction_error, DeleteTableComplete_success);  
+	     , transaction_error, SaveDB_success);  
 	     
 	     //**********************************************************************************************  
 	       
 	        	
     	
 	     
+    }
+    
+    function InitializeMutex()
+    {
+         mutexDB=0;
+          //****************************** EVENT OBJECT *************************************
+		             		 
+								$(eventDataJSONObject).each(function() {  							
+		              		   		 		              		   		 
+		              		   		++mutexDB;		              		   		 
+		              		   		
+		              		   		  var locationObject = this.Locations;
+		              		   		  
+				              		       $(locationObject).each(function() { 				              		     
+				              		     
+				              		 	  ++mutexDB;	
+				              		 	  
+				              		 	   //****************************** Groups OBJECT *************************************
+				              		 	   var groupObject = this.Groups;
+				              		 	   var locationId=this.ID ;
+				              		 	   //------------------------ Traverse Groups : START----------------------------
+				              		       $(groupObject).each(function() { 				              		     
+				              		     
+				              		 	    ++mutexDB;	
+				              		 	 
+				              		       		        
+				              		    }); 			              		 	  
+				              		       		        
+				              		    }); 
+		              		   		 	              		   		 
+		              		   
+				              
+				              		  var participantObject = this.Participants;
+				              		
+				              	
+				              		   $(participantObject).each(function() {  
+				              		   
+				              		      ++mutexDB;	
+				              		 
+				              		     var performanceObject = this.Performance;   
+				              		     
+				              		    
+				              		       $(performanceObject).each(function() { 	
+				              		       
+				              		 	    ++mutexDB;					              		 	  
+				              		       		        
+				              		    }); // end of performance		
+				              		   
+				              		   }); // end of participants
+
+
+				              		    var gameObject = this.Game;
+				              		    
+				              		   
+				              		    $(gameObject).each(function() {  
+				              		    	
+				              		    	 	  
+				              		 	   				  ++mutexDB;	
+				              		 	 			
+				              		    	 	      var levelsObject = this.Levels;
+				              		    	 	      
+				              		    
+				              		    	 	        $(levelsObject).each(function() {  
+				              		    	 	        	
+				              		 	   						  ++mutexDB;	
+				              		 	 					   
+				              		    	 	        	    var objectivesObject = this.Objectives;
+				              		    	 	        	    
+				              		  
+				              		    	 	        	     $(objectivesObject).each(function() { 
+				              		    	 	        	     
+				              		 	   									  ++mutexDB;	
+				              		 	 					  		
+				              		    	 	        	    }); // end of Objectives
+				              		    	 	        	    
+				              		 
+				              		    	 	        	 }); // end of Levels
+				              		    	 	        	 
+				              		  
+				              		   
+				              		   }); // end of Game
+				              		    
+				              		   
+									}); // end of Event
+		//alert(mutexDB);
     }
    
 	function LoadMetadata()
@@ -426,16 +504,13 @@ function DownloadEventData(){
 		              		  eventDataJSONObject = JSON.parse(this.responseText);
 		              		  //alert('JSON object Initialized');   
 		              		 
+		              		  InitializeMutex();
 		              		 
 		              		  var $eventinfo = $("#eventinfo");
 		              		  $eventinfo.html("");  
 		              		   
-								$(eventDataJSONObject).each(function() {  
-									 $eventinfo.append("<div> Event Name: " + this.Name + "<br></div>");	
-		              		 		 $eventinfo.append("<div> Id: " + this.ID + "<br></div>");	
-		              		 		 $eventinfo.append("<div> Start Date: " + this.StartDate + "<br></div>");	
-		              		   		 $eventinfo.append("<div> End Date: " + this.EndDate + "<br></div>");	
-		              		   		 
+								$(eventDataJSONObject).each(function() {  							
+		              		   		 		              		   		 
 		              		   		 SaveEvent(this);	
 		              		   		 
 		              		   		 $eventinfo.append("<div> Locations ######################<br></div>");	
@@ -604,7 +679,7 @@ function DownloadEventData(){
 															
               		  	     		 
                 		
-	           			 			DownloadParticipantImages();
+	           			 			
 			
 		 
 			    }
@@ -625,7 +700,7 @@ function DownloadEventData(){
 	     {	     	
 	     	tx.executeSql(sql);	     	
 	     }
-	     , transaction_error, SaveDB_success);
+	     	     , transaction_error, MetadataLoadComplete_success);
 			
     }    
     function SaveGranteePerformance(granteePerformanceObj,userUniqueId)
@@ -639,7 +714,7 @@ function DownloadEventData(){
 	     {	     	
 	     	tx.executeSql(sql);	     	
 	     }
-	     , transaction_error, SaveDB_success);
+	     , transaction_error, MetadataLoadComplete_success);
 	     
 		
     }   
@@ -653,7 +728,7 @@ function DownloadEventData(){
 	     {	     	
 	     	tx.executeSql(sql);	     	
 	     }
-	     , transaction_error, SaveDB_success);
+	     , transaction_error, MetadataLoadComplete_success);
     }   
     function SaveLevel(levelObj)
     {
@@ -665,7 +740,7 @@ function DownloadEventData(){
 	     {	     	
 	     	tx.executeSql(sql);	     	
 	     }
-	     , transaction_error, SaveDB_success);
+	     , transaction_error, MetadataLoadComplete_success);
     }   
     function SaveObjective(objectiveObj,levelId)
     {
@@ -689,7 +764,7 @@ function DownloadEventData(){
 	     {	     	
 	     	tx.executeSql(sql);	     	
 	     }
-	     , transaction_error, SaveDB_success);
+	     , transaction_error, MetadataLoadComplete_success);
     } 
     function SaveLocation(locationObj)
     {
@@ -701,7 +776,7 @@ function DownloadEventData(){
 	     {	     	
 	     	tx.executeSql(sql);	     	
 	     }
-	     , transaction_error, SaveDB_success);
+	     , transaction_error, MetadataLoadComplete_success);
     } 
     function SaveGroup(groupObj,locationId)
     {
@@ -713,7 +788,7 @@ function DownloadEventData(){
 	     {	     	
 	     	tx.executeSql(sql);	     	
 	     }
-	     , transaction_error, SaveDB_success);
+	     , transaction_error, MetadataLoadComplete_success);
     } 
      
 
@@ -724,23 +799,38 @@ function DownloadEventData(){
 function fail(error) {
     console.log(error.code);
 }
-function MetadataLoadComplete_success() {
-	
+function MetadataLoadComplete_success() {	
+	//alert(mutexDB);
+	if(--mutexDB==0)
+	{
+		setTimeout(function(){
+ 			$('#busy').html('Event...');
+  			DownloadParticipantImages();
+		}, 10000);
+	}
 }
+
 function SaveDB_success() {
-	//alert('SaveGranteeDB_success');	
+	
+	if(--mutexDB==0)
+	{
+		setTimeout(function(){
+ 			$('#busy').html('Event...');
+  			LoadMetadata();
+		}, 10000);
+	}
 }
+
 function transaction_error(tx, error) {
 	$('#busy').hide();
     alert("Database Error: " + error);
 }
 function DeleteTableComplete_success() {
 	//$('#busy').html('Database Created');
+	alert('deletetable');
 }
  // function to be called at last
- function DeleteTable_success() {
-	
-}
+ 
  
 
  //--------------------------------------------------------------------------------------------------
