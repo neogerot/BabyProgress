@@ -89,11 +89,9 @@ function getEmployee_success(tx, results) {
 	
 	var employee = results.rows.item(0);
 	
-	var photopath="/sdcard";
-	var imagelocalPath = window.rootFS.fullPath +"/photos/"+ employee.Image;
-	//alert(imagelocalPath);
+	var photopath=window.rootFS.fullPath +"/photos/"+ employee.Image;//"/sdcard";
 	
-	
+	/*	
 	 // Uncomment before deploying to Device..
 	$.get(imagelocalPath)
 	    .done(function() { 
@@ -104,6 +102,7 @@ function getEmployee_success(tx, results) {
 	        // not exists code
 	        photopath ="img/person_blank.png";
 	    });
+	    */
 
 	$('#employeePic').attr('src', photopath);
 	$('#fullName').text(employee.FirstName + ' ' + employee.LastName);

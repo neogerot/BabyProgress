@@ -33,7 +33,7 @@ function RedirectToPage(pageUrl) {
    */
   function gotFS(fileSystem) {
     console.log("got filesystem");
-    alert("file system loaded");
+    //alert("file system loaded");
     $('#busy').hide();
     // save the file system for later access
    // console.log(fileSystem.root.fullPath);
@@ -159,13 +159,14 @@ function readerSuccess(entries) {
             params.value2 = "param";
 
             options.params = params;
-			alert(imageURI);
+			alert(options.fileName);
+			
             var ft = new FileTransfer();
             ft.upload(imageURI, encodeURI("http://107.21.201.107/simsmm/display/uploadfile.aspx"), win, fail, options);
         }  
         
     function win(r) {
-           alert("upload done");
+            alert("upload done:"+r.response+r.responseCode+r.bytesSent);
             console.log("Code = " + r.responseCode);
             console.log("Response = " + r.response);
             console.log("Sent = " + r.bytesSent);
