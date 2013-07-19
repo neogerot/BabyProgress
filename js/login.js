@@ -56,7 +56,7 @@ window.addEventListener('load', function() {
   
  // ----------------------------------------------------------------------------------------------
  function RedirectToPage(pageUrl) {
-	$('#busy').html('Redirecting...');	
+	$('#busy').html('Redirect..');	
 	
 	setTimeout(function(){ 	
     window.location=pageUrl;
