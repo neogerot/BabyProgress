@@ -10,18 +10,24 @@
 
     <body>
         
-	<div data-role="header" data-theme="a">	
+	<div data-role="header" data-theme="b">	
 	<p>		
-		<h1>Ma-se-Ma</h1>			
-	    <a href="#" data-role="button" data-inline="true" data-theme="b" id="btnAdd" >Add Paticipant</a>
-		<a href="#" data-role="button" data-inline="true" data-theme="b" id="btnSynchronize">Synchronize</a>		
+		<h1>Participants</h1>	
+		<div class="ui-btn-left" data-role="controlgroup" data-type="horizontal">
+		 	    <a href="#" data-role="button" data-inline="true" data-theme="b" id="btnAdd" data-icon="plus" >Add Paticipant</a>
+		 	    <a href="#" data-role="button" data-inline="true" data-theme="b" id="btnLottery" data-icon="star">Lottery</a>
+		</div>
+	    		<div class="ui-btn-right" data-role="controlgroup" data-type="horizontal">
+					<a href="#" data-role="button" data-inline="true" data-theme="b" id="btnSynchronize" data-icon="gear">Options</a>	
+					<a href="#" data-role="button" data-inline="true" data-theme="b" id="btnLogout" data-icon="grid">Logout</a>	
+				 </div>		
    	</p>
    	
 	</div>
 	<div id="title">
 		<div class="ui-grid-a">
 			<div class="ui-block-a"><input id='txtSearch' type="search"/></div>
-			<div class="ui-block-b"><a href="#" data-role="button" data-theme="b" id="btnSearch" data-inline="true">Search</a></div>
+			<div class="ui-block-b"><a href="#" data-role="button" data-theme="b" id="btnSearch" data-inline="true" data-icon="search">Search</a></div>
 		</div> 								
    			
    		

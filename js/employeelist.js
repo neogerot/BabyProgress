@@ -8,13 +8,19 @@ var scroll = new iScroll('wrapper', { vScrollbar: false, hScrollbar:false, hScro
 				var buttonAdd;	
 				var buttonSynchronize;
 				var buttonSearch;
+				var buttonLottery;
+				var buttonLogout ;
 				buttonAdd = document.getElementById('btnAdd');
 				buttonSynchronize = document.getElementById('btnSynchronize');
 				buttonSearch = document.getElementById('btnSearch');
+				buttonLottery  = document.getElementById('btnLottery'); 
+				buttonLogout  = document.getElementById('btnLogout'); 
+				
 		
 				// Android 2.2 needs FastClick to be instantiated before the other listeners so that the stopImmediatePropagation hack can work.
 				FastClick.attach(buttonAdd);	
-				FastClick.attach(buttonSynchronize);			
+				FastClick.attach(buttonSynchronize);	
+				FastClick.attach(buttonLottery);		
 		
 				buttonAdd.addEventListener('touchend', function(event) {
 					RedirectToPage('addemployeenew.html');
@@ -27,6 +33,14 @@ var scroll = new iScroll('wrapper', { vScrollbar: false, hScrollbar:false, hScro
   							
 				buttonSearch.addEventListener('touchend', function(event) {
 						Search();
+					}, false);
+					
+				buttonLottery.addEventListener('touchend', function(event) {
+						RedirectToPage('lottery.html');
+					}, false);
+					
+				buttonLogout.addEventListener('touchend', function(event) {
+						Logout();
 					}, false);
 				
 				
@@ -62,6 +76,12 @@ function transaction_error(tx, error) {
     alert("Database Error: " + error);
 }
 
+function Logout()
+{
+	// Clear the value in the table that indicates the logged in status..and then redirect to the login page	
+	RedirectToPage('login.html');
+}
+
 function populateDB_success() {
 	//alert('populateDB_success');
 	dbCreated = true;	
@@ -88,7 +108,7 @@ function getEmployees_success(tx, results) {
     	RedirectToPage('login.html');
     }
     var photopath="/sdcard";
-     $('#employeeList').append('<li data-role="list-divider"><strong>List of Grantees</strong> <span class="ui-li-count">'+len+'</span></li>');
+     $('#employeeList').append('<li data-role="list-divider"><strong>No. of Participants:</strong> <span class="ui-li-count">'+len+'</span></li>');
      
     for (var i=0; i<len; i++) {
     	var employee = results.rows.item(i);

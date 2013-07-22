@@ -13,17 +13,18 @@
 
    <body>
         
-     <div data-role="header" data-theme="a">	
+     <div data-role="header" data-theme="b">	
 			<p>		
-				<h1>Grantee Directory</h1>			
-	  			<a href="#" data-role="button" data-inline="true" data-theme="b" id="btnBack" onclick="RedirectToPage('index.html')">Back</a>
-				<a href="#" data-role="button" data-inline="true" data-theme="b" id="btnCleanTables" onclick="CleanTables();">Clean</a>		
-				<a href="#" data-role="button" data-inline="true" data-theme="b" id="btnLoadMetadata" onclick="LoadMetadata();">LoadMetadata</a>
-				<a href="#" data-role="button" data-inline="true" data-theme="b" id="btnUploadParticipantImages" onclick="UploadData();">Upload Photos</a>
+				<h1>Options</h1>			
+	  			<a href="#" data-role="button" data-inline="true" data-theme="b" id="btnBack" onclick="RedirectToPage('index.html')" data-icon="back">Back</a>
+				<div class="ui-btn-right" data-role="controlgroup" data-type="horizontal">
+					<a href="#" data-role="button" data-inline="true" data-theme="b" id="btnCleanTables" onclick="CleanTables();" data-icon="delete">Clean</a>		
+					<a href="#" data-role="button" data-inline="true" data-theme="b" id="btnUploadParticipantImages" onclick="UploadData();" data-icon="refresh">Upload Data</a>
+				</div>	
   		 	</p>
    	   </div>	
 	<div id="title">
-		Metadata
+	
 	</div>
 	<div id="result" style="display: none;"></div>
 	
@@ -33,7 +34,7 @@
     	</div>		
 	</div>
 	<div id="busy">Loading...</div>	
-	<div id="ready">Loading...</div>
+	<div id="ready"></div>
     <div id="footer">@2013</div>
     
 	<script src="phonegap.js"></script>

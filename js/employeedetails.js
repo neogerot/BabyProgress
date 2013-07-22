@@ -76,7 +76,7 @@ function getEmployee(tx) {
    var  sql = "select e.ID,e.FirstName, e.LastName, e.UniqueID, e.Image,e.Level, e.Points,e.LocationID,e.GroupID,e.IsNew,e.IsUpdate,loc.Name as locationname,g.Name as groupname "
   			  + 	" from Participants e " 
   			  +    " join Locations loc on loc.ID=e.LocationID "
-  			  +   " join Groups g on g.LocationId=loc.ID "
+  			  +   " join Groups g on g.LocationId=loc.ID and e.GroupID=g.ID "
 			  +  " where e.UniqueID=:uid "
 			  + " order by e.LastName, e.FirstName";
 				

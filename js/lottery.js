@@ -1,15 +1,86 @@
 /* Perform Login functions here*/
-var db;
-var arrImagesToDownload = [];
-var eventDataJSONObject;
-var eventId;
-var flagDataExist=0;
-//-----------Mutex-----------
-var mutexDB=0;
-var mutexImages;
-
-//---------------------
-
+var count;	
+			var timesToRotate;	
+			var numberOfParticipants;	
+			var myParticipants = [];
+			var currentParticipant;
+			var speed=50;
+			var winneruid;
+			var ParticipantCollection = [];	
+			
+			$('#winner').hide();			
+			function Initialize(){
+			    count= 1 + Math.floor(Math.random() * numberOfParticipants);
+			    timesToRotate=5;			    
+			    currentParticipant=0;			   
+			   // $('#counter').html("count:"+count+" Times:"+timesToRotate);
+			   					
+			}
+			
+			function SelectWinner(){	
+				$('#winner').hide();	
+				$('#btnStart').hide();
+				$('#counter').html();	
+				
+				Initialize();		
+						setTimeout(function(){					 							
+				 			rotateImages();	
+				 	}, speed);
+			}
+			
+			function rotateImages(){
+					var origsrc = $('#rotate_images').attr('src');
+			        var src = '';
+			        var imagerootPath=window.rootFS+'/photos/';
+			        if (origsrc == 'img/person_blank.png') src = ParticipantCollection[currentParticipant].Image;
+			       
+			        currentParticipant++;
+			       
+			        if(currentParticipant<numberOfParticipants)
+			        {
+			        	src = ParticipantCollection[currentParticipant].Image;	
+					}
+					else
+					{
+						currentParticipant=0;
+						src= ParticipantCollection[currentParticipant].Image;	
+					}
+						        
+			        $('#rotate_images').attr('src',imagerootPath+src);	
+			        
+			        count--;
+			        if(count<=0)
+			        {
+			        	if(--timesToRotate<=0)
+			        	  {
+			        	  	ShowWinner();
+			        	  }
+			        	  else
+			        	  {
+			        	  	count=numberOfParticipants;
+			        	  //	$('#counter').append("count:"+count+" Times:"+timesToRotate +" Current:"+currentParticipant);
+			        		setTimeout(function(){				        					        		        		
+		 							rotateImages();	
+		 						}, speed*timesToRotate);
+			        	  }
+			        }			      
+			        else
+			        {
+			        	//$('#counter').append("count:"+count+" Times:"+timesToRotate +" Current:"+currentParticipant);
+			        	setTimeout(function(){	
+			        					        		        		
+		 							rotateImages();	
+		 						}, speed*timesToRotate);			        	
+			        }
+			}
+			function ShowWinner(){					
+					
+					$('#counter').append(' <h3>'+ParticipantCollection[currentParticipant].FirstName+ ' '+ParticipantCollection[currentParticipant].LastName
+					+ ' ('+ParticipantCollection[currentParticipant].locationname +')</h3>');
+				    $('#winner').show();	
+			}
+			
+	
 //------------------------------ Initialize System Resources---------------------------------------------------
 //------------------------------ File System Initialization Starts---------------------------------------------
  document.addEventListener('deviceready', function() {                
@@ -19,8 +90,9 @@ var mutexImages;
 
 function gotFS(fileSystem) {
     console.log("got filesystem");  
-    $('#busy').hide();   
+    $('#busy').hide();       
     window.rootFS = fileSystem.root;
+    $('#btnStart').show();
 }
 
 //-----------------------------File System Initialization Ends ----------------------------------------------
@@ -29,50 +101,28 @@ function gotFS(fileSystem) {
 document.addEventListener("deviceready", onDeviceReady, false);
 
 function onDeviceReady() {	
-    db = window.openDatabase("GranteeDirectoryDB", "1.0", "PhoneGap Demo", 200000);    
-    $('#busy').hide();
-    $('#message').hide();	
-    $('#selectevent').hide();	
-    db.transaction(function(tx)
-	     {	     	
-	     	tx.executeSql('select ID from events',[],CheckData_success);	     	
-	     }
-	     , EventTable_error); 
-}
-function EventTable_error()
-{
-	
-}
-function CheckData_success(tx,results)
-{
-	 var len = results.rows.length;
-	if(len>0){
-		flagDataExist=1;
-	}
-	else{
-		flagDataExist=0;
-	}
-	
-	 
+    db = window.openDatabase("GranteeDirectoryDB", "1.0", "PhoneGap Demo", 200000);     
+    db.transaction(getEmployee, transaction_error);	    
 }
 
 window.addEventListener('load', function() {
-			var buttonLogin,buttonSelectEvent;	
-			buttonLogin = document.getElementById('btnLogin');
-			buttonSelectEvent = document.getElementById('btnSelectEvent');
-			
-	
+			var buttonStart;
+			var buttonBack;
+			buttonStart = document.getElementById('btnStart');		
+			buttonBack = document.getElementById('btnBack');	
+				
 			// Android 2.2 needs FastClick to be instantiated before the other listeners so that the stopImmediatePropagation hack can work.
-			FastClick.attach(buttonLogin);		
-			FastClick.attach(buttonSelectEvent);
+			FastClick.attach(buttonStart);		
+			FastClick.attach(buttonBack);		
 	
-			buttonLogin.addEventListener('touchend', function(event) {				
-				Authenticate();
+			buttonStart.addEventListener('touchend', function(event) {				
+				SelectWinner();
 			}, false);
 			
-			buttonSelectEvent.addEventListener('touchend', function(event) {				
-				DownloadEventData();
+			buttonBack.addEventListener('touchend', function(event) {				
+				RedirectToPage('index.html');
 			}, false);
+					
 			
 			
 		}, false);
@@ -85,13 +135,40 @@ window.addEventListener('load', function() {
   
  // ----------------------------------------------------------------------------------------------
  function RedirectToPage(pageUrl) {
- 		
-	setTimeout(function(){ 	
+	 	
     window.location=pageUrl;
-}, 100);
- 	
+  
+}
+
+function getEmployee(tx) {
+ 
+ var  sql = "select e.ID,e.FirstName, e.LastName, e.UniqueID, e.Image,e.Level, e.Points,e.LocationID,e.GroupID,e.IsNew,e.IsUpdate,loc.Name as locationname,g.Name as groupname "
+  			  + 	" from Participants e " 
+  			  +    " join Locations loc on loc.ID=e.LocationID "
+  			  +   " join Groups g on g.LocationId=loc.ID and e.GroupID=g.ID "			
+			  +  " order by e.LastName, e.FirstName";
+			 
+	/*			
+	var  sql =   "select e.ID,e.FirstName, e.LastName, e.UniqueID, e.Image,e.Level, e.Points,e.LocationID,e.GroupID,e.IsNew,e.IsUpdate " + 
+				"from Participants e " ;
+				
+		*/		
+	tx.executeSql(sql, [], getEmployee_success);
+}
+
+function getEmployee_success(tx, results) {
+	var len = results.rows.length;
+	numberOfParticipants=len;
+	//alert(len);
+  for (var i=0; i<len; i++) {
+    	var participant = results.rows.item(i);
+	   ParticipantCollection.push(participant);	  
+   }
    
-}  
+   var lenCol=ParticipantCollection.length;
+   //alert(lenCol);
+   
+}
  
 // This function will authenticate the User from the Server and Get the Events information to choose for the Device..
 function Authenticate(){
@@ -123,15 +200,6 @@ function Authenticate(){
 			    		 $('#login').hide();	
 			    		
 			    		 // Check if there are some values in the Event Table if exists then redirect directly to Index page 
-			    		 if(flagDataExist==1)
-			    		 {
-			    		 	$('#busy').show();
-							$('#busy').html('Loading');	
-			    		 	RedirectToPage('index.html');
-			    		 	return;
-			    		 }
-			    		 
-			    		 
 			    		 // Other wise present a Event Selection page for the User	
 			    		 var eventDataJSONObject = JSON.parse(this.responseText);
 			    		 $('#selectevent').show();	
@@ -158,13 +226,9 @@ function DownloadEventData(){
 	
 	$('#busy').html('Database...');
 	$('#busy').show();
-	 eventId=$('input[name=radio-choice]:checked').val();
-	 if (typeof eventId === "undefined") {
-	 				$('#busy').hide();
-  					alert('Select an Event');
-  					return;
-		}
- 	CleanTables(); 	
+ 	CleanTables();
+ 
+ 	
  	
  	// Redirect to Index Page....
  	
@@ -200,7 +264,7 @@ function DownloadEventData(){
                                          //  alert("download complete");
                                          
                                          	if(--mutexImages==0)
-                                         	{                                         		
+                                         	{
                                          		RedirectToPage('index.html');
                                          	}
                                            console.log("download complete: " + theFile.toURI());                                          
@@ -220,14 +284,14 @@ function DownloadEventData(){
                                            );
                 
                 
-            }, DownloadFilefail);        
+            }, fail);        
       
  
     }  
     
     
 //----------------------------------------- Database Operations Start -----------------------------------
-	function CleanTables()
+	function  CleanTables()
     {
     	mutexDB=16;
     	//alert('Clean Tables');
@@ -524,9 +588,8 @@ function DownloadEventData(){
     	  //  $('#busy').show();		
 			  var xhr1 = new XMLHttpRequest();
 			  //alert('1');
-			 // xhr1.open('GET', 'metadata/data.txt', true);			
-
-			 xhr1.open('GET', 'http://masema.org/sync/sync.aspx?type=download&id='+eventId+'&username=testgrantor@masema.com&password=abc123&bypass=', true);
+			 // xhr1.open('GET', 'metadata/data.txt', true);
+			 xhr1.open('GET', 'http://masema.org/sync/sync.aspx?type=download&id=4&username=testgrantor@masema.com&password=abc123&bypass=', true);
 			 // Event Data Download :'http://masema.org/sync/sync.aspx?type=download&id=4&username=testgrantor@masema.com&password=abc123&bypass='
 			  if (xhr1.overrideMimeType) {
 			    xhr1.overrideMimeType('text/plain; charset=x-user-defined');
@@ -835,13 +898,6 @@ function DownloadEventData(){
 function fail(error) {
     console.log(error.code);
 }
-function DownloadFilefail()
-{
-	if(--mutexImages==0)
-     {
-        RedirectToPage('index.html');
-     }
-}
 function MetadataLoadComplete_success() {	
 	//alert(mutexDB);
 	if(--mutexDB==0)
@@ -874,27 +930,7 @@ function DeleteTableComplete_success() {
 }
  // function to be called at last
  
- //----- Reset Functionality
- function ShowResetOption(){
- 	 $('#busy').hide();	
-	 $('#login').hide();
- 	 $('#resetdevice').show();
- }
-function ResetDevice(){
-	$('#busy').show();
-	$('#busy').html('Resetting');		
-	
-    	// Delete Event Table 
-    db.transaction(function(tx)
-	     {	     	
-	     	tx.executeSql('DROP TABLE IF EXISTS Events');    	
-	     }
-	     , transaction_error,ResetDevice_success);
-	
- }
- function ResetDevice_success()
- {
-    	RedirectToPage('login.html'); 	
- }
+ 
+
  //--------------------------------------------------------------------------------------------------
 

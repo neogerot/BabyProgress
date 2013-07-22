@@ -249,3 +249,20 @@ li .bubble {
 		left:100px;
 }
 
+#lottery {
+	position:relative;
+
+	border-color:#000000;	
+	text-align: center;
+	vertical-align: center;
+	background-position: center;
+	background-repeat:no-repeat;
+}
+#rotate_images{
+	position:relative;	
+	width: 100px;
+	height:100px;
+}
+#resetdevice {
+	display:none;
+}

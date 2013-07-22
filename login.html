@@ -10,19 +10,20 @@
 
     <body>
         
-	<div data-role="header" data-theme="a">	
+	<div data-role="header" data-theme="b">	
 	<p>		
-		<h1>Ma-se-Ma</h1>			    		
+		<h1>Login to Application</h1>			    		
    	</p>
    	
 	</div>
 	<div id="title">
-		<center><label>The vaccine and savings game</label></center>
+		
    	</div>		
 	<div id="login">
 		<input name="username" id="username" placeholder="Enter your Username" value="" type="text">   
 		<input name="password" id="password" placeholder="Enter your Password" value="" type="text">   
 		<a href="#" data-role="button" data-theme="b" id="btnLogin" >Login</a>	
+		<a href="#" data-theme="b" id="btnResetOption" onclick="ShowResetOption();">Reset Device Option</a>	
 		<span id="message">Authentication Failed</span>
 	</div>
 	
@@ -33,6 +34,10 @@
 	  	</ul> 
      	</fieldset>
      	<a href="#" data-role="button" data-theme="b" id="btnSelectEvent" >Download Event Data</a>	
+	</div>
+	<div id="resetdevice">	
+		<a href="#" data-role="button" data-theme="b" id="btnReset" onclick="ResetDevice();" >Reset Device</a>		
+		<span id="resetmessage"></span>
 	</div>
     <div id="eventinfo"></div>
 	<div id="busy">Loading...</div>
