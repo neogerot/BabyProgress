@@ -7,7 +7,7 @@ var insertedUniqueId;
 function loaded() {
 	//alert('loaded');
 	setTimeout(function () { 
-        scroll = new iScroll('wrapper', {
+        scroll = new iScroll('wrapper', { 
 		useTransform: false,
 		onBeforeScrollStart: function (e) {
 			var target = e.target;
@@ -18,11 +18,9 @@ function loaded() {
 				e.preventDefault();
 		}
 	});
-        }, 100);         
+        }, 1000);       
     
-     setTimeout(function(){
-		scroll.refresh();
-	},200);	
+     
  }
 
 document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
@@ -49,9 +47,11 @@ window.addEventListener('load', function() {
 	}, false);
 	
 window.addEventListener("orientationchange", function() {
-    setTimeout(function(){
+   setTimeout(function(){
 		scroll.refresh();
-	},200);	 
+	},0);
+     
+	
 }, false);
 
 document.addEventListener("deviceready", onDeviceReady, false);
@@ -81,21 +81,8 @@ function onDeviceReady() {
 	     {	     	
 	     	tx.executeSql('Select ID,Name from locations',[],PopulateLocation_success);    	
 	     }
-	     , transaction_error);
+	     , transaction_error);		     
 	
-	// Location
-	// $('#locationSelect').append('<div data-role="fieldcontain"><select name="locationId" id="locationId" data-native-menu="false"><option value="Choose Location" data-placeholder="true">Choose Location</option><option value="standard">Location 1</option><option value="rush">Location 2</option><option value="express">Location 3</option><option value="overnight">Location 4</option></select></div>'		 	
-	//	 );
-		 
-		 
-		 
-	//Group
-	//$('#groupSelect').append('<div data-role="fieldcontain"><select name="groupId" id="groupId" data-native-menu="false"><option value="Choose Group" data-placeholder="true">Choose Group</option><option value="standard">Group 1</option><option value="rush">Group 2</option><option value="express">Group 3</option><option value="overnight">Group 4</option></select></div>'		 	
-	//	 );
-		 
-		 // Refresh the UI..
-	//	 $('#locationSelect').trigger( "create" );	
-	//	 $('#groupSelect').trigger( "create" );	
 }
 function PopulateLocation_success(tx,results){
 	var len = results.rows.length;
@@ -151,7 +138,8 @@ function PopulateLevel_success(tx,results){
 	 }
 	//alert(strGroupOptions+strGroupClose);
 	$('#levelSelect').append(strLevelOptions+strLevelClose);
-	$('#levelSelect').trigger( "create" );		
+	$('#levelSelect').trigger( "create" );	
+		
 }
 
 
