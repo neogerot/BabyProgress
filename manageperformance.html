@@ -11,13 +11,25 @@
     <script src="js/iscroll-lite.js"></script>   
     <script src="js/jquery.mobile-1.3.1.min.js"></script>
    
-   
+   <script>
+   document.addEventListener("deviceready", onDeviceReady, false);
+   function onDeviceReady() {
+		 $('#locationSelect').append('<div data-role="fieldcontain"><select name="locationId" id="locationId" data-native-menu="false"><option value="Choose Location" data-placeholder="true">Choose Location</option><option value="standard">Standard: 7 day</option><option value="rush">Rush: 3 days</option><option value="express">Express: next day</option><option value="overnight">Overnight</option></select></div>'		 	
+		 );
+		 
+		 $('#locationSelect').trigger( "create" );	
+	}
+
+   function AddItems(){
+  		 	
+   		}
+   </script>
     </head>
     
     <body>
-
-<div style="width:400px;height:300px;-webkit-border-radius: 50px;-moz-border-radius: 50px;border-radius: 50px;border:2px solid #121200;background-color:#8DA7C4;-webkit-box-shadow: #B3B3B3 14px 14px 14px;-moz-box-shadow: #B3B3B3 14px 14px 14px; box-shadow: #B3B3B3 14px 14px 14px;">Just modify width and height values to get what you need...</div>
-			
+    	<div id='locationSelect'></div>
+    	<div id='groupSelect'></div>
+    
     </body>
 
 </html>

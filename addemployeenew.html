@@ -21,7 +21,7 @@
      <div id="title">
 		
 	</div>
-	
+	<input name="uid" id="uid" placeholder="" value="" type="text" readonly="true" style="display:none;">    
    <div id="wrapper">    	
     <div id="scroller">
 	    <ul>	
@@ -30,15 +30,7 @@
 			  <a href="#" data-role="button" data-inline="true" data-theme="b" id="btnCaptureImage" >Capture Image</a>						
 			  <img id="imgCaptured" src="img/blank.gif"/>	
 			</div>
-		</li>				  
-       <li>       
-            <label for="uid">
-                Employee Id
-            </label>           
-            <input name="uid" id="uid" placeholder="" value="" type="text" readonly="true">          
-       
-      </li>
-       
+		</li>         
        <li>
         
             <label for="firstName">
@@ -57,27 +49,17 @@
        </li>       
        <li>
        
-            <label for="level">
-                Level
-            </label>
-            <input name="level" id="level" placeholder="" value="" type="text" data-mini="true">
+            <div id='levelSelect'></div>
        
        </li>         
        		
 		<li>
-        
-            <label for="location">
-                Location
-            </label>
-            <input name="locationId" id="locationId" placeholder="" value="" type="text" data-mini="true">
+           <div id='locationSelect'></div>
        
         </li>
 		<li>        
 		
-            <label for="groupId">
-               Group
-            </label>
-            <input name="groupId" id="groupId" placeholder="" value="" type="text" data-mini="true">
+            <div id='groupSelect'></div>
        
         </li>
                

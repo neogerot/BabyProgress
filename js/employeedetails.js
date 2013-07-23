@@ -73,10 +73,11 @@ function getEmployee(tx) {
 				" where e.UniqueID=:uid "+
 				" order by e.LastName, e.FirstName";
 		*/		
-   var  sql = "select e.ID,e.FirstName, e.LastName, e.UniqueID, e.Image,e.Level, e.Points,e.LocationID,e.GroupID,e.IsNew,e.IsUpdate,loc.Name as locationname,g.Name as groupname "
+   var  sql = "select e.ID,e.FirstName, e.LastName, e.UniqueID, e.Image,e.Level, e.Points,e.LocationID,e.GroupID,e.IsNew,e.IsUpdate,lev.Name as levelname,loc.Name as locationname,g.Name as groupname "
   			  + 	" from Participants e " 
   			  +    " join Locations loc on loc.ID=e.LocationID "
   			  +   " join Groups g on g.LocationId=loc.ID and e.GroupID=g.ID "
+  			  +   " join Levels lev on e.level=lev.ID "
 			  +  " where e.UniqueID=:uid "
 			  + " order by e.LastName, e.FirstName";
 				
@@ -106,7 +107,7 @@ function getEmployee_success(tx, results) {
 
 	$('#employeePic').attr('src', photopath);
 	$('#fullName').text(employee.FirstName + ' ' + employee.LastName);
-	$('#level').html("<strong>Level:</strong>"+employee.Level + ",<strong>Points:</strong>"+ employee.Points);
+	$('#level').html("<strong>Level:</strong>"+employee.levelname + ",<strong>Points:</strong>"+ employee.Points);
 	$('#location').html("<strong>Location:</strong>"+ employee.locationname + ",<strong>Group:</strong>"+ employee.groupname );
 	
 	
