@@ -816,7 +816,7 @@ function DeleteTableComplete_success() {
                                            function(theFile) {
                                          //  alert("download complete");
                                          
-                                         	if(--mutexImages==0)
+                                         	if(--mutexDownloadImages==0)
                                          	{                                         		
                                          		$('#busy').html('......');
                                          		$('#busy').hide();
@@ -826,7 +826,7 @@ function DeleteTableComplete_success() {
                                            },
                                            function(error) {
                                            	
-                                           	if(--mutexImages==0)
+                                           	if(--mutexDownloadImages==0)
                                          	{
                                          		$('#busy').html('......');
                                          		$('#busy').hide();
