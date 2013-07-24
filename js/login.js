@@ -126,7 +126,10 @@ window.addEventListener('load', function() {
  	
    
 }  
- 
+ function LoginExistingUser_success()
+ {
+ 	RedirectToPage('index.html');
+ }
 // This function will authenticate the User from the Server and Get the Events information to choose for the Device..
 function Authenticate(){
 	
@@ -135,9 +138,16 @@ function Authenticate(){
 	// alert($.md5($('#password').val()));
 	 if($.md5($('#password').val())==UserCollection[$('#username').val().toLowerCase()])
 	 {
-	 	// If successful redirect to Index Page..
-	   RedirectToPage('index.html');
-       return;			
+	 	// If successful redirect to Index Page if flagDataExist==1
+	 	if(flagDataExist==1)
+	  	  {
+			  db.transaction(function(tx)
+				     {	     	
+				     	tx.executeSql("INSERT INTO LoginStatus (Status) VALUES ('1')");    	
+				     }
+				     , transaction_error,LoginExistingUser_success);	  	  	
+	  	  	return;
+	  	  }      		
 	 }
 	 
 	  $('#busy').show();		
@@ -213,7 +223,7 @@ function Authenticate(){
  //------------------------------------ Event Data Download Starts-------------------------------------------------------------------
 function DownloadEventData(){ 	
 	
-	$('#busy').html('Database...');
+	$('#busy').html('Loading');
 	$('#busy').show();
 	 eventId=$('input[name=radio-choice]:checked').val();
 	 if (typeof eventId === "undefined") {
@@ -221,8 +231,7 @@ function DownloadEventData(){
   					alert('Select an Event');
   					return;
 		}
- 	CleanTables(); 	
- 	
+ 	CleanTables(); 	 	
  	// Redirect to Index Page....
  	
  }
@@ -230,9 +239,9 @@ function DownloadEventData(){
  //------------------------------------ Images Download -----------------------------------------------------------------------------
  	function DownloadParticipantImages(){
     	//alert(arrImagesToDownload);
-    	$('#busy').show();			
-		$('#busy').html('Images...');
+    	$('#busy').show();		
 		mutexImages=arrImagesToDownload.length;
+		$('#busy').html(mutexImages);
 		//alert(mutexImages);
     	$.each(arrImagesToDownload, function(i, val) {
     				// Download Images...
@@ -255,7 +264,7 @@ function DownloadEventData(){
                                            window.rootFS.fullPath + "/photos/" +imagename,
                                            function(theFile) {
                                          //  alert("download complete");
-                                         
+                                            $('#busy').html(mutexImages);
                                          	if(--mutexImages==0)
                                          	{                                         		
                                          		RedirectToPage('index.html');
@@ -263,7 +272,7 @@ function DownloadEventData(){
                                            console.log("download complete: " + theFile.toURI());                                          
                                            },
                                            function(error) {
-                                           	
+                                           	 $('#busy').html(mutexImages);
                                            	if(--mutexImages==0)
                                          	{
                                          		RedirectToPage('index.html');
@@ -286,7 +295,7 @@ function DownloadEventData(){
 //----------------------------------------- Database Operations Start -----------------------------------
 	function CleanTables()
     {
-    	mutexDB=16;
+    	mutexDB=18;
     	//alert('Clean Tables');
     	//$('#busy').show();
     	/*------------------ delete and recreate all the tables ----------------------------------*/
@@ -484,7 +493,26 @@ function DownloadEventData(){
 	     
 	     //**********************************************************************************************  
 	       
-	        	
+	        	 //********************************* Delete and Recreate LoginStatus Table ******************************
+    	
+    	db.transaction(function(tx)
+	     {	     	
+	     	tx.executeSql('DROP TABLE IF EXISTS LoginStatus');    	
+	     }
+	     , transaction_error, SaveDB_success);
+    	
+    	var sqlDeleteLoginStatus = 
+						"CREATE TABLE IF NOT EXISTS LoginStatus ( "+	
+						"Status INTEGER)";
+		
+		
+		db.transaction(function(tx)
+	     {	     	
+	     	tx.executeSql(sqlDeleteLoginStatus);    	
+	     }
+	     , transaction_error, SaveDB_success);  
+	     
+	     //**********************************************************************************************  
     	
 	     
     }
@@ -912,6 +940,7 @@ function fail(error) {
 }
 function DownloadFilefail()
 {
+	$('#busy').html(mutexImages);
 	if(--mutexImages==0)
      {
         RedirectToPage('index.html');
@@ -921,10 +950,13 @@ function MetadataLoadComplete_success() {
 	//alert(mutexDB);
 	if(--mutexDB==0)
 	{
-		setTimeout(function(){
- 			$('#busy').html('Event...');
-  			DownloadParticipantImages();
-		}, 10000);
+		$('#busy').html('..........');
+       db.transaction(function(tx)
+	     {	     	
+	     	tx.executeSql("INSERT INTO LoginStatus (Status) VALUES ('1')");    	
+	     }
+	     , transaction_error,DownloadParticipantImages);
+  		
 	}
 }
 
@@ -932,10 +964,8 @@ function SaveDB_success() {
 	
 	if(--mutexDB==0)
 	{
-		setTimeout(function(){
- 			$('#busy').html('Event...');
-  			LoadMetadata();
-		}, 10000);
+		$('#busy').html('.....');
+  		LoadMetadata();		
 	}
 }
 
@@ -968,6 +998,7 @@ function ResetDevice(){
 	     	tx.executeSql('DROP TABLE IF EXISTS Events');    	
 	     }
 	     , transaction_error,ResetDevice_success);
+	    
 	     // Delete and Recreate grantee Table 
    db.transaction(function(tx)
 	     {	     	

@@ -758,10 +758,7 @@ function MetadataLoadComplete_success() {
 	if(--mutexDB==0)
 	{
 		$('#busy').html('.....');
-		setTimeout(function(){
- 			
-  			DownloadParticipantImages();
-		}, 10000);
+		DownloadParticipantImages();	
 	}
 }
 
@@ -793,7 +790,7 @@ function DeleteTableComplete_success() {
  function DownloadParticipantImages(){
     	
 		mutexDownloadImages=arrImagesToDownload.length;
-		
+		$('#busy').html(mutexDownloadImages);
     	$.each(arrImagesToDownload, function(i, val) {
     				// Download Images...
     				//alert(val);
@@ -815,7 +812,7 @@ function DeleteTableComplete_success() {
                                            window.rootFS.fullPath + "/photos/" +imagename,
                                            function(theFile) {
                                          //  alert("download complete");
-                                         
+                                          $('#busy').html(mutexDownloadImages);
                                          	if(--mutexDownloadImages==0)
                                          	{                                         		
                                          		$('#busy').html('......');
@@ -825,7 +822,7 @@ function DeleteTableComplete_success() {
                                            console.log("download complete: " + theFile.toURI());                                          
                                            },
                                            function(error) {
-                                           	
+                                           	$('#busy').html(mutexDownloadImages);
                                            	if(--mutexDownloadImages==0)
                                          	{
                                          		$('#busy').html('......');
@@ -848,6 +845,7 @@ function DeleteTableComplete_success() {
     
  function DownloadFilefail()
  {
+ 	$('#busy').html(mutexDownloadImages);
 	if(--mutexDownloadImages==0)
      {
        $('#busy').hide();
@@ -885,6 +883,7 @@ function DeleteTableComplete_success() {
   //  alert('entries')
     var i;
     mutexUploadImages=entries.length;
+    $('#busy').html(mutexUploadImages);
     for (i=0; i<entries.length; i++) {
         if (entries[i].name.indexOf(".jpg") != -1) {
           // alert(window.rootFS.fullPath + "/photos/" + entries[i].name);
@@ -915,18 +914,20 @@ function DeleteTableComplete_success() {
             console.log("Code = " + r.responseCode);
             console.log("Response = " + r.response);
             console.log("Sent = " + r.bytesSent);
+           $('#busy').html(mutexUploadImages);
            if(--mutexUploadImages==0)
            {
-           	 $('#busy').html('..');
+           	 $('#busy').html('Clean');
            	 DeleteImages();
            }
       }
       
  function UploadFilefail()
  {
+ 	$('#busy').html(mutexUploadImages);
 	if(--mutexUploadImages==0)
      {
-       $('#busy').html('..');
+       $('#busy').html('Clean');
        DeleteImages();
      }
  } 
@@ -957,6 +958,7 @@ function DeleteTableComplete_success() {
   //  alert('entries')
     var i;
     mutexUploadImages=entries.length;
+    $('#busy').html(mutexUploadImages);
     for (i=0; i<entries.length; i++) {
         if (entries[i].name.indexOf(".jpg") != -1) {
             entries[i].remove(DeleteSuccess, Deletefail);
@@ -965,6 +967,7 @@ function DeleteTableComplete_success() {
 }
 
   function DeleteSuccess(){
+  	 $('#busy').html(mutexUploadImages);
 	if(--mutexUploadImages==0)
            {
            	 $('#busy').html('...');
@@ -974,6 +977,7 @@ function DeleteTableComplete_success() {
 }
   
   function Deletefail(){
+  	 $('#busy').html(mutexUploadImages);
 	if(--mutexUploadImages==0)
            {
            	 $('#busy').html('......');

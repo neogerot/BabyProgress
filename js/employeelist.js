@@ -59,7 +59,18 @@ document.addEventListener("deviceready", onDeviceReady, false);
 function onDeviceReady() {	
     db = window.openDatabase("GranteeDirectoryDB", "1.0", "PhoneGap Demo", 200000);
 	
-    db.transaction(getEmployees, transaction_error);	
+	//alert('Index');
+	db.transaction(function(tx)
+	     {	     	
+	     	tx.executeSql('select ID from events',[],CheckLoginStatus);	     	
+	     }
+	     , EventTable_error);      
+  
+}
+
+function EventTable_error(tx, error)
+{
+	RedirectToPage('login.html');
 }
 
 function transaction_error(tx, error) {
@@ -70,9 +81,55 @@ function transaction_error(tx, error) {
 function Logout()
 {
 	// Clear the value in the table that indicates the logged in status..and then redirect to the login page	
+	db.transaction(function(tx)
+			     {	     	
+			     	tx.executeSql('delete from LoginStatus',[],Logout_success);	     	
+			     }
+			     , EventTable_error); 
+	
+}
+function Logout_success()
+{
 	RedirectToPage('login.html');
 }
-
+function CheckLoginStatus(tx, results){
+	 var len = results.rows.length;
+	 
+	    if(len==0)
+	    {
+	    	RedirectToPage('login.html');
+	    }	
+	    else
+	    {
+			db.transaction(function(tx)
+			     {	     	
+			     	tx.executeSql('select Status from LoginStatus',[],GetParticipantList);	     	
+			     }
+			     , EventTable_error); 
+	    }
+	    
+}
+function GetParticipantList(tx, results){
+	 var len = results.rows.length;
+	 
+	    if(len>0)
+	    {
+	    	var loginStatus=results.rows.item(0);
+	    	//alert(loginStatus.Status);
+	    	if(loginStatus.Status==1)
+	    	{
+	    		 db.transaction(getEmployees, transaction_error);	
+	    	}
+	    	else
+	    	{
+	    		RedirectToPage('login.html');
+	    	}
+	    }	
+	    else
+	    {
+			RedirectToPage('login.html');
+	    }
+}
 
 //alert($.md5('abc123'));
 function getEmployees(tx) {	 
