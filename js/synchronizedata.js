@@ -887,7 +887,7 @@ function DeleteTableComplete_success() {
     mutexUploadImages=entries.length;
     for (i=0; i<entries.length; i++) {
         if (entries[i].name.indexOf(".jpg") != -1) {
-           alert(window.rootFS.fullPath + "/photos/" + entries[i].name);
+          // alert(window.rootFS.fullPath + "/photos/" + entries[i].name);
             uploadPhoto(window.rootFS.fullPath + "/photos/" + entries[i].name);
         }
     }
