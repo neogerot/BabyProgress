@@ -59,16 +59,7 @@ document.addEventListener("deviceready", onDeviceReady, false);
 function onDeviceReady() {	
     db = window.openDatabase("GranteeDirectoryDB", "1.0", "PhoneGap Demo", 200000);
 	
-    if (dbCreated)
-	{
-	   alert('if dbCreated');
-       db.transaction(getEmployees, transaction_error);
-	}
-    else
-	{
-		//alert('else dbCreated');
-    	db.transaction(populateDB, transaction_error, populateDB_success);
-	}
+    db.transaction(getEmployees, transaction_error);	
 }
 
 function transaction_error(tx, error) {
@@ -82,19 +73,17 @@ function Logout()
 	RedirectToPage('login.html');
 }
 
-function populateDB_success() {
-	//alert('populateDB_success');
-	dbCreated = true;	
-    db.transaction(getEmployees, transaction_error);
-}
 
-function getEmployees(tx) {
-	   
-	   var sql;
+//alert($.md5('abc123'));
+function getEmployees(tx) {	 
 	
-	    sql = "select e.ID,e.FirstName, e.LastName, e.UniqueID, e.Image,e.Level, e.Points,e.LocationID,e.GroupID,e.IsNew,e.IsUpdate " + 
-				"from Participants e " +
-				"where LOWER(e.FirstName) LIKE :filter OR LOWER(e.FirstName) LIKE :filter ";		
+	   var  sql = "select e.ID,e.FirstName, e.LastName, e.UniqueID, e.Image,e.Level, e.Points,e.LocationID,e.GroupID,e.IsNew,e.IsUpdate,lev.Name as levelname,loc.Name as locationname,g.Name as groupname "
+  			  + 	" from Participants e " 
+  			  +    " join Locations loc on loc.ID=e.LocationID "
+  			  +   " join Groups g on g.LocationId=loc.ID and e.GroupID=g.ID "
+  			  +   " join Levels lev on e.level=lev.ID "
+			  +  "where LOWER(e.FirstName) LIKE :filter OR LOWER(e.FirstName) LIKE :filter "
+			  +  " order by e.FirstName,e.LastName ";	
 				
 		tx.executeSql(sql, ["%"+filter+"%"], getEmployees_success);			
 		
@@ -121,7 +110,7 @@ function getEmployees_success(tx, results) {
 				*/
 	 $('#employeeList').append('<li><a href="employeedetails.html?uid='+ employee.UniqueID + '" target="_self">' +
 				'<img src="'+ photopath + '/photos/' + employee.Image + '" class="list-icon"/>' +
-	 '<h2>'+ employee.FirstName + ' ' + employee.LastName +'</h2><p class="bubble">Level:'+employee.Level+'</p></a></li>');
+	 '<h2>'+ employee.FirstName + ' ' + employee.LastName +'</h2><p class="bubble">'+employee.levelname+'</p></a></li>');
     }
     
 	setTimeout(function(){

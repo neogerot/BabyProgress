@@ -266,3 +266,15 @@ li .bubble {
 #resetdevice {
 	display:none;
 }
+
+.ui-field-contain .ui-select {
+width: 100%;
+display: inline-block;
+}
+
+.errorMessage{
+	font-size: 12px;
+	font-family: ubuntu, helvetica, arial;
+	color:red;
+	display:none;
+}

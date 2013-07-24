@@ -65,14 +65,8 @@ function transaction_error(tx, error) {
 }
 
 function getEmployee(tx) {
-	$('#busy').show();
-	
-	/*
-	var  sql = "select e.ID,e.FirstName, e.LastName, e.UniqueID, e.Image,e.Level, e.Points,e.LocationID,e.GroupID,e.IsNew,e.IsUpdate " + 
-				"from Participants e " +
-				" where e.UniqueID=:uid "+
-				" order by e.LastName, e.FirstName";
-		*/		
+	$('#busy').show();	
+		
    var  sql = "select e.ID,e.FirstName, e.LastName, e.UniqueID, e.Image,e.Level, e.Points,e.LocationID,e.GroupID,e.IsNew,e.IsUpdate,lev.Name as levelname,loc.Name as locationname,g.Name as groupname "
   			  + 	" from Participants e " 
   			  +    " join Locations loc on loc.ID=e.LocationID "
@@ -235,12 +229,16 @@ function SubmitPerformanceDB(tx)
 for ( key_name in hashtable){
 	// Update each performance in database
 	//alert(hashtable[key_name]);
-	var sql = "update Performance set Completed=:completedstatus"
+	var sql = "update Performance set Completed=:completedstatus "
 				+ " where ID=:id";
 	tx.executeSql(sql, [hashtable[key_name],key_name], SubmitPerformanceDB_success);
 	
 	
 }
+// Update Participant Status of IsUpdate as 1 for uid
+   var sqlupdateParticipant = "update Participants set IsUpdate='1' "
+				+ " where UniqueID=:uid";
+	tx.executeSql(sqlupdateParticipant, [uid], SubmitPerformanceDB_success);
 	/*
 	
 	*/

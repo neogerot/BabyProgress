@@ -3,6 +3,22 @@ var db;
 var scroll;
 var levelUser;
 var insertedUniqueId;
+var uid ;
+var flagIsUpdate;
+
+
+function getUrlVars() {
+	alert('hi');
+    var vars = [], hash;
+    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+    for(var i = 0; i < hashes.length; i++)
+    {
+        hash = hashes[i].split('=');
+        vars.push(hash[0]);
+        vars[hash[0]] = hash[1];
+    }
+    return vars;
+}
 
 function loaded() {
 	//alert('loaded');
@@ -74,6 +90,15 @@ function onDeviceReady() {
 	$('#busy').hide();
 	$('#uid').val(guid());	
 	$('#uid').hide();	
+	uid= getUrlVars()["uid"];
+	
+	 if (typeof uid === "undefined") {	 	
+	 	flagIsUpdate=0;
+	 }
+	 else
+	 {
+	 	flagIsUpdate=1;
+	 }
 	db = window.openDatabase("GranteeDirectoryDB", "1.0", "PhoneGap Demo", 200000);
 	// Assign the avaialble Single Select Values for
 	
@@ -86,7 +111,7 @@ function onDeviceReady() {
 }
 function PopulateLocation_success(tx,results){
 	var len = results.rows.length;
-	var strLocationOptions='<div data-role="fieldcontain"><label for="locationId" class="select">Choose Location</label><br><select name="locationId" id="locationId" data-native-menu="false"><option value="0" data-placeholder="true">Choose Location</option>';
+	var strLocationOptions='<div data-role="fieldcontain"><label for="locationId" class="select">Choose Location</label><select name="locationId" id="locationId" data-native-menu="false"><option value="0" data-placeholder="true">Choose Location</option>';
 	var strLocationClose='</select></div>';
 	
 	 for (var i=0; i<len; i++) {
@@ -108,7 +133,7 @@ function PopulateLocation_success(tx,results){
 }
 function PopulateGroup_success(tx,results){
 	var len = results.rows.length;
-	var strGroupOptions='<div data-role="fieldcontain"><label for="groupId" class="select">Choose Group</label><br><select name="groupId" id="groupId" data-native-menu="false"><option value="0" data-placeholder="true">Choose Group</option>';
+	var strGroupOptions='<div data-role="fieldcontain"><label for="groupId" class="select">Choose Group</label><select name="groupId" id="groupId" data-native-menu="false"><option value="0" data-placeholder="true">Choose Group</option>';
 	var strGroupClose='</select></div>';
 		
 	 for (var i=0; i<len; i++) {
@@ -129,7 +154,7 @@ function PopulateGroup_success(tx,results){
 
 function PopulateLevel_success(tx,results){
 	var len = results.rows.length;
-	var strLevelOptions='<div data-role="fieldcontain"><label for="level" class="select">Choose Level</label><br><select name="level" id="level" data-native-menu="false"><option value="0" data-placeholder="true">Choose Level</option>';
+	var strLevelOptions='<div data-role="fieldcontain"><label for="level" class="select">Choose Level</label><select name="level" id="level" data-native-menu="false"><option value="0" data-placeholder="true">Choose Level</option>';
 	var strLevelClose='</select></div>';
 		
 	 for (var i=0; i<len; i++) {
@@ -140,9 +165,44 @@ function PopulateLevel_success(tx,results){
 	$('#levelSelect').append(strLevelOptions+strLevelClose);
 	$('#levelSelect').trigger( "create" );	
 		
+		
+		// If the operation is for existing participant
+		// Populate values from his profile..
+		if(flagIsUpdate==1)
+		{
+			var  sql = "select e.ID,e.FirstName, e.LastName, e.UniqueID, e.Image,e.Level, e.Points,e.LocationID,e.GroupID,e.IsNew,e.IsUpdate,lev.Name as levelname,loc.Name as locationname,g.Name as groupname "
+  			  + 	" from Participants e " 
+  			  +    " join Locations loc on loc.ID=e.LocationID "
+  			  +   " join Groups g on g.LocationId=loc.ID and e.GroupID=g.ID "
+  			  +   " join Levels lev on e.level=lev.ID "
+			  +  " where e.UniqueID=:uid "
+			  + " order by e.LastName, e.FirstName";
+			 db.transaction(function(tx)
+		     {	     	
+		     	tx.executeSql(sql,[uid],PopulateProfile_success);    	
+		     }
+		     , transaction_error);
+		}
 }
 
-
+// This function will populate the values in the form
+function PopulateProfile_success(tx,results){
+	
+		var participant = results.rows.item(0);
+		$('#uid').val(participant.UniqueID);
+		$('#firstName').val(participant.FirstName);
+		$('#lastName').val(participant.LastName);
+		
+		$('#locationId').find("option[value='"+participant.LocationID+"']").attr("selected", true);
+		$('#groupId').find("option[value='"+participant.GroupID+"']").attr("selected", true);
+		$('#levelId').find("option[value='"+participant.Level+"']").attr("selected", true);		
+		//$('#uid').val(uid);
+		//$('#locationSelect').trigger( "create" );	
+		$('#locationId').selectmenu("refresh", true);
+		$('#groupId').selectmenu("refresh", true);
+		$('#levelId').selectmenu("refresh", true);
+		
+}
 
 // Get querystring parameter
 function getUrlVars() {

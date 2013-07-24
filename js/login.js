@@ -2,11 +2,15 @@
 var db;
 var arrImagesToDownload = [];
 var eventDataJSONObject;
+var loginInfoJSONObject;
 var eventId;
 var flagDataExist=0;
+var UserCollection = {};	
 //-----------Mutex-----------
 var mutexDB=0;
 var mutexImages;
+var mutexReset;
+
 
 //---------------------
 
@@ -33,38 +37,63 @@ function onDeviceReady() {
     $('#busy').hide();
     $('#message').hide();	
     $('#selectevent').hide();	
+   //alert($.md5('abc123'));
     db.transaction(function(tx)
 	     {	     	
 	     	tx.executeSql('select ID from events',[],CheckData_success);	     	
 	     }
 	     , EventTable_error); 
 }
-function EventTable_error()
+function EventTable_error(tx, error)
 {
 	
 }
 function CheckData_success(tx,results)
 {
-	 var len = results.rows.length;
+	var len = results.rows.length;
 	if(len>0){
 		flagDataExist=1;
+		eventId=results.rows.item(0).ID;
+		//alert(eventId);
+		 db.transaction(function(tx)
+	     {	     	
+	     	tx.executeSql('select ID,UserName,Password from Users',[],PopulateUserCollection_success);	     	
+	     }
+	     , EventTable_error); 
 	}
 	else{
 		flagDataExist=0;
 	}
 	
-	 
+	
+	 // 
+}
+function PopulateUserCollection_success(tx,results)
+{
+	var len = results.rows.length;	
+	//alert(len);
+   for (var i=0; i<len; i++) {
+    	var appUser = results.rows.item(i);
+	    UserCollection[appUser.UserName.toLowerCase()]=appUser.Password;
+   } 	
+   	/*
+	for ( key_name in UserCollection){
+		alert(key_name + ':'+ UserCollection[key_name]);
+	}
+	*/
 }
 
 window.addEventListener('load', function() {
-			var buttonLogin,buttonSelectEvent;	
+			var buttonLogin,buttonSelectEvent,buttonBack;	
 			buttonLogin = document.getElementById('btnLogin');
 			buttonSelectEvent = document.getElementById('btnSelectEvent');
+			buttonBack = document.getElementById('btnBack');
 			
 	
 			// Android 2.2 needs FastClick to be instantiated before the other listeners so that the stopImmediatePropagation hack can work.
 			FastClick.attach(buttonLogin);		
 			FastClick.attach(buttonSelectEvent);
+			FastClick.attach(buttonBack);
 	
 			buttonLogin.addEventListener('touchend', function(event) {				
 				Authenticate();
@@ -73,6 +102,11 @@ window.addEventListener('load', function() {
 			buttonSelectEvent.addEventListener('touchend', function(event) {				
 				DownloadEventData();
 			}, false);
+			
+			buttonBack.addEventListener('touchend', function(event) {				
+				RedirectToPage('login.html');
+			}, false);
+			
 			
 			
 		}, false);
@@ -96,11 +130,22 @@ window.addEventListener('load', function() {
 // This function will authenticate the User from the Server and Get the Events information to choose for the Device..
 function Authenticate(){
 	
+	 // First try to authenticate locally..	 
+	// alert(UserCollection[$('#username').val().toLowerCase()]);
+	// alert($.md5($('#password').val()));
+	 if($.md5($('#password').val())==UserCollection[$('#username').val().toLowerCase()])
+	 {
+	 	// If successful redirect to Index Page..
+	   RedirectToPage('index.html');
+       return;			
+	 }
+	 
 	  $('#busy').show();		
 			  var xhr1 = new XMLHttpRequest();
 			  //alert('1');
 			 // xhr1.open('GET', 'metadata/data.txt', true);
-			 xhr1.open('GET', 'http://masema.org/sync/sync.aspx?type=download&id=0&username=testgrantor@masema.com&password=abc1234&bypass=', true);
+			// alert("http://masema.org/sync/sync.aspx?type=download&id=0&username="+$('#username').val()+"&password="+$('#password').val());
+			 xhr1.open('GET', "http://masema.org/sync/sync.aspx?type=download&id=0&username="+$('#username').val()+"&password="+$('#password').val(), true);
 			 // Event Data Download :'http://masema.org/sync/sync.aspx?type=download&id=4&username=testgrantor@masema.com&password=abc123&bypass='
 			  if (xhr1.overrideMimeType) {
 			    xhr1.overrideMimeType('text/plain; charset=x-user-defined');
@@ -115,7 +160,7 @@ function Authenticate(){
 			    		 // Authentication Failed 
 			    		 $('#busy').hide();	
 			    		 $('#message').show();	
-			    		 alert('error');
+			    		// alert('error');
 			    	}
 			    	else
 			    	{			    		
@@ -133,17 +178,29 @@ function Authenticate(){
 			    		 
 			    		 
 			    		 // Other wise present a Event Selection page for the User	
-			    		 var eventDataJSONObject = JSON.parse(this.responseText);
+			    		 loginInfoJSONObject=JSON.parse(this.responseText);
+			    		 
+			    		 eventDataJSONObject = loginInfoJSONObject.Events;
+			    		 var usersJSONObject = loginInfoJSONObject.Users;
 			    		 $('#selectevent').show();	
 			    		
-			    		 $(eventDataJSONObject).each(function() {  
+			    		// loginInfoJSONObject is composed of Events and the Users 
+			    		 $(eventDataJSONObject).each(function() {  			    		  
 			    		  
 			    		  $('#eventlist').append('<input type="radio" name="radio-choice" id="'+ this.ID+'" value="'+this.ID +'" />'
 			    		  +'<label for="'+ this.ID+'">'+ this.Name+'</label>');
 			    		 	
 			    		 });
+			    		 
+			    		  // Traverse all the Users Objects..
 			    		  
-			    	  	   $('#eventlist').trigger( "create" );	 		   		  		    		
+			    		  $(usersJSONObject).each(function() {  			    		  
+			    		 				    		  
+			    		 		 SaveUser(this);
+			    		 });
+			    		 
+			    		   $('#eventlist').trigger( "create" );	
+			    	  	   $('#loginUsers').trigger( "create" );	 		   		  		    		
 			    		 
 		  			 }
 				}
@@ -194,7 +251,7 @@ function DownloadEventData(){
               //  alert("Directory found...downloading..");
                 var fileTransfer = new FileTransfer();
                 fileTransfer.download(
-                                           "http://107.21.201.107/ziphandler/images/"+imagename,
+                                           "http://www.masema.org/data/images/"+imagename,
                                            window.rootFS.fullPath + "/photos/" +imagename,
                                            function(theFile) {
                                          //  alert("download complete");
@@ -261,7 +318,7 @@ function DownloadEventData(){
 	     }
 	     , transaction_error, SaveDB_success);
     	
-    	
+    	   	
     	
     	// Delete and Recreate Event Table 
     	db.transaction(function(tx)
@@ -739,6 +796,24 @@ function DownloadEventData(){
 	     	     , transaction_error, MetadataLoadComplete_success);
 			
     }    
+    
+    function SaveUser(userObj)
+    {
+    	//alert(granteeObj.FirstName);LastName
+    	var sql ="INSERT INTO Users (ID,FirstName,LastName,UserName,Password) VALUES ('" + userObj.UniqueID +"','"
+		+ userObj.FirstName +"',"+ "'"+userObj.LastName+"','"+ userObj.UserName +"','"+userObj.Password +"')"; 
+	
+	     db.transaction(function(tx)
+	     {	     	
+	     	tx.executeSql(sql);	     	
+	     }
+	     	     , transaction_error, SaveUser_success);			
+    } 
+    function SaveUser_success()
+    {
+    	
+    }
+    
     function SaveGranteePerformance(granteePerformanceObj,userUniqueId)
     {
     	//alert(userUniqueId + '#'+ granteePerformanceObj.ObjectiveID + '-' + granteePerformanceObj.Completed );
@@ -879,8 +954,11 @@ function DeleteTableComplete_success() {
  	 $('#busy').hide();	
 	 $('#login').hide();
  	 $('#resetdevice').show();
+ 	 $('#btnBack').show();
  }
+ 
 function ResetDevice(){
+	mutexReset=3;
 	$('#busy').show();
 	$('#busy').html('Resetting');		
 	
@@ -890,11 +968,34 @@ function ResetDevice(){
 	     	tx.executeSql('DROP TABLE IF EXISTS Events');    	
 	     }
 	     , transaction_error,ResetDevice_success);
+	     // Delete and Recreate grantee Table 
+   db.transaction(function(tx)
+	     {	     	
+	     	tx.executeSql('DROP TABLE IF EXISTS Users');    	
+	     }
+	     , transaction_error, ResetDevice_success);
+    	
+    var sqlDeleteUsers = 
+						"CREATE TABLE IF NOT EXISTS Users ( "+
+						"ID INTEGER PRIMARY KEY , " +		
+						"FirstName VARCHAR(50), " +
+						"LastName VARCHAR(50), " +
+						"UserName VARCHAR(50), " +
+						"Password VARCHAR(100))";
+		
+	db.transaction(function(tx)
+	     {	     	
+	     	tx.executeSql(sqlDeleteUsers);    	
+	     }
+	     , transaction_error, ResetDevice_success);
 	
  }
  function ResetDevice_success()
  {
+ 	if(--mutexReset==0)
+ 	{
     	RedirectToPage('login.html'); 	
+    }
  }
  //--------------------------------------------------------------------------------------------------
 
