@@ -254,7 +254,7 @@ function addEmployeeInDB(tx)
 	levelUser=$('#level').val();	
 	$('#busy').show();		
 	var sql = "INSERT INTO Participants (FirstName,LastName,UniqueID,Image,Level,Points,LocationID,GroupID,IsNew,IsUpdate) VALUES ('" + $('#firstName').val() +"','"
-		+ $('#lastName').val() +"',"+ "'"+$('#uid').val()+"','"+ $('#uid').val() +".jpg'" +",'"+$('#level').val() +"','0','"+$('#locationId').val()+"','"+
+		+ $('#lastName').val() +"',"+ "'"+$('#uid').val()+"','"+ $('#uid').val() +".jpg'" +",'"+$('#level').val() +"','0','"+$('#groupId').val()+"','"+
 		$('#groupId').val() +"','1','0')"; 
 		
 	//alert(sql);

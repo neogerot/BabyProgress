@@ -149,10 +149,7 @@ function getEmployees(tx) {
 function getEmployees_success(tx, results) {
 	$('#busy').hide();
     var len = results.rows.length;
-    if(len==0)
-    {
-    	RedirectToPage('login.html');
-    }
+   
     var photopath="/sdcard";
      $('#employeeList').append('<li data-role="list-divider"><strong>No. of Participants:</strong> <span class="ui-li-count">'+len+'</span></li>');
      
