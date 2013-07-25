@@ -42,7 +42,9 @@ function loaded() {
 	});
         }, 1000);       
     
-     
+      setTimeout(function(){
+		scroll.refresh();
+	},3000);
  }
 
 document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
@@ -100,6 +102,7 @@ function onDeviceReady() {
 	
 	 if (typeof uid === "undefined") {	 	
 	 	flagIsUpdate=0;
+	 	originalImage=$('#uid').val()+".jpg";
 	 }
 	 else
 	 {
@@ -386,7 +389,7 @@ function createFileEntry(imageURI) {
 function copyPhoto(fileEntry) {
     window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSys) { 
         fileSys.root.getDirectory("photos", {create: true, exclusive: false}, function(dir) { 
-                fileEntry.copyTo(dir, $('#uid').val() +".jpg", onCopySuccess, fail); 
+                fileEntry.copyTo(dir, originalImage, onCopySuccess, fail); 
             }, fail); 
     }, fail); 
 }
