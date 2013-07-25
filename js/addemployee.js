@@ -7,8 +7,9 @@ var uid ;
 var flagIsUpdate;
 var GroupCollection = {};
 
-//-- Workaround for single selects in EDIT cases---
+//-- Workarounds for Update cases---
 var originalGroupId;
+var originalImage;
 //----- 
 
 
@@ -212,6 +213,7 @@ function PopulateProfile_success(tx,results){
 		//$('#groupId').val(participant.GroupID);
 		//$('#groupId').attr('value', participant.GroupID);
 		originalGroupId=participant.GroupID;
+		originalImage=participant.Image;
 		$('#groupId').selectmenu("refresh", true);
 		//alert($('#groupId').attr('value'));
 		
@@ -286,7 +288,7 @@ function UpdateEmployeeInDB(tx)
 	
 	$('#busy').show();		GroupCollection[$('#groupId').val()]
 	var sql = "Update Participants set FirstName='" + $('#firstName').val() +"',LastName='"+ $('#lastName').val()
-	 +"',Image='"+ $('#uid').val() +".jpg',GroupID='"+ updatedGroupId +"',LocationID='"+ GroupCollection[updatedGroupId] +"',IsUpdate='1'" 
+	 +"',Image='"+ originalImage +"',GroupID='"+ updatedGroupId +"',LocationID='"+ GroupCollection[updatedGroupId] +"',IsUpdate='1'" 
 	 + " where UniqueID=:uid";
 	 
 	 /* +  ,,UniqueID,Image,Level,Points,LocationID,GroupID,IsNew,IsUpdate) VALUES ('" + $('#firstName').val() +"','"

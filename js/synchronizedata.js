@@ -143,7 +143,7 @@ function UploadtoServer(participantPerformance)
     type       : "POST",
     url        : uploadurl,
     crossDomain: true,
-    beforeSend : function() {$('#busy').show();},
+    beforeSend : function() {$('#busy').show(); $('#busy').html('Uploading Data');},
     complete   : function() {},
     data       : {username : 'admin', password : 'admin',bypass:'1',type:'upload',upload:participantPerformance},
     dataType   : 'json',
@@ -151,7 +151,14 @@ function UploadtoServer(participantPerformance)
         //console.error(JSON.stringify(response));
       // alert('Data Uploaded'+ response);
        eventDataJSONObject = response;
-       $('#busy').html('.');
+       if(eventDataJSONObject==false)
+       {
+       	// alert('Error while Uploading data');
+       	  alert('Error Uploading Data'); 
+       	  $('#busy').hide(); 
+	       	return;
+       }
+       $('#busy').html('Uploading Images');
        UploadParticipantImages();
       // CleanTables();
       // UploadParticipantImages();
@@ -757,7 +764,7 @@ function MetadataLoadComplete_success() {
 	//alert(mutexDB);
 	if(--mutexDB==0)
 	{
-		$('#busy').html('.....');
+		$('#busy').html('Downloading Images');
 		DownloadParticipantImages();	
 	}
 }
@@ -766,10 +773,8 @@ function SaveDB_success() {
 	
 	if(--mutexDB==0)
 	{
-		$('#busy').html('....');
-		setTimeout(function(){
- 			LoadMetadata();
-		}, 10000);
+		$('#busy').html('Downloading Data');
+		LoadMetadata();		
 	}
 }
 
@@ -815,7 +820,7 @@ function DeleteTableComplete_success() {
                                           $('#busy').html(mutexDownloadImages);
                                          	if(--mutexDownloadImages==0)
                                          	{                                         		
-                                         		$('#busy').html('......');
+                                         		$('#busy').html('Sync Complete');
                                          		$('#busy').hide();
                                          		
                                          	}
@@ -825,7 +830,7 @@ function DeleteTableComplete_success() {
                                            	$('#busy').html(mutexDownloadImages);
                                            	if(--mutexDownloadImages==0)
                                          	{
-                                         		$('#busy').html('......');
+                                         		$('#busy').html('Sync Complete');
                                          		$('#busy').hide();
                                          		
                                          	}
@@ -848,8 +853,8 @@ function DeleteTableComplete_success() {
  	$('#busy').html(mutexDownloadImages);
 	if(--mutexDownloadImages==0)
      {
-       $('#busy').hide();
-       
+     	$('#busy').html('Sync Complete');
+       $('#busy').hide();       
      }
  }  
   
@@ -927,7 +932,7 @@ function DeleteTableComplete_success() {
  	$('#busy').html(mutexUploadImages);
 	if(--mutexUploadImages==0)
      {
-       $('#busy').html('Clean');
+       $('#busy').html('Deleting Local Images');
        DeleteImages();
      }
  } 
@@ -939,7 +944,7 @@ function DeleteTableComplete_success() {
  }
  
  function failDeleteDirectory(){
- 	//alert('failDeleteDirectory');
+    //	alert('Error in Delete Directory');
  	 $('#busy').html('...');
      CleanTables();
  }
@@ -970,7 +975,7 @@ function DeleteTableComplete_success() {
   	 $('#busy').html(mutexUploadImages);
 	if(--mutexUploadImages==0)
            {
-           	 $('#busy').html('...');
+           	 $('#busy').html('Deleting Local Data');
            	 CleanTables();
            }
 	
@@ -980,7 +985,7 @@ function DeleteTableComplete_success() {
   	 $('#busy').html(mutexUploadImages);
 	if(--mutexUploadImages==0)
            {
-           	 $('#busy').html('......');
+           	 $('#busy').html('Deleting Local Data');
            	 CleanTables();
            }
 }
