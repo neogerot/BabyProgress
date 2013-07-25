@@ -17,5 +17,6 @@
         masema
     </author>
     <preference name="phonegap-version" value="2.9.0" />
+	<icon src="icon.png" />
 
 </widget>
