@@ -24,9 +24,8 @@
 		<span id="message" class="errorMessage">You are not Authorized to perform this action</span>
 		<input name="username" id="username" placeholder="Enter your Username" value="" type="text">   
 		<input name="password" id="password" placeholder="Enter your Password" value="" type="password">   
-		<a href="#" data-role="button" data-theme="b" id="btnLogin" >Login</a>	
-		<a href="#" data-theme="b" id="btnResetOption" onclick="ShowResetOption();">Reset Device Option</a>	
-		
+		<a href="#" data-role="button" data-theme="b" id="btnLogin" >Login</a>		
+		<a href="#" data-role="button" data-theme="b" id="btnResetOption" onclick="ShowResetOption();" data-inline="true" data-icon="alert">Reset Device</a>	
 	</div>
 	
 	<div id="selectevent" style="display:none;">
@@ -38,7 +37,8 @@
      	<a href="#" data-role="button" data-theme="b" id="btnSelectEvent" >Download Event Data</a>	
 	</div>
 	<div id="resetdevice" style="display:none;">	
-		<a href="#" data-role="button" data-theme="b" id="btnReset" onclick="ResetDevice();" >Reset Device</a>		
+		<center><img src="img/caution.png" id="imgCaution" style="text-align:center;"></center>
+		<a href="#" data-role="button" data-theme="b" id="btnReset" onclick="ResetDevice();" data-icon="alert">Are you sure !!...Press to continue</a>		
 		<span id="resetmessage"></span>
 	</div>
     <div id="eventinfo"></div>

@@ -103,8 +103,8 @@ function getEmployee_success(tx, results) {
 	$('#fullName').text(employee.FirstName + ' ' + employee.LastName);
 	$('#level').html("<strong>Level:</strong>"+employee.levelname + ",<strong>Points:</strong>"+ employee.Points);
 	$('#location').html("<strong>Location:</strong>"+ employee.locationname + ",<strong>Group:</strong>"+ employee.groupname );
-	
-	
+	$('#btnEditDetails').attr('href',"addemployeenew.html?uid="+ employee.UniqueID); 	
+	//alert("addemployeenew.html?uid="+ employee.UniqueID);
 	db.transaction(getObjectives, transaction_error);
 }
 

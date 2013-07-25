@@ -136,6 +136,7 @@ function Authenticate(){
 	 // First try to authenticate locally..	 
 	// alert(UserCollection[$('#username').val().toLowerCase()]);
 	// alert($.md5($('#password').val()));
+	$('#busy').html('Authenticating');
 	 if($.md5($('#password').val())==UserCollection[$('#username').val().toLowerCase()])
 	 {
 	 	// If successful redirect to Index Page if flagDataExist==1
@@ -222,8 +223,7 @@ function Authenticate(){
  
  //------------------------------------ Event Data Download Starts-------------------------------------------------------------------
 function DownloadEventData(){ 	
-	
-	$('#busy').html('Loading');
+		
 	$('#busy').show();
 	 eventId=$('input[name=radio-choice]:checked').val();
 	 if (typeof eventId === "undefined") {
@@ -241,7 +241,7 @@ function DownloadEventData(){
     	//alert(arrImagesToDownload);
     	$('#busy').show();		
 		mutexImages=arrImagesToDownload.length;
-		$('#busy').html(mutexImages);
+		$('#busy').html('Images : '+mutexImages);
 		//alert(mutexImages);
     	$.each(arrImagesToDownload, function(i, val) {
     				// Download Images...
@@ -951,7 +951,7 @@ function MetadataLoadComplete_success() {
 	if(--mutexDB==0)
 	{
 		$('#busy').html('..........');
-       db.transaction(function(tx)
+        db.transaction(function(tx)
 	     {	     	
 	     	tx.executeSql("INSERT INTO LoginStatus (Status) VALUES ('1')");    	
 	     }
@@ -964,7 +964,7 @@ function SaveDB_success() {
 	
 	if(--mutexDB==0)
 	{
-		$('#busy').html('.....');
+		$('#busy').html('Downloading');
   		LoadMetadata();		
 	}
 }
@@ -990,7 +990,7 @@ function DeleteTableComplete_success() {
 function ResetDevice(){
 	mutexReset=3;
 	$('#busy').show();
-	$('#busy').html('Resetting');		
+	$('#busy').html('Deleting Data');		
 	
     	// Delete Event Table 
     db.transaction(function(tx)
@@ -1006,7 +1006,8 @@ function ResetDevice(){
 	     }
 	     , transaction_error, ResetDevice_success);
     	
-    var sqlDeleteUsers = 
+    	
+    var sqlCreateUsers = 
 						"CREATE TABLE IF NOT EXISTS Users ( "+
 						"ID INTEGER PRIMARY KEY , " +		
 						"FirstName VARCHAR(50), " +
@@ -1014,18 +1015,27 @@ function ResetDevice(){
 						"UserName VARCHAR(50), " +
 						"Password VARCHAR(100))";
 		
-	db.transaction(function(tx)
+	setTimeout(function(){ 	
+   		 db.transaction(function(tx)
 	     {	     	
-	     	tx.executeSql(sqlDeleteUsers);    	
+	     	tx.executeSql(sqlCreateUsers);    	
 	     }
 	     , transaction_error, ResetDevice_success);
+		}, 5000);
+		
+	
 	
  }
  function ResetDevice_success()
  {
  	if(--mutexReset==0)
- 	{
-    	RedirectToPage('login.html'); 	
+ 	{	
+   		$('#busy').html('Reset Completed');			
+ 		 		
+ 		setTimeout(function(){ 	
+   			RedirectToPage('login.html'); 
+		}, 5000);
+    		
     }
  }
  //--------------------------------------------------------------------------------------------------

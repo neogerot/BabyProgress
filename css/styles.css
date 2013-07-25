@@ -101,14 +101,14 @@ li .bubble {
 	position: absolute;
 	top: 50%;
  	left: 50%;
-	margin-left: -65px;
+	margin-left: -100px;
 	margin-top: -31px;
 	color: #FFFFFF;
 	font-size: 24px;	
 	z-index:6;
 	background-color: #000000;
 	opacity:0.5;
- 	width:100px;
+ 	width:200px;
 	height:32px;
 	padding: 30px;
 	-moz-border-radius: 10px;
@@ -145,15 +145,19 @@ li .bubble {
 #employeeDetails {
 	padding: 8px;
 	padding-bottom: 5px;
-	 border-bottom: 1px solid #666;
+	border-bottom: 1px solid #666;
+	border-top: 1px solid #666;
 }
 
 #employeeDetails img {
 	float: left;
 	margin-right: 8px;
-    height: 100px;
-    width:100px;
-    vertical-align: top;
+    height: 150px;
+    width:150px;
+    vertical-align: top;    
+}
+#employeeDetails a {
+    
 }
 
 .searchbutton {
@@ -260,8 +264,8 @@ li .bubble {
 }
 #rotate_images{
 	position:relative;	
-	width: 100px;
-	height:100px;
+	width: 200px;
+	height:200px;
 }
 #resetdevice {
 	display:none;
@@ -277,4 +281,14 @@ display: inline-block;
 	font-family: ubuntu, helvetica, arial;
 	color:red;
 	display:none;
+}
+
+#btnResetOption{	
+	
+	margin-top:50px;
+}
+
+#imgCaution{
+	
+	
 }

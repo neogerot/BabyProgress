@@ -31,7 +31,8 @@ var count;
 			function rotateImages(){
 					var origsrc = $('#rotate_images').attr('src');
 			        var src = '';
-			        var imagerootPath=window.rootFS.fullPath+'/photos/';//'images/';//window.rootFS.fullPath+'/photos/';
+			        //var imagerootPath=window.rootFS.fullPath+'/photos/';//'images/';//window.rootFS.fullPath+'/photos/';
+			        var imagerootPath='images/';
 			        if (origsrc == 'img/person_blank.png') src = ParticipantCollection[currentParticipant].Image;
 			       
 			        currentParticipant++;
@@ -73,10 +74,13 @@ var count;
 		 						}, speed*timesToRotate);			        	
 			        }
 			}
+			
 			function ShowWinner(){					
+					
 					
 					$('#counter').append(' <h3>'+ParticipantCollection[currentParticipant].FirstName+ ' '+ParticipantCollection[currentParticipant].LastName
 					+ ' ('+ParticipantCollection[currentParticipant].locationname +')</h3>');
+				    $('#rotate_images').attr('style','width:200px,height:200px;');
 				    $('#winner').show();	
 			}
 			

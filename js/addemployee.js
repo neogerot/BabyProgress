@@ -5,6 +5,11 @@ var levelUser;
 var insertedUniqueId;
 var uid ;
 var flagIsUpdate;
+var GroupCollection = {};
+
+//-- Workaround for single selects in EDIT cases---
+var originalGroupId;
+//----- 
 
 
 function getUrlVars() {
@@ -109,6 +114,8 @@ function onDeviceReady() {
 	     , transaction_error);		     
 	
 }
+
+
 function PopulateLocation_success(tx,results){
 	var len = results.rows.length;
 	var strLocationOptions='<div data-role="fieldcontain"><label for="locationId" class="select">Choose Location</label><select name="locationId" id="locationId" data-native-menu="false"><option value="0" data-placeholder="true">Choose Location</option>';
@@ -126,7 +133,7 @@ function PopulateLocation_success(tx,results){
 	
 	  db.transaction(function(tx)
 	     {	     	
-	     	tx.executeSql('Select ID,Name from groups',[],PopulateGroup_success);    	
+	     	tx.executeSql('Select ID,Name,LocationId from groups',[],PopulateGroup_success);    	
 	     }
 	     , transaction_error);
 	
@@ -139,6 +146,7 @@ function PopulateGroup_success(tx,results){
 	 for (var i=0; i<len; i++) {
 	 	var group = results.rows.item(i);	 
 	 	strGroupOptions +='<option value="'+group.ID+'">'+group.Name+'</option>';
+	 	GroupCollection[group.ID]=group.LocationId;
 	 }
 	//alert(strGroupOptions+strGroupClose);
 	$('#groupSelect').append(strGroupOptions+strGroupClose);
@@ -195,13 +203,23 @@ function PopulateProfile_success(tx,results){
 		
 		$('#locationId').find("option[value='"+participant.LocationID+"']").attr("selected", true);
 		$('#groupId').find("option[value='"+participant.GroupID+"']").attr("selected", true);
-		$('#levelId').find("option[value='"+participant.Level+"']").attr("selected", true);		
-		//$('#uid').val(uid);
-		//$('#locationSelect').trigger( "create" );	
-		$('#locationId').selectmenu("refresh", true);
-		$('#groupId').selectmenu("refresh", true);
-		$('#levelId').selectmenu("refresh", true);
+		$('#level').find("option[value='"+participant.Level+"']").attr("selected", true);		
+		// Disable the level field
 		
+				
+		$('#locationId').selectmenu("refresh", true);
+		
+		//$('#groupId').val(participant.GroupID);
+		//$('#groupId').attr('value', participant.GroupID);
+		originalGroupId=participant.GroupID;
+		$('#groupId').selectmenu("refresh", true);
+		//alert($('#groupId').attr('value'));
+		
+		$('#level').selectmenu("refresh", true);		
+		$('#level').selectmenu("disable");
+		
+		
+					
 }
 
 // Get querystring parameter
@@ -246,7 +264,49 @@ function transaction_error(tx, error) {
 // Add grantee
 function addEmployee()
 {
-	db.transaction(addEmployeeInDB);	
+	if(flagIsUpdate==1)
+	{
+		$('#busy').html('Updating Record');	
+		db.transaction(UpdateEmployeeInDB);
+	}
+	else
+	{
+		$('#busy').html('Adding Record');	
+		db.transaction(addEmployeeInDB);	
+	}
+}
+function UpdateEmployeeInDB(tx)
+{	
+	levelUser=$('#level').val();	
+	var updatedGroupId=$('#groupId').val();
+	if(updatedGroupId == 0)
+	{
+		updatedGroupId=originalGroupId;
+	}
+	
+	$('#busy').show();		GroupCollection[$('#groupId').val()]
+	var sql = "Update Participants set FirstName='" + $('#firstName').val() +"',LastName='"+ $('#lastName').val()
+	 +"',Image='"+ $('#uid').val() +".jpg',GroupID='"+ updatedGroupId +"',LocationID='"+ GroupCollection[updatedGroupId] +"',IsUpdate='1'" 
+	 + " where UniqueID=:uid";
+	 
+	 /* +  ,,UniqueID,Image,Level,Points,LocationID,GroupID,IsNew,IsUpdate) VALUES ('" + $('#firstName').val() +"','"
+		+ $('#lastName').val() +"',"+ "'"+$('#uid').val()+"','"+ $('#uid').val() +".jpg'" +",'"+$('#level').val() +"','0','"+$('#groupId').val()+"','"+
+		$('#groupId').val() +"','1','0')"; 
+	*/
+		
+	//alert(sql);
+	tx.executeSql(sql,[uid],UpdateEmployeeInDB_success);
+	
+	
+	//alert('Query Executed');
+}
+function UpdateEmployeeInDB_success(tx,results) {
+		
+	
+	setTimeout(function(){ 	
+  	 RedirectToPage("index.html");
+}, 1000);
+	
 }
 
 function addEmployeeInDB(tx)
@@ -254,8 +314,8 @@ function addEmployeeInDB(tx)
 	levelUser=$('#level').val();	
 	$('#busy').show();		
 	var sql = "INSERT INTO Participants (FirstName,LastName,UniqueID,Image,Level,Points,LocationID,GroupID,IsNew,IsUpdate) VALUES ('" + $('#firstName').val() +"','"
-		+ $('#lastName').val() +"',"+ "'"+$('#uid').val()+"','"+ $('#uid').val() +".jpg'" +",'"+$('#level').val() +"','0','"+$('#groupId').val()+"','"+
-		$('#groupId').val() +"','1','0')"; 
+		+ $('#lastName').val() +"',"+ "'"+$('#uid').val()+"','"+ $('#uid').val() +".jpg'" +",'"+$('#level').val() +"','0','"+GroupCollection[$('#groupId').val()]+"','"
+		+ $('#groupId').val()+"','1','0')"; 
 		
 	//alert(sql);
 	tx.executeSql(sql,[],addEmployeeInDB_success);
@@ -295,8 +355,10 @@ function getObjectives_success(tx, results) {
 		
 	}
 	
-	$('#busy').hide();	
-	RedirectToPage("index.html");
+	
+	setTimeout(function(){ 	
+  	 RedirectToPage("index.html");
+  }, 1000);
 }
 
 
