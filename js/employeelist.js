@@ -58,7 +58,10 @@ document.addEventListener("deviceready", onDeviceReady, false);
 
 function onDeviceReady() {	
     db = window.openDatabase("GranteeDirectoryDB", "1.0", "PhoneGap Demo", 200000);
-	
+
+    $('#MainHeading').html('&#2346;&#2381;&#2352;&#2340;&#2367;&#2349;&#2366;&#2327;&#2367;&#2351;&#2379;&#2306;');	
+	$('#btnAdd').html('<br>&#2346;&#2381;&#2352;&#2340;&#2367;&#2349;&#2366;&#2327;&#2368; &#2332;&#2379;&#2337;&#2364;&#2375;&#2306;');
+	$('#btnLottery').html('<br>&#2354;&#2366;&#2335;&#2352;&#2368;');
 	//alert('Index');
 	db.transaction(function(tx)
 	     {	     	
@@ -216,6 +219,21 @@ function Search()
 	
 }
 
-
+function convertToEntities(inputStr) {
+  var tstr = inputStr;
+  var bstr = '';
+  for(i=0; i<tstr.length; i++)
+  {
+    if(tstr.charCodeAt(i)>127)
+    {
+      bstr += '&#' + tstr.charCodeAt(i) + ';';
+    }
+    else
+    {
+      bstr += tstr.charAt(i);
+    }
+  }
+   return bstr;
+}
 
 
