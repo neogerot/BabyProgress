@@ -6,6 +6,8 @@ var insertedUniqueId;
 var uid ;
 var flagIsUpdate;
 var GroupCollection = {};
+var locationId;
+var groupId;
 
 //-- Workarounds for Update cases---
 var originalGroupId;
@@ -14,7 +16,7 @@ var originalImage;
 
 
 function getUrlVars() {
-	alert('hi');
+	//alert('hi');
     var vars = [], hash;
     var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
     for(var i = 0; i < hashes.length; i++)
@@ -41,10 +43,7 @@ function loaded() {
 		}
 	});
         }, 1000);       
-    
-      setTimeout(function(){
-		scroll.refresh();
-	},3000);
+  
  }
 
 document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
@@ -61,7 +60,7 @@ window.addEventListener('load', function() {
 		FastClick.attach(buttonBack);		
 
 		buttonBack.addEventListener('touchend', function(event) {
-			 RedirectToPage('index.html'); 
+			 RedirectToPage("groupparticipants.html"); 
 		}, false);
 		
 		buttonCapture.addEventListener('touchend', function(event) {
@@ -95,9 +94,11 @@ document.addEventListener('deviceready', function() {
 
 function onDeviceReady() {
 	//loaded();
+	 locationId= getUrlVars()["locationId"];
+	 groupId== getUrlVars()["groupId"];
 	// Assign all the Hindi Label..
 	  $('#btnBack').html('<br>&#2357;&#2366;&#2346;&#2360;');
-	  $('#btnCaptureImage').html("&#2347;&#2379;&#2335;&#2379; &#2354;&#2375;"); 
+	  $('#btnCaptureImage').html("<br><br>&#2347;&#2379;&#2335;&#2379; &#2354;&#2375;"); 
 	  $('#addEntrySubmit').html("&#2360;&#2369;&#2352;&#2325;&#2381;&#2359;&#2367;&#2340; &#2325;&#2352;&#2375;"); 
 	  
 	  //
@@ -118,12 +119,12 @@ function onDeviceReady() {
 	db = window.openDatabase("GranteeDirectoryDB", "1.0", "PhoneGap Demo", 200000);
 	// Assign the avaialble Single Select Values for
 	
-	  db.transaction(function(tx)
+	// Populate the avaialble Levels
+	db.transaction(function(tx)
 	     {	     	
-	     	tx.executeSql('Select ID,Name from locations',[],PopulateLocation_success);    	
+	     	tx.executeSql('Select ID,Name from levels',[],PopulateLevel_success);    	
 	     }
-	     , transaction_error);		     
-	
+	     , transaction_error);
 }
 
 
@@ -189,14 +190,11 @@ function PopulateLevel_success(tx,results){
 		// Populate values from his profile..
 		if(flagIsUpdate==1)
 		{
-			var  sql = "select e.ID,e.FirstName, e.LastName, e.UniqueID, e.Image,e.Level, e.Points,e.LocationID,e.GroupID,e.IsNew,e.IsUpdate,lev.Name as levelname,loc.Name as locationname,g.Name as groupname "
+			var  sql = "select e.ID,e.FirstName, e.LastName, e.UniqueID,e.Level, e.Image,e.LocationID,e.GroupID,e.IsNew,e.IsUpdate "
   			  + 	" from Participants e " 
-  			  +    " join Locations loc on loc.ID=e.LocationID "
-  			  +   " join Groups g on g.LocationId=loc.ID and e.GroupID=g.ID "
-  			  +   " join Levels lev on e.level=lev.ID "
-			  +  " where e.UniqueID=:uid "
-			  + " order by e.LastName, e.FirstName";
-			 db.transaction(function(tx)
+			  +  " where e.UniqueID=:uid ";
+			  
+	 db.transaction(function(tx)
 		     {	     	
 		     	tx.executeSql(sql,[uid],PopulateProfile_success);    	
 		     }
@@ -212,19 +210,19 @@ function PopulateProfile_success(tx,results){
 		$('#firstName').val(participant.FirstName);
 		$('#lastName').val(participant.LastName);
 		
-		$('#locationId').find("option[value='"+participant.LocationID+"']").attr("selected", true);
-		$('#groupId').find("option[value='"+participant.GroupID+"']").attr("selected", true);
+	 //	$('#locationId').find("option[value='"+participant.LocationID+"']").attr("selected", true);
+	//	$('#groupId').find("option[value='"+participant.GroupID+"']").attr("selected", true);
 		$('#level').find("option[value='"+participant.Level+"']").attr("selected", true);		
 		// Disable the level field
 		
 				
-		$('#locationId').selectmenu("refresh", true);
+	//	$('#locationId').selectmenu("refresh", true);
 		
 		//$('#groupId').val(participant.GroupID);
 		//$('#groupId').attr('value', participant.GroupID);
 		originalGroupId=participant.GroupID;
 		originalImage=participant.Image;
-		$('#groupId').selectmenu("refresh", true);
+		//$('#groupId').selectmenu("refresh", true);
 		//alert($('#groupId').attr('value'));
 		
 		$('#level').selectmenu("refresh", true);		
@@ -263,7 +261,7 @@ function guid() {
 // Redirect to the Home Page
 function RedirectToPage(pageUrl) {
 	$('#busy').hide();	
-    window.location=pageUrl;
+    window.location=pageUrl+"?locationId="+locationId+"&groupId="+groupId;
 }
 
 /*********************** Database Operations ****************************/
@@ -288,35 +286,27 @@ function addEmployee()
 	}
 }
 function UpdateEmployeeInDB(tx)
-{	
-	levelUser=$('#level').val();	
-	var updatedGroupId=$('#groupId').val();
-	if(updatedGroupId == 0)
+{		
+	var updatedGroupId=groupId;
+	var isInfluencer=0;
+	if(isInfluencer == 1)
 	{
-		updatedGroupId=originalGroupId;
+		updatedGroupId=0;
 	}
 	
-	$('#busy').show();		GroupCollection[$('#groupId').val()]
+	$('#busy').show();
 	var sql = "Update Participants set FirstName='" + $('#firstName').val() +"',LastName='"+ $('#lastName').val()
-	 +"',Image='"+ originalImage +"',GroupID='"+ updatedGroupId +"',LocationID='"+ GroupCollection[updatedGroupId] +"',IsUpdate='1'" 
+	 +"',Image='"+ originalImage +"',GroupID='"+ updatedGroupId +"',LocationID='"+ locationId +"',IsUpdate='1'" 
 	 + " where UniqueID=:uid";
 	 
-	 /* +  ,,UniqueID,Image,Level,Points,LocationID,GroupID,IsNew,IsUpdate) VALUES ('" + $('#firstName').val() +"','"
-		+ $('#lastName').val() +"',"+ "'"+$('#uid').val()+"','"+ $('#uid').val() +".jpg'" +",'"+$('#level').val() +"','0','"+$('#groupId').val()+"','"+
-		$('#groupId').val() +"','1','0')"; 
-	*/
-		
-	//alert(sql);
+	
 	tx.executeSql(sql,[uid],UpdateEmployeeInDB_success);
 	
-	
-	//alert('Query Executed');
 }
 function UpdateEmployeeInDB_success(tx,results) {
-		
 	
 	setTimeout(function(){ 	
-  	 RedirectToPage("index.html");
+  	 RedirectToPage("groupparticipants.html");
 }, 1000);
 	
 }
@@ -326,8 +316,8 @@ function addEmployeeInDB(tx)
 	levelUser=$('#level').val();	
 	$('#busy').show();		
 	var sql = "INSERT INTO Participants (FirstName,LastName,UniqueID,Image,Level,Points,LocationID,GroupID,IsNew,IsUpdate) VALUES ('" + $('#firstName').val() +"','"
-		+ $('#lastName').val() +"',"+ "'"+$('#uid').val()+"','"+ $('#uid').val() +".jpg'" +",'"+$('#level').val() +"','0','"+GroupCollection[$('#groupId').val()]+"','"
-		+ $('#groupId').val()+"','1','0')"; 
+		+ $('#lastName').val() +"',"+ "'"+$('#uid').val()+"','"+ $('#uid').val() +".jpg'" +",'"+$('#level').val() +"','0','"+locationId+"','"
+		+ groupId+"','1','0')"; 
 		
 	//alert(sql);
 	tx.executeSql(sql,[],addEmployeeInDB_success);
@@ -349,7 +339,6 @@ function addEmployeeInDB_success(tx,results) {
 				
 	tx.executeSql(sqlPerformance, [levelUser], getObjectives_success);	
 	
-	//RedirectToPage("index.html");
 }
 
 function getObjectives_success(tx, results) {
@@ -369,7 +358,7 @@ function getObjectives_success(tx, results) {
 	
 	
 	setTimeout(function(){ 	
-  	 RedirectToPage("index.html");
+  	 RedirectToPage("groupparticipants.html");
   }, 1000);
 }
 

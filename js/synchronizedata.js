@@ -62,16 +62,16 @@ function RedirectToPage(pageUrl) {
 }, false);
 
 	window.addEventListener('load', function() {
-			var testB;	
+			var buttonBack;	
 			var buttonLottery;
 			
-			testB = document.getElementById('btnBack');
+			buttonBack = document.getElementById('btnBack');
 			buttonLottery  = document.getElementById('btnLottery'); 
 			// Android 2.2 needs FastClick to be instantiated before the other listeners so that the stopImmediatePropagation hack can work.
-			FastClick.attach(testB);		
+			FastClick.attach(buttonBack);		
 			FastClick.attach(buttonLottery);		
 	
-			testB.addEventListener('touchend', function(event) {
+			buttonBack.addEventListener('touchend', function(event) {
 				 RedirectToPage('index.html'); 
 			}, false);
 			

@@ -4,6 +4,7 @@ var arrImagesToDownload = [];
 var eventDataJSONObject;
 var loginInfoJSONObject;
 var eventId;
+var locationId;
 var flagDataExist=0;
 var UserCollection = {};	
 //-----------Mutex-----------
@@ -11,6 +12,9 @@ var mutexDB=0;
 var mutexImages;
 var mutexReset;
 
+// Add IScroll
+var myScroll;
+var myScroll = new iScroll('wrapper', { vScrollbar: false, hScrollbar:false, hScroll: false,useTransform:true });
 
 //---------------------
 
@@ -46,11 +50,14 @@ function onDeviceReady() {
     $('#message').html("&#2310;&#2346; &#2311;&#2360; &#2325;&#2381;&#2352;&#2367;&#2351;&#2366; &#2325;&#2379; &#2325;&#2352;&#2344;&#2375; &#2325;&#2375; &#2354;&#2367;&#2319; &#2309;&#2343;&#2367;&#2325;&#2371;&#2340; &#2344;&#2361;&#2368;&#2306; &#2361;&#2376;&#2306;");
      
    //alert($.md5('abc123'));
+
     db.transaction(function(tx)
 	     {	     	
 	     	tx.executeSql('select ID from events',[],CheckData_success);	     	
 	     }
 	     , EventTable_error); 
+	     
+	     
 }
 function EventTable_error(tx, error)
 {
@@ -58,6 +65,8 @@ function EventTable_error(tx, error)
 }
 function CheckData_success(tx,results)
 {
+	  
+	
 	var len = results.rows.length;
 	if(len>0){
 		flagDataExist=1;
@@ -70,11 +79,27 @@ function CheckData_success(tx,results)
 	     , EventTable_error); 
 	}
 	else{
-		flagDataExist=0;
+		flagDataExist=0;		
 	}
 	
 	
 	 // 
+}
+function PopulateLocations_success(tx,results)
+{
+   	var len = results.rows.length;	
+	//alert(len);
+   for (var i=0; i<len; i++) {
+    	var location = results.rows.item(i);
+	    $('#eventlist').append('<li><a href="index.html?locationId='+ location.ID +'"  target="_self">' +
+	 '<h2>'+ location.Name +'</h2>');
+   } 	
+	  $('#eventlist').trigger( "create" );	 
+	  $('#wrapper').trigger( "create" );	
+	  
+	  setTimeout(function(){
+		myScroll.refresh();
+	},100);
 }
 function PopulateUserCollection_success(tx,results)
 {
@@ -84,32 +109,27 @@ function PopulateUserCollection_success(tx,results)
     	var appUser = results.rows.item(i);
 	    UserCollection[appUser.UserName.toLowerCase()]=appUser.Password;
    } 	
-   	/*
-	for ( key_name in UserCollection){
-		alert(key_name + ':'+ UserCollection[key_name]);
-	}
-	*/
+   	
+   	PopulateLocations();
+	    
 }
 
 window.addEventListener('load', function() {
 			var buttonLogin,buttonSelectEvent,buttonBack;	
 			buttonLogin = document.getElementById('btnLogin');
-			buttonSelectEvent = document.getElementById('btnSelectEvent');
+			
 			buttonBack = document.getElementById('btnBack');
 			
 	
 			// Android 2.2 needs FastClick to be instantiated before the other listeners so that the stopImmediatePropagation hack can work.
 			FastClick.attach(buttonLogin);		
-			FastClick.attach(buttonSelectEvent);
+			
 			FastClick.attach(buttonBack);
 	
 			buttonLogin.addEventListener('touchend', function(event) {				
 				Authenticate();
 			}, false);
 			
-			buttonSelectEvent.addEventListener('touchend', function(event) {				
-				DownloadEventData();
-			}, false);
 			
 			buttonBack.addEventListener('touchend', function(event) {				
 				RedirectToPage('login.html');
@@ -136,9 +156,17 @@ window.addEventListener('load', function() {
 }  
  function LoginExistingUser_success()
  {
- 	RedirectToPage('index.html');
+ 	//RedirectToPage('index.html?locationId='+locationId);
  }
+ 
 // This function will authenticate the User from the Server and Get the Events information to choose for the Device..
+/*
+ *  db.transaction(function(tx)
+				     {	     	
+				     	tx.executeSql("INSERT INTO LoginStatus (Status) VALUES ('1')");    	
+				     }
+				     , transaction_error,LoginExistingUser_success);	
+ */
 function Authenticate(){
 	
 	 // First try to authenticate locally..	 
@@ -150,11 +178,18 @@ function Authenticate(){
 	 	// If successful redirect to Index Page if flagDataExist==1
 	 	if(flagDataExist==1)
 	  	  {
-			  db.transaction(function(tx)
+	  	  			    		
+			  $('#busy').hide();	
+			  $('#login').hide();				    		
+			  $('#selectevent').show();	
+			  $('#btnBack').show();
+			  	
+			  // make an entry into Login Table
+				db.transaction(function(tx)
 				     {	     	
 				     	tx.executeSql("INSERT INTO LoginStatus (Status) VALUES ('1')");    	
 				     }
-				     , transaction_error,LoginExistingUser_success);	  	  	
+				     , transaction_error,LoginExistingUser_success);		
 	  	  	return;
 	  	  }      		
 	 }
@@ -186,42 +221,32 @@ function Authenticate(){
 			    		 $('#busy').hide();	
 			    		 $('#login').hide();	
 			    		
+			    		 
 			    		 // Check if there are some values in the Event Table if exists then redirect directly to Index page 
 			    		 if(flagDataExist==1)
 			    		 {
-			    		 	$('#busy').show();
-							$('#busy').html('Loading');	
-			    		 	RedirectToPage('index.html');
-			    		 	return;
+			    		 	 $('#selectevent').show();	
+			    		 	 $('#btnBack').show();
+			    		 	 return;
 			    		 }
 			    		 
 			    		 
 			    		 // Other wise present a Event Selection page for the User	
 			    		 loginInfoJSONObject=JSON.parse(this.responseText);
 			    		 
-			    		 eventDataJSONObject = loginInfoJSONObject.Events;
-			    		 var usersJSONObject = loginInfoJSONObject.Users;
-			    		 $('#selectevent').show();	
-			    		
-			    		
-			    		// loginInfoJSONObject is composed of Events and the Users 
-			    		 $(eventDataJSONObject).each(function() {  			    		  
-			    		  //alert(this.Name);
-			    		  $('#eventlist').append('<input type="radio" name="radio-choice" id="'+ this.ID+'" value="'+this.ID +'" />'
-			    		  +'<label for="'+ this.ID+'">'+ this.Name+'</label>');
-			    		 	
-			    		 });
+			    		 eventDataJSONObject = loginInfoJSONObject.Event;
 			    		 
-			    		  // Traverse all the Users Objects..
+			    		 
+			    		 
+			    		 var usersJSONObject = loginInfoJSONObject.Users;
+			    		 
+			    		 // Traverse all the Users Objects..
 			    		  
 			    		  $(usersJSONObject).each(function() {  			    		  
 			    		 				    		  
 			    		 		 SaveUser(this);
 			    		 });
-			    		 
-			    		   $('#eventlist').trigger( "create" );	
-			    	  	   $('#loginUsers').trigger( "create" );	 		   		  		    		
-			    		 
+			    	 
 		  			 }
 				}
 	};			
@@ -234,13 +259,22 @@ function Authenticate(){
 function DownloadEventData(){ 	
 		
 	$('#busy').show();
-	 eventId=$('input[name=radio-choice]:checked').val();
+	 locationId=$('input[name=radio-choice]:checked').val();
+	 //alert(eventId);
 	 if (typeof eventId === "undefined") {
 	 				$('#busy').hide();
-  					alert('Select an Event');
+  					alert('Select a Location');
   					return;
 		}
- 	CleanTables(); 	 	
+		
+		// make an entry into Login Table
+		db.transaction(function(tx)
+				     {	     	
+				     	tx.executeSql("INSERT INTO LoginStatus (Status) VALUES ('1')");    	
+				     }
+				     , transaction_error,LoginExistingUser_success);	
+		
+ 	//CleanTables(); 	 	
  	// Redirect to Index Page....
  	
  }
@@ -276,7 +310,17 @@ function DownloadEventData(){
                                             $('#busy').html(mutexImages);
                                          	if(--mutexImages==0)
                                          	{                                         		
-                                         		RedirectToPage('index.html');
+                                         		 $('#selectevent').show();	
+			 									 $('#btnBack').show();
+			 									 
+			 									   // make an entry into Login Table
+												db.transaction(function(tx)
+												     {	     	
+												     	tx.executeSql("INSERT INTO LoginStatus (Status) VALUES ('1')");    	
+												     }
+												     , transaction_error,LoginExistingUser_success);	
+			 									 return;
+			 
                                          	}
                                            console.log("download complete: " + theFile.toURI());                                          
                                            },
@@ -284,7 +328,15 @@ function DownloadEventData(){
                                            	 $('#busy').html(mutexImages);
                                            	if(--mutexImages==0)
                                          	{
-                                         		RedirectToPage('index.html');
+                                         		$('#selectevent').show();	
+			 									 $('#btnBack').show();
+			 									   // make an entry into Login Table
+												db.transaction(function(tx)
+												     {	     	
+												     	tx.executeSql("INSERT INTO LoginStatus (Status) VALUES ('1')");    	
+												     }
+												     , transaction_error,LoginExistingUser_success);	
+			 									 return;
                                          	}
                                            //alert("error in download");
                                           // alert(error.code);
@@ -613,27 +665,9 @@ function DownloadEventData(){
    
 	function LoadMetadata()
     {
-    	$("#eventinfo").hide();
-    	   // alert('Start Loading Metadata..');
-    	  //  $('#busy').show();		
-			  var xhr1 = new XMLHttpRequest();
-			  //alert('1');
-			 // xhr1.open('GET', 'metadata/data.txt', true);			
-
-			 xhr1.open('GET', 'http://masema.org/sync/sync.aspx?type=download&id='+eventId+'&username=testgrantor@masema.com&password=abc123&bypass=', true);
-			 // Event Data Download :'http://masema.org/sync/sync.aspx?type=download&id=4&username=testgrantor@masema.com&password=abc123&bypass='
-			  if (xhr1.overrideMimeType) {
-			    xhr1.overrideMimeType('text/plain; charset=UTF-8');
-			  }
-			 // alert('2');
-			  xhr1.onreadystatechange = function(e) {
-			  //  alert(this.readyState+'-'+this.status);
-			    if (this.readyState == 4 && this.status == 200) {
-			     	  	
-			     	  	 	 //****************************** EVENT OBJECT *************************************
-		              		  eventDataJSONObject = JSON.parse(this.responseText);
-		              		  //alert('JSON object Initialized');   
-		              		 
+    	    $("#eventinfo").hide();
+    	  	
+			 	  	 	 //****************************** EVENT OBJECT *************************************
 		              		  InitializeMutex();
 		              		 
 		              		  var $eventinfo = $("#eventinfo");
@@ -806,16 +840,7 @@ function DownloadEventData(){
 				              		    $eventinfo.append("<div> *********" + "<br></div>");	
 				              		   
 									}); // end of Event
-															
-              		  	     		 
-                		
-	           			 			
-			
-		 
-			    }
-			  };			
-			  xhr1.send();
-			
+				
 			
     }
     
@@ -848,7 +873,7 @@ function DownloadEventData(){
     } 
     function SaveUser_success()
     {
-    	
+    	CleanTables();
     }
     
     function SaveGranteePerformance(granteePerformanceObj,userUniqueId)
@@ -952,20 +977,34 @@ function DownloadFilefail()
 	$('#busy').html(mutexImages);
 	if(--mutexImages==0)
      {
-        RedirectToPage('index.html');
+      					$('#selectevent').show();	
+			 			$('#btnBack').show();
+			 			$('#busy').hide();
+			   // make an entry into Login Table
+			db.transaction(function(tx)
+			     {	     	
+			     	tx.executeSql("INSERT INTO LoginStatus (Status) VALUES ('1')");    	
+			     }
+			     , transaction_error,PopulateLocations);	
+			 									
+	   return;
      }
+}
+function PopulateLocations()
+{
+    // Populate Locations to select for working
+		 db.transaction(function(tx)
+	     {	     	
+	     	tx.executeSql('select ID,Name,City,State from Locations',[],PopulateLocations_success);	     	
+	     }
+	     , EventTable_error); 
 }
 function MetadataLoadComplete_success() {	
 	//alert(mutexDB);
 	if(--mutexDB==0)
 	{
 		$('#busy').html('..........');
-        db.transaction(function(tx)
-	     {	     	
-	     	tx.executeSql("INSERT INTO LoginStatus (Status) VALUES ('1')");    	
-	     }
-	     , transaction_error,DownloadParticipantImages);
-  		
+        DownloadParticipantImages(); 		
 	}
 }
 

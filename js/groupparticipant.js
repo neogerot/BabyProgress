@@ -2,6 +2,7 @@ var db;
 var dbCreated = false;
 var filter='';
 var locationId;
+var groupId;
 var scroll = new iScroll('wrapper', { vScrollbar: false, hScrollbar:false, hScroll: false });
 
 function getUrlVars() {
@@ -20,37 +21,27 @@ function getUrlVars() {
 
 //Add Button Events
   window.addEventListener('load', function() {
+				var buttonAdd;	
+				var buttonBack;	
 				
-				var buttonSynchronize;
-				var buttonSearch;
-				
-				var buttonLogout ;
-				
-				buttonSynchronize = document.getElementById('btnSynchronize');
-				buttonSearch = document.getElementById('btnSearch');
-				
-				buttonLogout  = document.getElementById('btnLogout'); 
+				buttonAdd = document.getElementById('btnAdd');
+				buttonBack = document.getElementById('btnBack');
 				
 		
 				// Android 2.2 needs FastClick to be instantiated before the other listeners so that the stopImmediatePropagation hack can work.
+				FastClick.attach(buttonAdd);	
+				FastClick.attach(buttonBack);	
 				
-				FastClick.attach(buttonSynchronize);	
-								
-				buttonSynchronize.addEventListener('touchend', function(event) {
-					RedirectToPage('synchronize.html');
+		
+				buttonAdd.addEventListener('touchend', function(event) {
+					RedirectToPage("addemployeenew.html");
 				}, false);
-  				
-  							
-				buttonSearch.addEventListener('touchend', function(event) {
-						Search();
-					}, false);
-					
 				
-					
-				buttonLogout.addEventListener('touchend', function(event) {
-						Logout();
-					}, false);
+				buttonBack.addEventListener('touchend', function(event) {
+				 RedirectToPage("index.html"); 
+			}, false);
 				
+			
 				
 			}, false);
 			
@@ -68,21 +59,14 @@ function onDeviceReady() {
     db = window.openDatabase("GranteeDirectoryDB", "1.0", "PhoneGap Demo", 200000);
 
     locationId= getUrlVars()["locationId"];
+    groupId= getUrlVars()["groupId"];
+    //alert(groupId +' '+locationId);
     //$('#MainHeading').html('&#2346;&#2381;&#2352;&#2340;&#2367;&#2349;&#2366;&#2327;&#2367;&#2351;&#2379;&#2306;');	
+	$('#btnAdd').html('<br>&#2326;&#2367;&#2354;&#2366;&#2337;&#2364;&#2368; &#2332;&#2379;&#2337;&#2364;&#2375;&#2306;');
+	$('#btnBack').html('<br>&#2357;&#2366;&#2346;&#2360;');
 	
 	
-	$('#btnSynchronize').html('<br>&#2357;&#2367;&#2325;&#2354;&#2381;&#2346;');
-	$('#btnLogout').html('<br>&#2348;&#2306;&#2342; &#2325;&#2352;&#2375;&#2306;');
-	$('#btnSearch').html('<br>&#2393;&#2379;&#2332;&#2375;');
-	
-	
-	
-	//alert('Index');
-	db.transaction(function(tx)
-	     {	     	
-	     	tx.executeSql('select ID from events',[],CheckLoginStatus);	     	
-	     }
-	     , EventTable_error);      
+	 db.transaction(GetParticipants, transaction_error);   
   
 }
 
@@ -110,47 +94,9 @@ function Logout_success()
 {
 	RedirectToPage('login.html');
 }
-function CheckLoginStatus(tx, results){
-	 var len = results.rows.length;
-	 
-	    if(len==0)
-	    {
-	    	RedirectToPage('login.html');
-	    }	
-	    else
-	    {
-			db.transaction(function(tx)
-			     {	     	
-			     	tx.executeSql('select Status from LoginStatus',[],GetParticipantList);	     	
-			     }
-			     , EventTable_error); 
-	    }
-	    
-}
-function GetParticipantList(tx, results){
-	 var len = results.rows.length;
-	 
-	    if(len>0)
-	    {
-	    	var loginStatus=results.rows.item(0);
-	    	//alert(loginStatus.Status);
-	    	if(loginStatus.Status==1)
-	    	{
-	    		 db.transaction(getEmployees, transaction_error);	
-	    	}
-	    	else
-	    	{
-	    		RedirectToPage('login.html');
-	    	}
-	    }	
-	    else
-	    {
-			RedirectToPage('login.html');
-	    }
-}
 
 //alert($.md5('abc123'));
-function getEmployees(tx) {	 
+function GetParticipants(tx) {	 
 	
 	 /*
 	   var  sql = "select e.ID,e.FirstName, e.LastName, e.UniqueID, e.Image,e.Level, e.Points,e.LocationID,e.GroupID,e.IsNew,e.IsUpdate,lev.Name as levelname,loc.Name as locationname,g.Name as groupname "
@@ -162,17 +108,17 @@ function getEmployees(tx) {
 			  +  " order by e.FirstName,e.LastName ";	
 				
 	*/
-	   var  sql = "select ID,Name,Size,LocationId "
-  			  + 	" from Groups g " 
-  			  +  " where g.LocationId=:locationId "
-			  +  " order by g.ID ";	
+	   var  sql = "select p.ID,p.FirstName, p.LastName, p.UniqueID, p.Image "
+  			  + 	" from Participants p " 
+  			  +  " where p.groupId=:groupId "
+			  +  " order by p.FirstName,p.LastName ";	;	
 		
 		
-		tx.executeSql(sql, [locationId], getEmployees_success);			
+		tx.executeSql(sql, [groupId], GetParticipants_success);			
 		
 }
 
-function getEmployees_success(tx, results) {
+function GetParticipants_success(tx, results) {
 	$('#busy').hide();
     var len = results.rows.length;
    
@@ -180,10 +126,10 @@ function getEmployees_success(tx, results) {
      $('#employeeList').append('<li data-role="list-divider"></li>');
      
     for (var i=0; i<len; i++) {
-    	var group = results.rows.item(i);
+    	var participant = results.rows.item(i);
 		
-	 $('#employeeList').append('<li><a href="groupparticipants.html?groupId='+ group.ID + '&locationId='+locationId +'"  target="_self">' +
-	 '<h2>'+ group.Name +'</h2>');
+	 $('#employeeList').append('<li><a href="employeedetails.html?uid='+ participant.UniqueID +'&locationId='+locationId+'&groupId='+groupId+'" target="_self">' +
+	 '<h2>'+ participant.FirstName + ' ' + participant.LastName+ '</h2>');
     }
     
 	setTimeout(function(){
@@ -222,7 +168,7 @@ function populateDB(tx) {
 function RedirectToPage(pageUrl) {
 	$('#busy').hide();
 	//alert("Employee Deleted");		
-    window.location=pageUrl;
+    window.location=pageUrl+"?locationId="+locationId;
 }
 
 function Search()

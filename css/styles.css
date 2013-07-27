@@ -59,15 +59,6 @@ li .bubble {
 	text-align: center;
 }
 
-#wrapper {
-	position: absolute; 
-	top: 200px; 
-	bottom: 20px;
-	width: 100%;
-	overflow: auto;
-	border-top: 1px solid #fff;
-	
-} 
 
 #scroller {
 	 position:absolute; 
@@ -180,7 +171,15 @@ li .bubble {
 	font-family: inherit;
     font-size: 18px;
     font-weight: bold;
-    height:45px;
+    height:20px;
+    vertical-align: top; 	
+ }
+ 
+ #titleIndex {	
+	font-family: inherit;
+    font-size: 18px;
+    font-weight: bold;
+    height:100px;
     vertical-align: top; 	
  }
  
@@ -192,12 +191,11 @@ li .bubble {
     background: #DCDCDC;
 	height:45px;
 }
-#capture img{
-	position:absolute;
-	top:0px;		
-	left:250px;
-	width:70px;
-	height:70px;
+
+#capture img{	
+	top:10px;		
+	width:200px;
+	height:200px;
 	vertical-align: center; 	
 }
 
@@ -285,3 +283,41 @@ display: inline-block;
 	height:100px;
 	vertical-align:middle;	
 }
+
+.txtBox{
+  height:50px;
+}
+
+.wrapperMain {
+	position: absolute; 
+	top: 200px; 
+	bottom: 20px;
+	width: 100%;
+	overflow: auto;
+	border-top: 1px solid #fff;	
+} 
+.wrapperAdd {
+	position: absolute; 
+	top: 340px; 
+	bottom: 20px;
+	width: 100%;
+	overflow: auto;
+	border-top: 1px solid #fff;	
+} 
+.wrapperGroup {
+	position: absolute; 
+	top: 200px; 
+	bottom: 20px;
+	width: 100%;
+	overflow: auto;
+	border-top: 1px solid #fff;	
+} 
+.wrapperList {
+	position: absolute; 
+	top: 170px; 
+	bottom: 20px;
+	width: 100%;
+	overflow: auto;
+	border-top: 1px solid #fff;	
+} 
+

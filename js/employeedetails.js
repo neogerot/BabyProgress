@@ -1,7 +1,7 @@
 var scroll = new iScroll('wrapper', { vScrollbar: false, hScrollbar:false, hScroll: false });
 
 var uid = getUrlVars()["uid"];
-
+var groupId,locationId;
 //alert('id:'+id);
 var db;
 
@@ -15,7 +15,7 @@ window.addEventListener('load', function() {
 		FastClick.attach(testB);		
 
 		testB.addEventListener('touchend', function(event) {
-			 RedirectToPage('index.html'); 
+			 RedirectToPage('groupparticipants.html'); 
 		}, false);
 		
 		buttonSubmit.addEventListener('touchend', function(event) {
@@ -49,6 +49,9 @@ window.addEventListener("orientationchange", function() {
 
 function onDeviceReady() {
 	console.log("opening database");
+	$('#btnBack').html('<br>&#2357;&#2366;&#2346;&#2360;');
+	locationId= getUrlVars()["locationId"];
+    groupId= getUrlVars()["groupId"];
     db = window.openDatabase("GranteeDirectoryDB", "1.0", "PhoneGap Demo", 200000);
 	console.log("database opened");
     db.transaction(getEmployee, transaction_error);
@@ -210,7 +213,7 @@ function deleteEmployee_success(tx, results) {
 function RedirectToPage(pageUrl) {
 	$('#busy').hide();
 	//alert("Employee Deleted");		
-    window.location=pageUrl;
+    window.location=pageUrl+"?groupId="+groupId+"&locationId="+locationId;
 }
 
 // This function will update the performance of the participant 
