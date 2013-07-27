@@ -206,7 +206,7 @@ function Authenticate(){
 			    		
 			    		// loginInfoJSONObject is composed of Events and the Users 
 			    		 $(eventDataJSONObject).each(function() {  			    		  
-			    		  alert(this.Name);
+			    		  //alert(this.Name);
 			    		  $('#eventlist').append('<input type="radio" name="radio-choice" id="'+ this.ID+'" value="'+this.ID +'" />'
 			    		  +'<label for="'+ this.ID+'">'+ this.Name+'</label>');
 			    		 	
