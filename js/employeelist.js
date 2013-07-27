@@ -8,19 +8,19 @@ var scroll = new iScroll('wrapper', { vScrollbar: false, hScrollbar:false, hScro
 				var buttonAdd;	
 				var buttonSynchronize;
 				var buttonSearch;
-				var buttonLottery;
+				
 				var buttonLogout ;
 				buttonAdd = document.getElementById('btnAdd');
 				buttonSynchronize = document.getElementById('btnSynchronize');
 				buttonSearch = document.getElementById('btnSearch');
-				buttonLottery  = document.getElementById('btnLottery'); 
+				
 				buttonLogout  = document.getElementById('btnLogout'); 
 				
 		
 				// Android 2.2 needs FastClick to be instantiated before the other listeners so that the stopImmediatePropagation hack can work.
 				FastClick.attach(buttonAdd);	
 				FastClick.attach(buttonSynchronize);	
-				FastClick.attach(buttonLottery);		
+				
 		
 				buttonAdd.addEventListener('touchend', function(event) {
 					RedirectToPage('addemployeenew.html');
@@ -35,9 +35,7 @@ var scroll = new iScroll('wrapper', { vScrollbar: false, hScrollbar:false, hScro
 						Search();
 					}, false);
 					
-				buttonLottery.addEventListener('touchend', function(event) {
-						RedirectToPage('lottery.html');
-					}, false);
+				
 					
 				buttonLogout.addEventListener('touchend', function(event) {
 						Logout();
@@ -59,9 +57,15 @@ document.addEventListener("deviceready", onDeviceReady, false);
 function onDeviceReady() {	
     db = window.openDatabase("GranteeDirectoryDB", "1.0", "PhoneGap Demo", 200000);
 
-    $('#MainHeading').html('&#2346;&#2381;&#2352;&#2340;&#2367;&#2349;&#2366;&#2327;&#2367;&#2351;&#2379;&#2306;');	
-	$('#btnAdd').html('<br>&#2346;&#2381;&#2352;&#2340;&#2367;&#2349;&#2366;&#2327;&#2368; &#2332;&#2379;&#2337;&#2364;&#2375;&#2306;');
-	$('#btnLottery').html('<br>&#2354;&#2366;&#2335;&#2352;&#2368;');
+    //$('#MainHeading').html('&#2346;&#2381;&#2352;&#2340;&#2367;&#2349;&#2366;&#2327;&#2367;&#2351;&#2379;&#2306;');	
+	$('#btnAdd').html('<br>&#2326;&#2367;&#2354;&#2366;&#2337;&#2364;&#2368; &#2332;&#2379;&#2337;&#2364;&#2375;&#2306;');
+	
+	$('#btnSynchronize').html('<br>&#2357;&#2367;&#2325;&#2354;&#2381;&#2346;');
+	$('#btnLogout').html('<br>&#2348;&#2306;&#2342; &#2325;&#2352;&#2375;&#2306;');
+	$('#btnSearch').html('<br>&#2393;&#2379;&#2332;&#2375;');
+	
+	
+	
 	//alert('Index');
 	db.transaction(function(tx)
 	     {	     	
@@ -154,7 +158,7 @@ function getEmployees_success(tx, results) {
     var len = results.rows.length;
    
     var photopath="/sdcard";
-     $('#employeeList').append('<li data-role="list-divider"><strong>No. of Participants:</strong> <span class="ui-li-count">'+len+'</span></li>');
+     $('#employeeList').append('<li data-role="list-divider"></li>');
      
     for (var i=0; i<len; i++) {
     	var employee = results.rows.item(i);

@@ -63,14 +63,21 @@ function RedirectToPage(pageUrl) {
 
 	window.addEventListener('load', function() {
 			var testB;	
+			var buttonLottery;
+			
 			testB = document.getElementById('btnBack');
-	
+			buttonLottery  = document.getElementById('btnLottery'); 
 			// Android 2.2 needs FastClick to be instantiated before the other listeners so that the stopImmediatePropagation hack can work.
 			FastClick.attach(testB);		
+			FastClick.attach(buttonLottery);		
 	
 			testB.addEventListener('touchend', function(event) {
 				 RedirectToPage('index.html'); 
 			}, false);
+			
+			buttonLottery.addEventListener('touchend', function(event) {
+						RedirectToPage('lottery.html');
+					}, false);
 			
 			
 		}, false);
@@ -80,6 +87,12 @@ function RedirectToPage(pageUrl) {
 function onDeviceReady() {	
     db = window.openDatabase("GranteeDirectoryDB", "1.0", "PhoneGap Demo", 200000);    
     $('#busy').hide();
+    
+    // Assign the hindi lables
+    $('#btnLottery').html('<br>&#2354;&#2366;&#2335;&#2352;&#2368;');
+    $('#btnBack').html('<br>&#2357;&#2366;&#2346;&#2360;');
+    $('#btnUploadParticipantImages').html('<br>&#2337;&#2375;&#2335;&#2366; &#2309;&#2346;&#2354;&#2379;&#2337;');
+    
 }
 
     

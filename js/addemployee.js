@@ -95,6 +95,13 @@ document.addEventListener('deviceready', function() {
 
 function onDeviceReady() {
 	//loaded();
+	// Assign all the Hindi Label..
+	  $('#btnBack').html('<br>&#2357;&#2366;&#2346;&#2360;');
+	  $('#btnCaptureImage').html("&#2347;&#2379;&#2335;&#2379; &#2354;&#2375;"); 
+	  $('#addEntrySubmit').html("&#2360;&#2369;&#2352;&#2325;&#2381;&#2359;&#2367;&#2340; &#2325;&#2352;&#2375;"); 
+	  
+	  //
+	
 	$('#busy').hide();
 	$('#uid').val(guid());	
 	$('#uid').hide();	
@@ -144,7 +151,7 @@ function PopulateLocation_success(tx,results){
 }
 function PopulateGroup_success(tx,results){
 	var len = results.rows.length;
-	var strGroupOptions='<div data-role="fieldcontain"><label for="groupId" class="select">Choose Group</label><select name="groupId" id="groupId" data-native-menu="false"><option value="0" data-placeholder="true">Choose Group</option>';
+	var strGroupOptions='<div data-role="fieldcontain"><select name="groupId" id="groupId" data-native-menu="false"><option value="0" data-placeholder="true">&#2360;&#2350;&#2370;&#2361; &#2325;&#2366; &#2330;&#2351;&#2344;</option>';
 	var strGroupClose='</select></div>';
 		
 	 for (var i=0; i<len; i++) {
@@ -166,7 +173,7 @@ function PopulateGroup_success(tx,results){
 
 function PopulateLevel_success(tx,results){
 	var len = results.rows.length;
-	var strLevelOptions='<div data-role="fieldcontain"><label for="level" class="select">Choose Level</label><select name="level" id="level" data-native-menu="false"><option value="0" data-placeholder="true">Choose Level</option>';
+	var strLevelOptions='<div data-role="fieldcontain"><select name="level" id="level" data-native-menu="false"><option value="0" data-placeholder="true">&#2360;&#2381;&#2340;&#2352; &#2325;&#2366; &#2330;&#2351;&#2344;</option>';
 	var strLevelClose='</select></div>';
 		
 	 for (var i=0; i<len; i++) {

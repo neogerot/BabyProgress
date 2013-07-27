@@ -37,6 +37,14 @@ function onDeviceReady() {
     $('#busy').hide();
     $('#message').hide();	
     $('#selectevent').hide();	
+    
+    // Assign Hindi Labels  
+    $('#btnLogin').html("<br>&#2346;&#2381;&#2352;&#2357;&#2375;&#2358;");
+    $('#btnBack').html('<br>&#2357;&#2366;&#2346;&#2360;');
+    $('#btnResetOption').html("<br>&#2337;&#2367;&#2357;&#2366;&#2311;&#2360; &#2326;&#2366;&#2354;&#2368; &#2325;&#2352;&#2379;");
+    $('#btnReset').html("<br>&#2360;&#2366;&#2357;&#2343;&#2366;&#2344; &#2360;&#2367;&#2352;&#2381;&#2347; &#2337;&#2367;&#2357;&#2366;&#2311;&#2360; &#2326;&#2366;&#2354;&#2368; &#2325;&#2352;&#2344;&#2375; &#2325;&#2375; &#2354;&#2367;&#2319; &#2342;&#2348;&#2366;&#2351;&#2375;");
+    $('#message').html("&#2310;&#2346; &#2311;&#2360; &#2325;&#2381;&#2352;&#2367;&#2351;&#2366; &#2325;&#2379; &#2325;&#2352;&#2344;&#2375; &#2325;&#2375; &#2354;&#2367;&#2319; &#2309;&#2343;&#2367;&#2325;&#2371;&#2340; &#2344;&#2361;&#2368;&#2306; &#2361;&#2376;&#2306;");
+     
    //alert($.md5('abc123'));
     db.transaction(function(tx)
 	     {	     	
@@ -136,7 +144,7 @@ function Authenticate(){
 	 // First try to authenticate locally..	 
 	// alert(UserCollection[$('#username').val().toLowerCase()]);
 	// alert($.md5($('#password').val()));
-	$('#busy').html('Authenticating');
+	$('#busy').html('&#2346;&#2381;&#2352;&#2350;&#2366;&#2339;&#2368;&#2325;&#2352;&#2339;');
 	 if($.md5($('#password').val())==UserCollection[$('#username').val().toLowerCase()])
 	 {
 	 	// If successful redirect to Index Page if flagDataExist==1
@@ -159,7 +167,7 @@ function Authenticate(){
 			 xhr1.open('GET', "http://masema.org/sync/sync.aspx?type=download&id=0&username="+$('#username').val()+"&password="+$('#password').val(), true);
 			 // Event Data Download :'http://masema.org/sync/sync.aspx?type=download&id=4&username=testgrantor@masema.com&password=abc123&bypass='
 			  if (xhr1.overrideMimeType) {
-			    xhr1.overrideMimeType('text/plain; charset=x-user-defined');
+			    xhr1.overrideMimeType('text/plain; charset=UTF-8');
 			  }
 			 // alert('2');
 			  xhr1.onreadystatechange = function(e) {
@@ -195,9 +203,10 @@ function Authenticate(){
 			    		 var usersJSONObject = loginInfoJSONObject.Users;
 			    		 $('#selectevent').show();	
 			    		
+			    		
 			    		// loginInfoJSONObject is composed of Events and the Users 
 			    		 $(eventDataJSONObject).each(function() {  			    		  
-			    		  
+			    		  alert(this.Name);
 			    		  $('#eventlist').append('<input type="radio" name="radio-choice" id="'+ this.ID+'" value="'+this.ID +'" />'
 			    		  +'<label for="'+ this.ID+'">'+ this.Name+'</label>');
 			    		 	
@@ -614,7 +623,7 @@ function DownloadEventData(){
 			 xhr1.open('GET', 'http://masema.org/sync/sync.aspx?type=download&id='+eventId+'&username=testgrantor@masema.com&password=abc123&bypass=', true);
 			 // Event Data Download :'http://masema.org/sync/sync.aspx?type=download&id=4&username=testgrantor@masema.com&password=abc123&bypass='
 			  if (xhr1.overrideMimeType) {
-			    xhr1.overrideMimeType('text/plain; charset=x-user-defined');
+			    xhr1.overrideMimeType('text/plain; charset=UTF-8');
 			  }
 			 // alert('2');
 			  xhr1.onreadystatechange = function(e) {
@@ -1037,6 +1046,23 @@ function ResetDevice(){
 		}, 5000);
     		
     }
+ }
+ 
+ 
+function convertToEntities(inputStr) {
+  var tstr = inputStr;
+  var bstr = '';
+  for(i=0; i<tstr.length; i++)
+  {
+    if(tstr.charCodeAt(i)>127)
+    {
+      bstr += '&#' + tstr.charCodeAt(i) + ';';
+    }
+    else
+    {
+      bstr += tstr.charAt(i);
+    }
+  }
  }
  //--------------------------------------------------------------------------------------------------
 

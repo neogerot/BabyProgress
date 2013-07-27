@@ -12,23 +12,23 @@
         
 	<div data-role="header" data-theme="b" class="header">	
 	<p>		
-		<h1 id="MainHeading"></h1>	
+		<h1 class="header"></h1>	
 		<div class="ui-btn-left" data-role="controlgroup" data-type="horizontal">
 		 	    <a href="#" data-role="button" data-inline="true" data-theme="b" id="btnAdd" data-icon="plus" class="buttonHindi" ></a>
-		 	    <a href="#" data-role="button" data-inline="true" data-theme="b" id="btnLottery" data-icon="star" class="buttonHindi"></a>
+		 	  
 		 	   </div>
 	
 	    		<div class="ui-btn-right" data-role="controlgroup" data-type="horizontal">
-					<a href="#" data-role="button" data-inline="true" data-theme="b" id="btnSynchronize" data-icon="gear">Options</a>	
-					<a href="#" data-role="button" data-inline="true" data-theme="b" id="btnLogout" data-icon="grid">Logout</a>	
+					<a href="#" data-role="button" data-inline="true" data-theme="b" id="btnSynchronize" data-icon="gear" class="buttonHindi">Options</a>	
+					<a href="#" data-role="button" data-inline="true" data-theme="b" id="btnLogout" data-icon="grid" class="buttonHindi">Logout</a>	
 				 </div>		
    	</p>
    	
 	</div>
 	<div id="title">
-		<div class="ui-grid-a">
-			<div class="ui-block-a"><input id='txtSearch' type="search"/></div>
-			<div class="ui-block-b"><a href="#" data-role="button" data-theme="b" id="btnSearch" data-inline="true" data-icon="search">Search</a></div>
+		<div class="ui-btn-left" data-role="controlgroup" data-type="horizontal" style="width:100%;">
+			<div class="ui-block-a"><input id='txtSearch' type="search" placeholder="&#2326;&#2367;&#2354;&#2366;&#2337;&#2364;&#2368; &#2360;&#2306;&#2326;&#2381;&#2351;&#2366; &#2337;&#2366;&#2354;&#2375;" class="searchInput"/></div>
+			<div class="ui-block-b"><a href="#" data-role="button" data-theme="b" id="btnSearch" data-inline="true" data-icon="search" class="searchButton">Search</a></div>
 		</div> 								
    			
    		
@@ -49,6 +49,7 @@
     <script src="js/employeelist.js"></script>
     <script src="js/fastclick.js"></script> 
     <script src="js/jquery.mobile-1.3.1.min.js"></script>
+   
 
     </body>
 

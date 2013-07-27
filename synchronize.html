@@ -15,11 +15,14 @@
         
      <div data-role="header" data-theme="b">	
 			<p>		
-				<h1>Options</h1>			
-	  			<a href="#" data-role="button" data-inline="true" data-theme="b" id="btnBack" onclick="RedirectToPage('index.html')" data-icon="back">Back</a>
+				<h1 class="header"></h1>
+				<div class="ui-btn-left" data-role="controlgroup" data-type="horizontal">			
+	  				<a href="#" data-role="button" data-inline="true" data-theme="b" id="btnBack" onclick="RedirectToPage('index.html')" data-icon="back" class="buttonHindi">Back</a>
+	  				<a href="#" data-role="button" data-inline="true" data-theme="b" id="btnLottery" data-icon="star" class="buttonHindi"></a>
+	  			 </div>
 				<div class="ui-btn-right" data-role="controlgroup" data-type="horizontal">
 					<a href="#" data-role="button" data-inline="true" data-theme="b" id="btnCleanTables" onclick="CleanTables();" data-icon="delete" style="display: none;">Clean</a>		
-					<a href="#" data-role="button" data-inline="true" data-theme="b" id="btnUploadParticipantImages" onclick="UploadData();" data-icon="refresh">Upload Data</a>
+					<a href="#" data-role="button" data-inline="true" data-theme="b" id="btnUploadParticipantImages" onclick="UploadData();" data-icon="refresh" class="buttonHindi">Upload Data</a>
 				</div>	
   		 	</p>
    	   </div>	

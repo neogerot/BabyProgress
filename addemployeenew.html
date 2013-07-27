@@ -11,30 +11,29 @@
 <body>
 <!-- Home -->
 
- <div data-role="header" data-theme="b">	
+ <div data-role="header" data-theme="b" class="header">	
    <p>		
-		<h1>Add Participant</h1>			
-	    <a href="#" data-role="button" data-inline="true" data-theme="b" id="btnBack" data-icon="back">Back</a>			
+		<h1></h1>			
+	  			 <div class="ui-btn-left" data-role="controlgroup" data-type="horizontal">			
+	  				<a href="#" data-role="button" data-inline="true" data-theme="b" id="btnBack" onclick="RedirectToPage('index.html')" data-icon="back" class="buttonHindi">Back</a>
+	  			 </div>	
    </p>  
   </div>
   
-     <div id="title">
-		
-	</div>
 	<input name="uid" id="uid" placeholder="" value="" type="text" readonly="true" style="display:none;">    
    <div id="wrapper">    	
     <div id="scroller">
 	    <ul>	
 		<li>
 			<div id="capture">		
-			  <a href="#" data-role="button" data-inline="true" data-theme="b" id="btnCaptureImage" >Capture Image</a>						
+			  <a href="#" data-role="button" data-inline="true" data-theme="b" id="btnCaptureImage" class="buttonHindi" style="height:50px;">Capture Image</a>						
 			  <img id="imgCaptured" src="img/blank.gif"/>	
 			</div>
 		</li>         
        <li>
         
             <label for="firstName">
-                First Name
+               &#2346;&#2381;&#2352;&#2341;&#2350; &#2344;&#2366;&#2350;
             </label>
             <input name="firstName" id="firstName" placeholder="" value="" type="text" data-mini="true">
        
@@ -42,7 +41,7 @@
         <li>
        
             <label for="lastName">
-                Last Name
+                &#2309;&#2306;&#2340;&#2367;&#2350; &#2344;&#2366;&#2350;
             </label>
             <input name="lastName" id="lastName" placeholder="" value="" type="text" data-mini="true">
        
@@ -64,7 +63,7 @@
         </li>
                
 		<li>			
-			 <input id="addEntrySubmit" type="submit" data-theme="b" value="Save" onclick="addEmployee()" data-icon="check" >    
+			 <input id="addEntrySubmit" type="submit" data-theme="b" value="&#2360;&#2369;&#2352;&#2325;&#2381;&#2359;&#2367;&#2340; &#2325;&#2352;&#2375;" onclick="addEmployee()" class="buttonHindi" style="left:7px;width:97%;" >    
 		</li>
 	</ul>		
 </div>    
