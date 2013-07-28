@@ -22,32 +22,22 @@ function getUrlVars() {
   window.addEventListener('load', function() {
 				
 				var buttonSynchronize;
-				var buttonSearch;
-				
 				var buttonLogout ;
 				
 				buttonSynchronize = document.getElementById('btnSynchronize');
-				buttonSearch = document.getElementById('btnSearch');
-				
 				buttonLogout  = document.getElementById('btnLogout'); 
 				
 		
 				// Android 2.2 needs FastClick to be instantiated before the other listeners so that the stopImmediatePropagation hack can work.
 				
-				FastClick.attach(buttonSynchronize);	
+				FastClick.attach(buttonSynchronize);
+				FastClick.attach(buttonLogout);	
 								
 				buttonSynchronize.addEventListener('touchend', function(event) {
 					RedirectToPage('synchronize.html');
 				}, false);
   				
-  							
-				buttonSearch.addEventListener('touchend', function(event) {
-						Search();
-					}, false);
-					
-				
-					
-				buttonLogout.addEventListener('touchend', function(event) {
+  				buttonLogout.addEventListener('touchend', function(event) {
 						Logout();
 					}, false);
 				
@@ -73,7 +63,7 @@ function onDeviceReady() {
 	
 	$('#btnSynchronize').html('<br>&#2357;&#2367;&#2325;&#2354;&#2381;&#2346;');
 	$('#btnLogout').html('<br>&#2348;&#2306;&#2342; &#2325;&#2352;&#2375;&#2306;');
-	$('#btnSearch').html('<br>&#2393;&#2379;&#2332;&#2375;');
+	
 	
 	
 	
@@ -177,14 +167,18 @@ function getEmployees_success(tx, results) {
     var len = results.rows.length;
    
     var photopath="/sdcard";
-     $('#employeeList').append('<li data-role="list-divider"></li>');
+     
      
     for (var i=0; i<len; i++) {
     	var group = results.rows.item(i);
 		
 	 $('#employeeList').append('<li><a href="groupparticipants.html?groupId='+ group.ID + '&locationId='+locationId +'"  target="_self">' +
-	 '<h2>'+ group.Name +'</h2>');
+	 '<h2>'+ group.Name +'</h2></li>');
     }
+    
+    $('#employeeList').append('<li data-role="list-divider"><li/>');
+    $('#employeeList').append('<li><a href="influencers.html?locationId='+locationId +'"  target="_self">' +
+	 '<h2>&#2346;&#2381;&#2352;&#2349;&#2366;&#2357;&#2358;&#2366;&#2354;&#2368;</h2></li>');
     
 	setTimeout(function(){
 		scroll.refresh();
@@ -225,15 +219,6 @@ function RedirectToPage(pageUrl) {
     window.location=pageUrl;
 }
 
-function Search()
-{
-	 filter= $('#txtSearch').val();
-	// alert(filter);
-	 $('#employeeList').text('');
-	 db = window.openDatabase("GranteeDirectoryDB", "1.0", "PhoneGap Demo", 200000);
-	 db.transaction(getEmployees, transaction_error);
-	
-}
 
 function convertToEntities(inputStr) {
   var tstr = inputStr;

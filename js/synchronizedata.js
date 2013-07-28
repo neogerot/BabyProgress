@@ -9,6 +9,9 @@ eventJson.ID = "4";
 eventJson.Name = "Masema Drive";
 eventJson.Participants = [];
 
+var locationId;
+var groupId;
+
 //----------------------- Mutex -------------
 var mutexDB=0;
 var mutexDownloadImages;
@@ -38,7 +41,7 @@ document.addEventListener('DOMContentLoaded', loaded, false);
 function RedirectToPage(pageUrl) {
 	$('#busy').hide();
 	//alert("Employee Deleted");		
-    window.location=pageUrl;
+    window.location=pageUrl+"?locationId="+locationId+"&groupId="+groupId;
 }
 
 
@@ -84,8 +87,27 @@ function RedirectToPage(pageUrl) {
   
 	document.addEventListener("deviceready", onDeviceReady, false);
 
+
+
+function getUrlVars() {
+	//alert('hi');
+    var vars = [], hash;
+    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+    for(var i = 0; i < hashes.length; i++)
+    {
+        hash = hashes[i].split('=');
+        vars.push(hash[0]);
+        vars[hash[0]] = hash[1];
+    }
+    return vars;
+}
+
 function onDeviceReady() {	
     db = window.openDatabase("GranteeDirectoryDB", "1.0", "PhoneGap Demo", 200000);    
+    
+    locationId= getUrlVars()["locationId"];
+    groupId= getUrlVars()["groupId"];
+    
     $('#busy').hide();
     
     // Assign the hindi lables

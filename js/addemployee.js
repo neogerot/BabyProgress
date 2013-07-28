@@ -54,10 +54,12 @@ window.addEventListener('load', function() {
 		var buttonBack;	
 		var buttonCapture;	
 		buttonBack = document.getElementById('btnBack');
-		buttonCapture = document.getElementById('btnCaptureImage');
+		buttonCapture = document.getElementById('imgCaptured');
 
 		// Android 2.2 needs FastClick to be instantiated before the other listeners so that the stopImmediatePropagation hack can work.
-		FastClick.attach(buttonBack);		
+		FastClick.attach(buttonBack);
+		FastClick.attach(buttonCapture);	
+			
 
 		buttonBack.addEventListener('touchend', function(event) {
 			 RedirectToPage("groupparticipants.html"); 
@@ -95,7 +97,8 @@ document.addEventListener('deviceready', function() {
 function onDeviceReady() {
 	//loaded();
 	 locationId= getUrlVars()["locationId"];
-	 groupId== getUrlVars()["groupId"];
+	 groupId = getUrlVars()["groupId"];
+	 //alert(groupId);
 	// Assign all the Hindi Label..
 	  $('#btnBack').html('<br>&#2357;&#2366;&#2346;&#2360;');
 	  $('#btnCaptureImage').html("<br><br>&#2347;&#2379;&#2335;&#2379; &#2354;&#2375;"); 
@@ -261,6 +264,7 @@ function guid() {
 // Redirect to the Home Page
 function RedirectToPage(pageUrl) {
 	$('#busy').hide();	
+	
     window.location=pageUrl+"?locationId="+locationId+"&groupId="+groupId;
 }
 

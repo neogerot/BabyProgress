@@ -40,9 +40,11 @@ function onDeviceReady() {
     db = window.openDatabase("GranteeDirectoryDB", "1.0", "PhoneGap Demo", 200000);    
     $('#busy').hide();
     $('#message').hide();	
-    $('#selectevent').hide();	
-    
+    //$('#selectevent').hide();	
+     $('#selectevent').attr('style','visibility:hidden');
     // Assign Hindi Labels  
+    
+    $('#mainHeading').html("&#2350;&#2366;&#2305; &#2360;&#2375; &#2350;&#2366;&#2305;");
     $('#btnLogin').html("<br>&#2346;&#2381;&#2352;&#2357;&#2375;&#2358;");
     $('#btnBack').html('<br>&#2357;&#2366;&#2346;&#2360;');
     $('#btnResetOption').html("<br>&#2337;&#2367;&#2357;&#2366;&#2311;&#2360; &#2326;&#2366;&#2354;&#2368; &#2325;&#2352;&#2379;");
@@ -99,7 +101,8 @@ function PopulateLocations_success(tx,results)
 	  
 	  setTimeout(function(){
 		myScroll.refresh();
-	},100);
+	});
+	
 }
 function PopulateUserCollection_success(tx,results)
 {
@@ -110,7 +113,12 @@ function PopulateUserCollection_success(tx,results)
 	    UserCollection[appUser.UserName.toLowerCase()]=appUser.Password;
    } 	
    	
-   	PopulateLocations();
+   	db.transaction(function(tx)
+			     {	     	
+			     	tx.executeSql("Select Status from LoginStatus ");    	
+			     }
+			     , transaction_error,PopulateLocations);
+			     
 	    
 }
 
@@ -156,7 +164,12 @@ window.addEventListener('load', function() {
 }  
  function LoginExistingUser_success()
  {
- 	//RedirectToPage('index.html?locationId='+locationId);
+ 
+ 			  $('#busy').hide();	
+			  $('#login').hide();				    		
+			  //$('#selectevent').show();
+			  $('#selectevent').attr('style','visibility:visible');	
+			  $('#btnBack').show();
  }
  
 // This function will authenticate the User from the Server and Get the Events information to choose for the Device..
@@ -172,18 +185,14 @@ function Authenticate(){
 	 // First try to authenticate locally..	 
 	// alert(UserCollection[$('#username').val().toLowerCase()]);
 	// alert($.md5($('#password').val()));
-	$('#busy').html('&#2346;&#2381;&#2352;&#2350;&#2366;&#2339;&#2368;&#2325;&#2352;&#2339;');
+	$('#busy').html('&#2346;&#2381;&#2352;&#2350;&#2366;&#2339;&#2368;&#2325;&#2352;&#2339;'); // Authenticating
+	$('#busy').show();	
 	 if($.md5($('#password').val())==UserCollection[$('#username').val().toLowerCase()])
 	 {
 	 	// If successful redirect to Index Page if flagDataExist==1
 	 	if(flagDataExist==1)
 	  	  {
-	  	  			    		
-			  $('#busy').hide();	
-			  $('#login').hide();				    		
-			  $('#selectevent').show();	
-			  $('#btnBack').show();
-			  	
+	  	  	
 			  // make an entry into Login Table
 				db.transaction(function(tx)
 				     {	     	
@@ -194,7 +203,7 @@ function Authenticate(){
 	  	  }      		
 	 }
 	 
-	  $('#busy').show();		
+		
 			  var xhr1 = new XMLHttpRequest();
 			  //alert('1');
 			 // xhr1.open('GET', 'metadata/data.txt', true);
@@ -218,15 +227,14 @@ function Authenticate(){
 			    	}
 			    	else
 			    	{			    		
-			    		 $('#busy').hide();	
-			    		 $('#login').hide();	
-			    		
-			    		 
+			    		$('#login').hide();
+			    		$('#btnBack').show();
 			    		 // Check if there are some values in the Event Table if exists then redirect directly to Index page 
 			    		 if(flagDataExist==1)
 			    		 {
-			    		 	 $('#selectevent').show();	
-			    		 	 $('#btnBack').show();
+			    		 	 $('#busy').hide();				    		 	 	
+			    		 	 //$('#selectevent').show();
+			    		 	 $('#selectevent').attr('style','visibility:visible');				    		 	 
 			    		 	 return;
 			    		 }
 			    		 
@@ -256,35 +264,14 @@ function Authenticate(){
  }
  
  //------------------------------------ Event Data Download Starts-------------------------------------------------------------------
-function DownloadEventData(){ 	
-		
-	$('#busy').show();
-	 locationId=$('input[name=radio-choice]:checked').val();
-	 //alert(eventId);
-	 if (typeof eventId === "undefined") {
-	 				$('#busy').hide();
-  					alert('Select a Location');
-  					return;
-		}
-		
-		// make an entry into Login Table
-		db.transaction(function(tx)
-				     {	     	
-				     	tx.executeSql("INSERT INTO LoginStatus (Status) VALUES ('1')");    	
-				     }
-				     , transaction_error,LoginExistingUser_success);	
-		
- 	//CleanTables(); 	 	
- 	// Redirect to Index Page....
- 	
- }
+
  
  //------------------------------------ Images Download -----------------------------------------------------------------------------
  	function DownloadParticipantImages(){
     	//alert(arrImagesToDownload);
     	$('#busy').show();		
 		mutexImages=arrImagesToDownload.length;
-		$('#busy').html('Images : '+mutexImages);
+		$('#busy').html(mutexImages);
 		//alert(mutexImages);
     	$.each(arrImagesToDownload, function(i, val) {
     				// Download Images...
@@ -300,7 +287,7 @@ function DownloadEventData(){
 	 //  alert(window.rootFS.fullPath);
        window.rootFS.getDirectory("photos", {create: true, exclusive: false}, function(dir) { 
                 // Directory for downloaded photos created..
-              //  alert("Directory found...downloading..");
+             
                 var fileTransfer = new FileTransfer();
                 fileTransfer.download(
                                            "http://www.masema.org/data/images/"+imagename,
@@ -310,9 +297,7 @@ function DownloadEventData(){
                                             $('#busy').html(mutexImages);
                                          	if(--mutexImages==0)
                                          	{                                         		
-                                         		 $('#selectevent').show();	
-			 									 $('#btnBack').show();
-			 									 
+                                         				 									 
 			 									   // make an entry into Login Table
 												db.transaction(function(tx)
 												     {	     	
@@ -328,7 +313,8 @@ function DownloadEventData(){
                                            	 $('#busy').html(mutexImages);
                                            	if(--mutexImages==0)
                                          	{
-                                         		$('#selectevent').show();	
+                                         		//$('#selectevent').show();	
+			 									 $('#selectevent').attr('style','visibility:visible');
 			 									 $('#btnBack').show();
 			 									   // make an entry into Login Table
 												db.transaction(function(tx)
@@ -977,10 +963,10 @@ function DownloadFilefail()
 	$('#busy').html(mutexImages);
 	if(--mutexImages==0)
      {
-      					$('#selectevent').show();	
+      					//$('#selectevent').show();	
+			 			$('#selectevent').attr('style','visibility:visible');
 			 			$('#btnBack').show();
 			 			$('#busy').hide();
-			   // make an entry into Login Table
 			db.transaction(function(tx)
 			     {	     	
 			     	tx.executeSql("INSERT INTO LoginStatus (Status) VALUES ('1')");    	
@@ -1012,7 +998,7 @@ function SaveDB_success() {
 	
 	if(--mutexDB==0)
 	{
-		$('#busy').html('Downloading');
+		$('#busy').html('&#2325;&#2366;&#2352;&#2381;&#2351;&#2352;&#2340;'); // Downloading
   		LoadMetadata();		
 	}
 }
@@ -1038,7 +1024,7 @@ function DeleteTableComplete_success() {
 function ResetDevice(){
 	mutexReset=3;
 	$('#busy').show();
-	$('#busy').html('Deleting Data');		
+	$('#busy').html('&#2325;&#2366;&#2352;&#2381;&#2351;&#2352;&#2340;');		// Deleting Data
 	
     	// Delete Event Table 
     db.transaction(function(tx)
@@ -1078,7 +1064,7 @@ function ResetDevice(){
  {
  	if(--mutexReset==0)
  	{	
-   		$('#busy').html('Reset Completed');			
+   		$('#busy').html('&#2325;&#2366;&#2352;&#2381;&#2351; &#2360;&#2350;&#2381;&#2346;&#2370;&#2352;&#2381;&#2339;'); // Reset Complete			
  		 		
  		setTimeout(function(){ 	
    			RedirectToPage('login.html'); 

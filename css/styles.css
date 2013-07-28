@@ -175,7 +175,7 @@ li .bubble {
     vertical-align: top; 	
  }
  
- #titleIndex {	
+ #titleSearch{	
 	font-family: inherit;
     font-size: 18px;
     font-weight: bold;
@@ -290,7 +290,7 @@ display: inline-block;
 
 .wrapperMain {
 	position: absolute; 
-	top: 200px; 
+	top: 120px; 
 	bottom: 20px;
 	width: 100%;
 	overflow: auto;
@@ -312,7 +312,7 @@ display: inline-block;
 	overflow: auto;
 	border-top: 1px solid #fff;	
 } 
-.wrapperList {
+.wrapperLogin {
 	position: absolute; 
 	top: 170px; 
 	bottom: 20px;

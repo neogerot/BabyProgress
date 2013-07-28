@@ -27,13 +27,13 @@ function getUrlVars() {
 				
 				buttonAdd = document.getElementById('btnAdd');
 				buttonBack = document.getElementById('btnBack');
-				buttonSearch = document.getElementById('btnSearch');
+				
 				
 		
 				// Android 2.2 needs FastClick to be instantiated before the other listeners so that the stopImmediatePropagation hack can work.
 				FastClick.attach(buttonAdd);	
 				FastClick.attach(buttonBack);	
-				FastClick.attach(buttonSearch);	
+					
 				
 		
 				buttonAdd.addEventListener('touchend', function(event) {
@@ -43,12 +43,6 @@ function getUrlVars() {
 				buttonBack.addEventListener('touchend', function(event) {
 				 RedirectToPage("index.html"); 
 			}, false);
-			
-			buttonSearch.addEventListener('touchend', function(event) {
-						Search();
-					}, false);
-					
-				
 			
 				
 			}, false);
@@ -70,11 +64,9 @@ function onDeviceReady() {
     groupId= getUrlVars()["groupId"];
    // alert(groupId +' '+locationId);
     //$('#MainHeading').html('&#2346;&#2381;&#2352;&#2340;&#2367;&#2349;&#2366;&#2327;&#2367;&#2351;&#2379;&#2306;');	
-	$('#btnAdd').html('<br>&#2326;&#2367;&#2354;&#2366;&#2337;&#2364;&#2368; &#2332;&#2379;&#2337;&#2364;&#2375;&#2306;');
+	$('#btnAdd').html('<br>&#2346;&#2381;&#2352;&#2349;&#2366;&#2357;&#2358;&#2366;&#2354;&#2368; &#2332;&#2379;&#2396;&#2375; ');
 	$('#btnBack').html('<br>&#2357;&#2366;&#2346;&#2360;');
-	$('#btnSearch').html('<br>&#2393;&#2379;&#2332;&#2375;');
-	
-	
+		
 	 db.transaction(GetParticipants, transaction_error);   
   
 }
