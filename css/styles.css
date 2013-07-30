@@ -92,14 +92,14 @@ li .bubble {
 	position: absolute;
 	top: 30%;
  	left: 50%;
-	margin-left: -150px;
+	margin-left: -200px;
 	margin-top: 0px;
 	color: #FFFFFF;
 	font-size: 24px;	
 	z-index:6;
 	background-color: #000000;
 	opacity:0.5;
- 	width:200px;
+ 	width:300px;
 	height:32px;
 	padding: 30px;
 	-moz-border-radius: 10px;
@@ -138,17 +138,15 @@ li .bubble {
 	padding-bottom: 5px;
 	border-bottom: 1px solid #666;
 	border-top: 1px solid #666;
+	height:190px;
 }
 
 #employeeDetails img {
 	float: left;
 	margin-right: 8px;
-    height: 150px;
-    width:150px;
+    height: 180px;
+    width:300px;
     vertical-align: top;    
-}
-#employeeDetails a {
-    
 }
 
 .searchInput {   
@@ -193,8 +191,9 @@ li .bubble {
 }
 
 #capture img{	
-	top:10px;		
-	width:200px;
+	top:10px;	
+	padding-left:100px;	
+	width:300px;
 	height:200px;
 	vertical-align: center; 	
 }
@@ -265,7 +264,15 @@ display: inline-block;
 {
 	width:160px;
 	height:80px;
-	font-size: 24px;
+	font-size: 24px;		
+}
+
+.buttonHindi2
+{
+	position:relative;
+	width:160px;
+	height:80px;
+	font-size: 24px;	
 }
 
 .buttonHindiSearch
@@ -273,7 +280,6 @@ display: inline-block;
 	width:160px;
 	height:80px;
 	font-size: 24px;
-	
 }
 
 
@@ -285,7 +291,9 @@ display: inline-block;
 }
 
 .txtBox{
-  height:50px;
+  height:60px;
+  font-weight: bold;
+  font-size: 40px; 
 }
 
 .wrapperMain {
@@ -321,3 +329,29 @@ display: inline-block;
 	border-top: 1px solid #fff;	
 } 
 
+.ui-controlgroup .ui-controlgroup-controls, .ui-controlgroup .ui-radio, .ui-controlgroup .ui-checkbox, .ui-controlgroup .ui-select, .ui-controlgroup li {
+-webkit-border-radius: inherit;
+border-radius: inherit;
+width: 100%;
+
+}
+.ui-header .ui-btn-left, .ui-footer .ui-btn-left {
+  top:10px;
+  left:10px;
+}
+
+input.ui-mini, .ui-mini input, textarea.ui-mini {
+font-size: 24px;
+}
+
+input.ui-input-text, textarea.ui-input-text {
+	background-image: none;
+	padding: .4em;
+	margin: .5em 0;
+	min-height: 1.4em;
+	line-height: 1.4em;
+	font-size: 24px;
+	display: block;
+	width: 100%;
+	outline: 0;
+}

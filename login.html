@@ -2,15 +2,16 @@
 <html>
     <head>
         <meta name="viewport" content="width=device-width,initial-scale=1"/>
-        <link rel="stylesheet" href="css/styles.css" />    
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />         
         <link rel="stylesheet" href="css/jquery.mobile-1.3.1.min.css">  
+        <link rel="stylesheet" href="css/styles.css" /> 
     </head>
 
     <body>
         
 	<div data-role="header" data-theme="b" class="header">	
 	<p>		
-		<h1 id="mainHeading" class="heading" style="font-size: 30px;"></h1>		
+	  	 <h1 id="mainHeading" class="heading" style="font-size: 30px;"></h1>		
 		 <a href="#" data-role="button" data-inline="true" data-theme="b" id="btnBack" style="display:none;" class="buttonHindi">Back</a>		    		
    	</p>
    	
@@ -18,10 +19,10 @@
 	<div id="title">		
    	</div>		
 	<div id="login">
-		<span id="message" class="errorMessage">You are not Authorized to perform this action</span>
-		<input name="username" id="username" placeholder="&#2313;&#2346;&#2351;&#2379;&#2327;&#2325;&#2352;&#2381;&#2340;&#2366; &#2325;&#2366; &#2344;&#2366;&#2350;"
+		<span id="message" class="errorMessage"></span>
+		<input name="username" id="username" placeholder=""
 		 value="testgrantor@masema.com" type="text" class="txtBox">   
-		<input name="password" id="password" placeholder="&#2313;&#2346;&#2351;&#2379;&#2327;&#2325;&#2352;&#2381;&#2340;&#2366; &#2325;&#2366; &#2346;&#2366;&#2360;&#2357;&#2352;&#2381;&#2337;" 
+		<input name="password" id="password" placeholder="" 
 		value="abc123" type="password" class="txtBox">   
 		<a href="#" data-role="button" data-theme="b" id="btnLogin" class="buttonHindi" style="left:7px;width:97%;">Login</a>		
 		<a href="#" data-role="button" data-theme="b" id="btnResetOption" onclick="ShowResetOption();" class="buttonHindi" style="left:7px;width:97%;">Reset Device</a>	
@@ -29,7 +30,7 @@
 	
 	<div id="selectevent" style="display:none;">
 		<fieldset data-role="controlgroup">
-		<legend><strong>&#2313;&#2346;&#2354;&#2348;&#2381;&#2343; &#2360;&#2381;&#2341;&#2366;&#2344; &#2360;&#2370;&#2330;&#2368; (&#2319;&#2325; &#2360;&#2381;&#2341;&#2366;&#2344; &#2325;&#2366; &#2330;&#2351;&#2344;  &#2325;&#2352;&#2375;)</strong></legend>
+		<legend id="selecteventlabel"></legend>
 		
 		<div id="wrapper" class="wrapperLogin">
 	  		<div id="scroller">		
@@ -49,6 +50,7 @@
 	<div id="busy">Loading...</div>	
     <div id="footer">@2013</div>
     
+    <script src="js/languagetext.js"></script>
 	<script src="phonegap.js"></script>
     <script src="js/jquery.js"></script>   
     <script src="js/iscroll-lite.js"></script>

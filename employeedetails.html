@@ -3,31 +3,16 @@
     <head>
         <title>Ma-se-Ma</title>
         <meta name="viewport" content="width=device-width,initial-scale=1"/>
-        <link rel="stylesheet" href="css/styles.css" />
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />   
         <link rel="stylesheet" href="css/jquery.mobile-1.3.1.min.css">
+        <link rel="stylesheet" href="css/styles.css" />
         
-         <script type="text/javascript">
-    	window.addEventListener('load', function() {
-		var testB;	
-		testB = document.getElementById('btnBack');
-
-		// Android 2.2 needs FastClick to be instantiated before the other listeners so that the stopImmediatePropagation hack can work.
-		FastClick.attach(testB);		
-
-		testB.addEventListener('touchend', function(event) {
-			 RedirectToPage('index.html'); 
-		}, false);
-		
-	}, false);
-    	
-    </script>
-    
     </head>
    
     <body>
     	
     <div data-role="header" data-theme="b">	
-    	<h1 class="heading" style="font-size:40px;">&#2350;&#2366;&#2305; &#2360;&#2375; &#2350;&#2366;&#2305;</h1>		
+    	 <h1 class="header"></h1>	
 		 <a href="#" data-role="button" data-inline="true" data-theme="b" id="btnBack" class="buttonHindi">Back</a>	
 	</div>
 	
@@ -35,33 +20,32 @@
 		
 	</div>
 	
-	  	<div id="wrapper">
+	  	<div id="wrapper" class="wrapperMain">
 	  		<div id="scroller">
 	  		<ul>
 		  		<div id="employeeDetails">
-	 		  		<img id="employeePic" width="100px" height="100px"/>
+	 		  		<a id="participantEdit" href="#" target="_self"><img id="employeePic"/></a>
 		       		<h3 id="fullName"></h3>
 		       		<p id="level"></p>
-		       		<p id="location"></p>	
-		       	    <a href="#" data-role="button" data-inline="true" data-theme="b" id="btnEditDetails" target="_self">Edit</a>	     				       		     		
+		       		<p id="location"></p>			       	         				       		     		
 		  		</div>		  			
 	  		</ul> 	 
 	  		<ul id="objectives" data-role="listview" data-inset="true">	  				  			
 	  		</ul>   	
-	  		<ul>
-	  			<input type="submit" data-role="button" id="btnSubmit" name="btnSubmit" value="Submit" data-theme="b"/>	  			
+	  		<ul id="submitbutton">
+	  			 <a href="#" data-role="button" data-theme="b" id="btnSubmit" style="left:7px;width:97%;height:80px;font-size:24px;">Submit</a>	  			  			
 	  		</ul>
 	  		</div>
-	  	</div>
-	  
-	  		
-	  	   
+	  	</div>	  
+	        
+	     
 
 	<div id="busy">Loading...</div>
  	
  	<div id="footer">@2013</div>
+ 	 	
  	
- 	</div>
+ 	<script src="js/languagetext.js"></script>
 	<script src="phonegap.js"></script>
 	<script src="js/jquery.js"></script>
     <script src="js/iscroll-lite.js"></script>

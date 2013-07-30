@@ -1,22 +1,28 @@
 var id = 0;
 var db;
 var scroll;
-var levelUser;
+
 var insertedUniqueId;
 var uid ;
 var flagIsUpdate;
 var GroupCollection = {};
 var locationId;
 var groupId;
+var levelId;
 
 //-- Workarounds for Update cases---
 var originalGroupId;
 var originalImage;
 //----- 
 
+var influencer;
+var influencerId;
+var PregnancyLevelID,NewMomLevelID;
+
+
 
 function getUrlVars() {
-	//alert('hi');
+	
     var vars = [], hash;
     var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
     for(var i = 0; i < hashes.length; i++)
@@ -29,7 +35,7 @@ function getUrlVars() {
 }
 
 function loaded() {
-	//alert('loaded');
+
 	setTimeout(function () { 
         scroll = new iScroll('wrapper', { 
 		useTransform: false,
@@ -42,7 +48,7 @@ function loaded() {
 				e.preventDefault();
 		}
 	});
-        }, 1000);       
+        }, 100);       
   
  }
 
@@ -96,13 +102,27 @@ document.addEventListener('deviceready', function() {
 
 function onDeviceReady() {
 	//loaded();
-	 locationId= getUrlVars()["locationId"];
-	 groupId = getUrlVars()["groupId"];
-	 //alert(groupId);
-	// Assign all the Hindi Label..
-	  $('#btnBack').html('<br>&#2357;&#2366;&#2346;&#2360;');
-	  $('#btnCaptureImage').html("<br><br>&#2347;&#2379;&#2335;&#2379; &#2354;&#2375;"); 
-	  $('#addEntrySubmit').html("&#2360;&#2369;&#2352;&#2325;&#2381;&#2359;&#2367;&#2340; &#2325;&#2352;&#2375;"); 
+	 // Get all Query String Parameters
+		 locationId= getUrlVars()["locationId"];
+		 groupId = getUrlVars()["groupId"];
+		 influencer=getUrlVars()["influencer"];
+		 
+		  if (typeof influencer === "undefined") {	
+		  	influencer=0;
+		  }
+		    if (typeof groupId === "undefined") {	
+		  	groupId=0;
+		  }
+		 
+	
+	 // Assign the Hindi Texts
+	   
+	  $('#btnBack').html('<br>'+PARTICIPANT_BUTTON_BACK);
+	  $('#btnCaptureImage').html('<br>'+PARTICIPANT_BUTTON_CAPTUREIMAGE); 
+	  $('#addEntrySubmit').html('<hr width="0">'+PARTICIPANT_BUTTON_ENTRYSUBMIT); 
+	  
+	  $('#lblFirstName').html('<br><strong>'+PARTICIPANT_LABEL_FIRSTNAME+'<strong>');
+	  $('#lblLastName').html('<br><strong>'+PARTICIPANT_LABEL_LASTNAME+'<strong>');
 	  
 	  //
 	
@@ -122,16 +142,72 @@ function onDeviceReady() {
 	db = window.openDatabase("GranteeDirectoryDB", "1.0", "PhoneGap Demo", 200000);
 	// Assign the avaialble Single Select Values for
 	
-	// Populate the avaialble Levels
+	// Populate the avaialble Influencers
 	db.transaction(function(tx)
 	     {	     	
-	     	tx.executeSql('Select ID,Name from levels',[],PopulateLevel_success);    	
+	     	tx.executeSql('Select ID,PregnancyLevelID,NewMomLevelID from game ',[],InitializeDBParameters_success);    	
+	     }
+	     , transaction_error);
+}
+function InitializeDBParameters_success(tx,results)
+{
+	var len = results.rows.length;
+	
+	 for (var i=0; i<len; i++) {
+	 	var game = results.rows.item(i);	
+	 	PregnancyLevelID=game.PregnancyLevelID;
+	 	NewMomLevelID=game.NewMomLevelID;
+	 }
+  // Populate the avaialble Influencers
+	db.transaction(function(tx)
+	     {	     	
+	     	tx.executeSql('Select ID,UniqueID,FirstName,LastName from participants where influencer=1 ',[],PopulateInfluencer_success);    	
 	     }
 	     , transaction_error);
 }
 
+function PopulateInfluencer_success(tx,results)
+{
+	var len = results.rows.length;
+	var strLocationOptions='<div data-role="fieldcontain"><label for="influencerId" class="select"><strong>'+PARTICIPANT_SELECT_INFLUENCER+'</strong></label><select name="influencerId" id="influencerId" data-native-menu="false"><option value="0" data-placeholder="true">&#2360;&#2361;&#2366;&#2351;&#2325; &#2330;&#2369;&#2344;&#2367;&#2351;&#2375;</option>';
+	var strLocationClose='</select></div>';
+	
+	 for (var i=0; i<len; i++) {
+	 	var influencer = results.rows.item(i);	 
+	 	strLocationOptions +='<option value="'+influencer.UniqueID+'">'+influencer.FirstName+' '+influencer.LastName +'</option>';
+	 }
+	
+	$('#influencerSelect').append(strLocationOptions+strLocationClose);
+	$('#influencerSelect').trigger( "create" );
+	
+	
+	var strCategoryOptions='<div data-role="fieldcontain"><label for="categoryId" class="select"><strong>'+PARTICIPANT_SELECT_CATEGORY +'</strong></label><select name="categoryId" id="categoryId" data-native-menu="false"><option value="0" data-placeholder="true">&#2358;&#2381;&#2352;&#2375;&#2339;&#2368; &#2330;&#2369;&#2344;&#2367;&#2351;&#2375;</option>';
+	var strCategoryClose='</select></div>';
+	strCategoryOptions +='<option value=1>'+PARTICIPANT_SELECT_CATEGORY_OPTION_PREGNANT+'</option>';
+	strCategoryOptions +='<option value=2>'+PARTICIPANT_SELECT_CATEGORY_OPTION_NEWMOM+'</option>';
+	strCategoryOptions +='<option value=3>'+PARTICIPANT_SELECT_CATEGORY_OPTION_PREGNANTANDNEWMOM+'</option>';
+	
+	
+	$('#categorySelect').append(strCategoryOptions+strCategoryClose);
+	$('#categorySelect').trigger( "create" );
+	
+	// Populate the Profile in case of Update
+	if(flagIsUpdate==1)
+		{
+			var  sql = "select e.ID,e.FirstName, e.LastName, e.UniqueID,e.Level, e.Image,e.Category,e.InfluencerID,e.LocationID,e.GroupID,e.IsNew,e.IsUpdate "
+  			  + 	" from Participants e " 
+			  +  " where e.UniqueID=:uid ";
+			  
+	     db.transaction(function(tx)
+		     {	     	
+		     	tx.executeSql(sql,[uid],PopulateProfile_success);    	
+		     }
+		     , transaction_error);
+		}
+}
 
 function PopulateLocation_success(tx,results){
+	/*
 	var len = results.rows.length;
 	var strLocationOptions='<div data-role="fieldcontain"><label for="locationId" class="select">Choose Location</label><select name="locationId" id="locationId" data-native-menu="false"><option value="0" data-placeholder="true">Choose Location</option>';
 	var strLocationClose='</select></div>';
@@ -140,7 +216,7 @@ function PopulateLocation_success(tx,results){
 	 	var location = results.rows.item(i);	 
 	 	strLocationOptions +='<option value="'+location.ID+'">'+location.Name+'</option>';
 	 }
-	//alert(strLocationOptions+strLocationClose);
+	
 	$('#locationSelect').append(strLocationOptions+strLocationClose);
 	$('#locationSelect').trigger( "create" );	
 	
@@ -151,9 +227,11 @@ function PopulateLocation_success(tx,results){
 	     	tx.executeSql('Select ID,Name,LocationId from groups',[],PopulateGroup_success);    	
 	     }
 	     , transaction_error);
+	     */
 	
 }
 function PopulateGroup_success(tx,results){
+	/*
 	var len = results.rows.length;
 	var strGroupOptions='<div data-role="fieldcontain"><select name="groupId" id="groupId" data-native-menu="false"><option value="0" data-placeholder="true">&#2360;&#2350;&#2370;&#2361; &#2325;&#2366; &#2330;&#2351;&#2344;</option>';
 	var strGroupClose='</select></div>';
@@ -163,7 +241,7 @@ function PopulateGroup_success(tx,results){
 	 	strGroupOptions +='<option value="'+group.ID+'">'+group.Name+'</option>';
 	 	GroupCollection[group.ID]=group.LocationId;
 	 }
-	//alert(strGroupOptions+strGroupClose);
+	
 	$('#groupSelect').append(strGroupOptions+strGroupClose);
 	$('#groupSelect').trigger( "create" );	
 	
@@ -172,10 +250,10 @@ function PopulateGroup_success(tx,results){
 	     	tx.executeSql('Select ID,Name from levels',[],PopulateLevel_success);    	
 	     }
 	     , transaction_error);
-	
+	*/
 }
-
 function PopulateLevel_success(tx,results){
+	/*
 	var len = results.rows.length;
 	var strLevelOptions='<div data-role="fieldcontain"><select name="level" id="level" data-native-menu="false"><option value="0" data-placeholder="true">&#2360;&#2381;&#2340;&#2352; &#2325;&#2366; &#2330;&#2351;&#2344;</option>';
 	var strLevelClose='</select></div>';
@@ -184,7 +262,7 @@ function PopulateLevel_success(tx,results){
 	 	var level = results.rows.item(i);	 
 	 	strLevelOptions +='<option value="'+level.ID+'">'+level.Name+'</option>';
 	 }
-	//alert(strGroupOptions+strGroupClose);
+	
 	$('#levelSelect').append(strLevelOptions+strLevelClose);
 	$('#levelSelect').trigger( "create" );	
 		
@@ -203,6 +281,7 @@ function PopulateLevel_success(tx,results){
 		     }
 		     , transaction_error);
 		}
+		*/
 }
 
 // This function will populate the values in the form
@@ -213,9 +292,19 @@ function PopulateProfile_success(tx,results){
 		$('#firstName').val(participant.FirstName);
 		$('#lastName').val(participant.LastName);
 		
+		$('#categoryId').find("option[value='"+participant.Category+"']").attr("selected", true);
+		$('#influencerId').find("option[value='"+participant.InfluencerID+"']").attr("selected", true);
+		
+		
+		$('#categoryId').selectmenu("refresh", true);		
+	    $('#categoryId').selectmenu("disable");
+		
+		$('#influencerId').selectmenu("refresh", true);		
+	    $('#influencerId').selectmenu("disable");
+	    
 	 //	$('#locationId').find("option[value='"+participant.LocationID+"']").attr("selected", true);
 	//	$('#groupId').find("option[value='"+participant.GroupID+"']").attr("selected", true);
-		$('#level').find("option[value='"+participant.Level+"']").attr("selected", true);		
+	//	$('#level').find("option[value='"+participant.Level+"']").attr("selected", true);		
 		// Disable the level field
 		
 				
@@ -223,13 +312,13 @@ function PopulateProfile_success(tx,results){
 		
 		//$('#groupId').val(participant.GroupID);
 		//$('#groupId').attr('value', participant.GroupID);
-		originalGroupId=participant.GroupID;
+	//	originalGroupId=participant.GroupID;
 		originalImage=participant.Image;
 		//$('#groupId').selectmenu("refresh", true);
-		//alert($('#groupId').attr('value'));
+	
 		
-		$('#level').selectmenu("refresh", true);		
-		$('#level').selectmenu("disable");
+	//	$('#level').selectmenu("refresh", true);		
+	//	$('#level').selectmenu("disable");
 		
 		
 					
@@ -280,12 +369,12 @@ function addEmployee()
 {
 	if(flagIsUpdate==1)
 	{
-		$('#busy').html('Updating Record');	
+		$('#busy').html(PARTICIPANT_MESSAGE_BUSY_UPDATERECORD);	
 		db.transaction(UpdateEmployeeInDB);
 	}
 	else
 	{
-		$('#busy').html('Adding Record');	
+		$('#busy').html(PARTICIPANT_MESSAGE_BUSY_ADDRECORD);	
 		db.transaction(addEmployeeInDB);	
 	}
 }
@@ -317,31 +406,51 @@ function UpdateEmployeeInDB_success(tx,results) {
 
 function addEmployeeInDB(tx)
 {	
-	levelUser=$('#level').val();	
+	
+	if($('#categoryId').val()==1 ||$('#categoryId').val()==3 )
+	{		
+		levelId = PregnancyLevelID;
+	}
+	else
+	{
+		levelId = NewMomLevelID;
+	}	
+	
 	$('#busy').show();		
-	var sql = "INSERT INTO Participants (FirstName,LastName,UniqueID,Image,Level,Points,LocationID,GroupID,IsNew,IsUpdate) VALUES ('" + $('#firstName').val() +"','"
-		+ $('#lastName').val() +"',"+ "'"+$('#uid').val()+"','"+ $('#uid').val() +".jpg'" +",'"+$('#level').val() +"','0','"+locationId+"','"
-		+ groupId+"','1','0')"; 
+	var sql = "INSERT INTO Participants (FirstName,LastName,UniqueID,Image,Category,Influencer,InfluencerID,Payout,Level,Points,LocationID,GroupID,IsNew,IsUpdate,IsLevelCompleted) VALUES ('" + $('#firstName').val() +"','"
+		+ $('#lastName').val() +"','" + $('#uid').val()+ "','"+ $('#uid').val() +".jpg" +"','" + $('#categoryId').val()
+		+"','" + influencer + "','"+ $('#influencerId').val()+ "','0'" 
+		+",'"+levelId +"','0','"+locationId+"','" + groupId+"','1','0','0')"; 
 		
-	//alert(sql);
-	tx.executeSql(sql,[],addEmployeeInDB_success);
+	
+	tx.executeSql(sql,[],addEmployeeInDB_success,transaction_error);
 	
 	
-	//alert('Query Executed');
+	
 }
 
 function addEmployeeInDB_success(tx,results) {
 	console.log("Employee Added"+results.insertId);
+	
 	insertedUniqueId=$('#uid').val();
 	
 	// Insert the performance of User in the Performance Table 
 	// Get all the associated Objectives with the Level
 	
 	var sqlPerformance="select ID,Name,LevelId from objectives o"
-			  +  " where o.LevelId=:levelUser ";
+			  +  " where o.LevelId= "+levelId;
 			 
 				
-	tx.executeSql(sqlPerformance, [levelUser], getObjectives_success);	
+	if(influencer==0)
+	{
+		tx.executeSql(sqlPerformance, [], getObjectives_success);	
+	}
+	else
+	{
+		setTimeout(function(){ 	
+		  	 RedirectToPage("influencers.html");
+		  }, 1000);
+	}
 	
 }
 

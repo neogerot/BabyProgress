@@ -118,7 +118,7 @@ function GetParticipants(tx) {
 	
 	   var  sql = "select p.ID,p.FirstName, p.LastName, p.UniqueID, p.Image "
   			  + 	" from Participants p " 
-  			  +  " where p.groupId=:groupId "
+  			  +  " where p.groupId=:groupId and p.Influencer=1"
 			  +  " order by p.FirstName,p.LastName ";	;	
 		
 		
@@ -175,8 +175,8 @@ function populateDB(tx) {
 }
 function RedirectToPage(pageUrl) {
 	$('#busy').hide();
-	//alert("Employee Deleted");		
-    window.location=pageUrl+"?locationId="+locationId+"&groupId="+groupId;
+		
+    window.location=pageUrl+"?locationId="+locationId+"&influencer=1";
 }
 
 

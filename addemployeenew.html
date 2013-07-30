@@ -3,9 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Add Participant</title>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <title>Add Participant</title> 
   <link rel="stylesheet" href="css/jquery.mobile-1.3.1.min.css"> 
   <link rel="stylesheet" href="css/styles.css">
+  
     
 </head>
 <body>
@@ -14,9 +16,8 @@
  <div data-role="header" data-theme="b" class="header">	
    <p>		
 		<h1></h1>			
-	  			 <div class="ui-btn-left" data-role="controlgroup" data-type="horizontal">			
-	  				<a href="#" data-role="button" data-inline="true" data-theme="b" id="btnBack" data-icon="back" class="buttonHindi">Back</a>
-	  			 </div>	
+	  	 <a href="#" data-role="button" data-inline="true" data-theme="b" id="btnBack" data-icon="back" class="buttonHindi">Back</a>
+	  			
    </p>  
   </div>
   <div id="titleMain">
@@ -27,44 +28,36 @@
   <input name="uid" id="uid" placeholder="" value="" type="text" readonly="true" style="display:none;">    
    <div id="wrapper" class="wrapperAdd">    	
     <div id="scroller">
-	    <ul>	
-		<li>
-			
-		</li>         
-       <li>
-        
-            <label for="firstName">
-               &#2346;&#2381;&#2352;&#2341;&#2350; &#2344;&#2366;&#2350;
+	    <ul>  
+       <li>        
+            <label for="firstName" id="lblFirstName">
+             
             </label>
-            <input name="firstName" id="firstName" placeholder="" value="" type="text" data-mini="true">
+            <input name="firstName" id="firstName" placeholder="" value="" type="text" data-mini="true" class="txtBox">
        
       </li>
-        <li>
-       
-            <label for="lastName">
-                &#2309;&#2306;&#2340;&#2367;&#2350; &#2344;&#2366;&#2350;
+        <li>       
+            <label for="lastName" id="lblLastName">
+              
             </label>
-            <input name="lastName" id="lastName" placeholder="" value="" type="text" data-mini="true">
+            <input name="lastName" id="lastName" placeholder="" value="" type="text" data-mini="true" class="txtBox">
        
        </li>       
        <li>
-       
-            <div id='levelSelect'></div>
-       
+          <div id='categorySelect'></div> 
        </li>         
        		
 		<li>
-           <div id='locationSelect' style="display: none;"></div>
-       
+            <div id='influencerSelect'></div>       
         </li>
 		<li>        
 		
-            <div id='groupSelect'></div>
+           
        
         </li>
                
-		<li>			
-			 <input id="addEntrySubmit" type="submit" data-theme="b" value="&#2360;&#2369;&#2352;&#2325;&#2381;&#2359;&#2367;&#2340; &#2325;&#2352;&#2375;" onclick="addEmployee()" class="buttonHindi" style="left:7px;width:97%;" >    
+		<li>	
+		    <a href="#" data-role="button" data-theme="b" id="addEntrySubmit" onclick="addEmployee();" style="left:7px;width:97%;height:80px;font-size:24px;">Submit</a>			 
 		</li>
 	</ul>		
 </div>    
@@ -75,6 +68,7 @@
   <div id="footer">@2013</div>
 
 	
+	<script src="js/languagetext.js"></script>
 	<script src="phonegap.js"></script>
 	<script src="js/jquery.js"></script>
     <script src="js/iscroll-lite.js"></script>   

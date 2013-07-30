@@ -11,6 +11,7 @@ var UserCollection = {};
 var mutexDB=0;
 var mutexImages;
 var mutexReset;
+var mutexUsers=0;
 
 // Add IScroll
 var myScroll;
@@ -40,18 +41,25 @@ function onDeviceReady() {
     db = window.openDatabase("GranteeDirectoryDB", "1.0", "PhoneGap Demo", 200000);    
     $('#busy').hide();
     $('#message').hide();	
-    //$('#selectevent').hide();	
+  
+    // Assign Hindi Texts  
+  
      $('#selectevent').attr('style','visibility:hidden');
-    // Assign Hindi Labels  
+   
     
-    $('#mainHeading').html("&#2350;&#2366;&#2305; &#2360;&#2375; &#2350;&#2366;&#2305;");
-    $('#btnLogin').html("<br>&#2346;&#2381;&#2352;&#2357;&#2375;&#2358;");
-    $('#btnBack').html('<br>&#2357;&#2366;&#2346;&#2360;');
-    $('#btnResetOption').html("<br>&#2337;&#2367;&#2357;&#2366;&#2311;&#2360; &#2326;&#2366;&#2354;&#2368; &#2325;&#2352;&#2379;");
-    $('#btnReset').html("<br>&#2360;&#2366;&#2357;&#2343;&#2366;&#2344; &#2360;&#2367;&#2352;&#2381;&#2347; &#2337;&#2367;&#2357;&#2366;&#2311;&#2360; &#2326;&#2366;&#2354;&#2368; &#2325;&#2352;&#2344;&#2375; &#2325;&#2375; &#2354;&#2367;&#2319; &#2342;&#2348;&#2366;&#2351;&#2375;");
-    $('#message').html("&#2310;&#2346; &#2311;&#2360; &#2325;&#2381;&#2352;&#2367;&#2351;&#2366; &#2325;&#2379; &#2325;&#2352;&#2344;&#2375; &#2325;&#2375; &#2354;&#2367;&#2319; &#2309;&#2343;&#2367;&#2325;&#2371;&#2340; &#2344;&#2361;&#2368;&#2306; &#2361;&#2376;&#2306;");
-     
-   //alert($.md5('abc123'));
+     $('#mainHeading').html(LOGIN_HEADING_MAIN);
+    
+     $('#btnLogin').html('<br>'+ LOGIN_BUTTON_LOGIN);
+     $('#btnBack').html('<br>'+ LOGIN_BUTTON_BACK);
+     $('#btnResetOption').html('<br>'+LOGIN_BUTTON_RESETOPTION);
+     $('#btnReset').html('<br>'+LOGIN_BUTTON_RESET);
+  
+     $('#username').attr("placeholder",LOGIN_TEXTBOX_PLACEHOLDER_USERNAME);
+     $('#password').attr("placeholder",LOGIN_TEXTBOX_PLACEHOLDER_PASSWORD);
+       
+     $('#message').html(LOGIN_MESSAGE_ERROR_AUTHENTICATION);
+     $('#selecteventlabel').html('<strong>'+LOGIN_LABEL_SELECTLOCATION+'</strong>');
+        
 
     db.transaction(function(tx)
 	     {	     	
@@ -73,7 +81,7 @@ function CheckData_success(tx,results)
 	if(len>0){
 		flagDataExist=1;
 		eventId=results.rows.item(0).ID;
-		//alert(eventId);
+		
 		 db.transaction(function(tx)
 	     {	     	
 	     	tx.executeSql('select ID,UserName,Password from Users',[],PopulateUserCollection_success);	     	
@@ -90,7 +98,7 @@ function CheckData_success(tx,results)
 function PopulateLocations_success(tx,results)
 {
    	var len = results.rows.length;	
-	//alert(len);
+	
    for (var i=0; i<len; i++) {
     	var location = results.rows.item(i);
 	    $('#eventlist').append('<li><a href="index.html?locationId='+ location.ID +'"  target="_self">' +
@@ -107,7 +115,7 @@ function PopulateLocations_success(tx,results)
 function PopulateUserCollection_success(tx,results)
 {
 	var len = results.rows.length;	
-	//alert(len);
+
    for (var i=0; i<len; i++) {
     	var appUser = results.rows.item(i);
 	    UserCollection[appUser.UserName.toLowerCase()]=appUser.Password;
@@ -117,7 +125,7 @@ function PopulateUserCollection_success(tx,results)
 			     {	     	
 			     	tx.executeSql("Select Status from LoginStatus ");    	
 			     }
-			     , transaction_error,PopulateLocations);
+			     , transaction_error,EventTable_error);
 			     
 	    
 }
@@ -167,9 +175,11 @@ window.addEventListener('load', function() {
  
  			  $('#busy').hide();	
 			  $('#login').hide();				    		
-			  //$('#selectevent').show();
+			 
 			  $('#selectevent').attr('style','visibility:visible');	
 			  $('#btnBack').show();
+			  
+			  PopulateLocations();
  }
  
 // This function will authenticate the User from the Server and Get the Events information to choose for the Device..
@@ -183,17 +193,16 @@ window.addEventListener('load', function() {
 function Authenticate(){
 	
 	 // First try to authenticate locally..	 
-	// alert(UserCollection[$('#username').val().toLowerCase()]);
-	// alert($.md5($('#password').val()));
-	$('#busy').html('&#2346;&#2381;&#2352;&#2350;&#2366;&#2339;&#2368;&#2325;&#2352;&#2339;'); // Authenticating
+	
+	$('#busy').html(LOGIN_MESSAGE_BUSY_AUTHENTICATION); // Authenticating
 	$('#busy').show();	
+	
 	 if($.md5($('#password').val())==UserCollection[$('#username').val().toLowerCase()])
 	 {
-	 	// If successful redirect to Index Page if flagDataExist==1
+	 	// If successful show option to selec the location if flagDataExist==1
 	 	if(flagDataExist==1)
-	  	  {
-	  	  	
-			  // make an entry into Login Table
+	  	  {	  	  	
+			  // Make an entry into Login Table
 				db.transaction(function(tx)
 				     {	     	
 				     	tx.executeSql("INSERT INTO LoginStatus (Status) VALUES ('1')");    	
@@ -205,25 +214,23 @@ function Authenticate(){
 	 
 		
 			  var xhr1 = new XMLHttpRequest();
-			  //alert('1');
-			 // xhr1.open('GET', 'metadata/data.txt', true);
-			// alert("http://masema.org/sync/sync.aspx?type=download&id=0&username="+$('#username').val()+"&password="+$('#password').val());
+			 
 			 xhr1.open('GET', "http://masema.org/sync/sync.aspx?type=download&id=0&username="+$('#username').val()+"&password="+$('#password').val(), true);
 			 // Event Data Download :'http://masema.org/sync/sync.aspx?type=download&id=4&username=testgrantor@masema.com&password=abc123&bypass='
 			  if (xhr1.overrideMimeType) {
 			    xhr1.overrideMimeType('text/plain; charset=UTF-8');
 			  }
-			 // alert('2');
+			
 			  xhr1.onreadystatechange = function(e) {
-			  // alert(this.readyState+'-'+this.status);
+			
 			    if (this.readyState == 4 && this.status == 200) {
-			    	//alert(this.responseText);
+			    	
 			    	if (this.responseText.toLowerCase().indexOf("authentication failed") >= 0) 
 			    	{
 			    		 // Authentication Failed 
 			    		 $('#busy').hide();	
 			    		 $('#message').show();	
-			    		// alert('error');
+			    		
 			    	}
 			    	else
 			    	{			    		
@@ -232,9 +239,8 @@ function Authenticate(){
 			    		 // Check if there are some values in the Event Table if exists then redirect directly to Index page 
 			    		 if(flagDataExist==1)
 			    		 {
-			    		 	 $('#busy').hide();				    		 	 	
-			    		 	 //$('#selectevent').show();
-			    		 	 $('#selectevent').attr('style','visibility:visible');				    		 	 
+			    		 	 $('#busy').hide();		   		 	 	
+			    		  	 $('#selectevent').attr('style','visibility:visible');				    		 	 
 			    		 	 return;
 			    		 }
 			    		 
@@ -249,6 +255,11 @@ function Authenticate(){
 			    		 var usersJSONObject = loginInfoJSONObject.Users;
 			    		 
 			    		 // Traverse all the Users Objects..
+			    		 mutexUsers=0;
+			    		   $(usersJSONObject).each(function() {  			    		  
+			    		 				    		  
+			    		 		 mutexUsers++;
+			    		 });
 			    		  
 			    		  $(usersJSONObject).each(function() {  			    		  
 			    		 				    		  
@@ -268,23 +279,25 @@ function Authenticate(){
  
  //------------------------------------ Images Download -----------------------------------------------------------------------------
  	function DownloadParticipantImages(){
-    	//alert(arrImagesToDownload);
+    	
     	$('#busy').show();		
 		mutexImages=arrImagesToDownload.length;
 		$('#busy').html(mutexImages);
-		//alert(mutexImages);
-    	$.each(arrImagesToDownload, function(i, val) {
-    				// Download Images...
-    				//alert(val);
-    				var imageName=val;    				
-    				downloadFile(imageName);
-    	 	});  	 	
+		
+		
+	    	$.each(arrImagesToDownload, function(i, val) {
+	    				// Download Images...
+	    				
+	    				var imageName=val;    				
+	    				downloadFile(imageName);
+	    	 	});  	 	
+    	
     	
     }
- //http://107.21.201.107/ziphandler/default.aspx
+    
+ 
 	function downloadFile(imagename){
-	  // alert('download start'+imagename);      
-	 //  alert(window.rootFS.fullPath);
+	
        window.rootFS.getDirectory("photos", {create: true, exclusive: false}, function(dir) { 
                 // Directory for downloaded photos created..
              
@@ -293,7 +306,7 @@ function Authenticate(){
                                            "http://www.masema.org/data/images/"+imagename,
                                            window.rootFS.fullPath + "/photos/" +imagename,
                                            function(theFile) {
-                                         //  alert("download complete");
+                                       
                                             $('#busy').html(mutexImages);
                                          	if(--mutexImages==0)
                                          	{                                         		
@@ -313,7 +326,7 @@ function Authenticate(){
                                            	 $('#busy').html(mutexImages);
                                            	if(--mutexImages==0)
                                          	{
-                                         		//$('#selectevent').show();	
+                                         		
 			 									 $('#selectevent').attr('style','visibility:visible');
 			 									 $('#btnBack').show();
 			 									   // make an entry into Login Table
@@ -324,8 +337,7 @@ function Authenticate(){
 												     , transaction_error,LoginExistingUser_success);	
 			 									 return;
                                          	}
-                                           //alert("error in download");
-                                          // alert(error.code);
+                                         
                                            console.log("download error source " + error.source);
                                            console.log("download error target " + error.target);
                                            console.log("upload error code: " + error.code);
@@ -361,12 +373,17 @@ function Authenticate(){
 						"LastName VARCHAR(50), " +
 						"UniqueID VARCHAR(50), " +
 						"Image VARCHAR(100), " + 
+						"Category INTEGER, " +
+						"Influencer INTEGER, " +
+						"InfluencerID INTEGER, " +
+						"Payout INTEGER, " +
 						"Level INTEGER, " +
 						"Points INTEGER, " +
 						"LocationID VARCHAR(10), " +						
 						"GroupID VARCHAR(10), " +						
 						"IsNew INTEGER, " +
-						"IsUpdate INTEGER)";
+						"IsUpdate INTEGER, " +
+						"IsLevelCompleted INTEGER)";
 		
 		db.transaction(function(tx)
 	     {	     	
@@ -387,6 +404,8 @@ function Authenticate(){
 						"CREATE TABLE IF NOT EXISTS Events ( "+
 						"ID INTEGER PRIMARY KEY, " +		
 						"Name VARCHAR(50), " +
+						"AmountPerParticipant INTEGER, " +	
+						"BaseAmount INTEGER, " +	
 						"StartDate VARCHAR(50), " +											
 						"EndDate VARCHAR(50))";
 		
@@ -431,7 +450,9 @@ function Authenticate(){
     	var sqlDeleteGame = 
 						"CREATE TABLE IF NOT EXISTS Game ( "+												
 						"ID VARCHAR(10), " +										
-						"Name VARCHAR(100))";
+						"Name VARCHAR(100), "+
+						"PregnancyLevelID INTEGER, "+
+						"NewMomLevelID INTEGER)";
 		
 		
 		db.transaction(function(tx)
@@ -442,7 +463,7 @@ function Authenticate(){
 	     
 	     //**********************************************************************************************
 	     
-	     //********************************* Delete and Recreate game Table ******************************
+	     //********************************* Delete and Recreate Levels Table ******************************
     	
     	db.transaction(function(tx)
 	     {	     	
@@ -452,7 +473,8 @@ function Authenticate(){
     	
     	var sqlDeleteLevels = 
 						"CREATE TABLE IF NOT EXISTS Levels ( "+												
-						"ID VARCHAR(10), " +										
+						"ID VARCHAR(10), " +	
+						"LevelNo INTEGER, " +										
 						"Name VARCHAR(100))";
 		
 		
@@ -464,7 +486,7 @@ function Authenticate(){
 	     
 	     //**********************************************************************************************
 	     
-	     //********************************* Delete and Recreate game Table ******************************
+	     //********************************* Delete and Recreate Objectives Table ******************************
     	
     	db.transaction(function(tx)
 	     {	     	
@@ -477,7 +499,9 @@ function Authenticate(){
 						"ID VARCHAR(10), " +		
 						"Name VARCHAR(100), " +		
 						"PlusPoints INTEGER, " +		
-						"MinusPoints INTEGER, " +									
+						"MinusPoints INTEGER, " +	
+						"Mandatory INTEGER, " +	
+						"Sequence INTEGER, " +									
 						"LevelId VARCHAR(10))";
 		
 		
@@ -503,6 +527,8 @@ function Authenticate(){
 						"CREATE TABLE IF NOT EXISTS Locations ( "+												
 						"ID VARCHAR(10), " +
 						"Name VARCHAR(100), " +		
+						"WinnerID VARCHAR(50), " +	
+						"WinningAmount INTEGER, " +
 						"City VARCHAR(100), " +							
 						"State VARCHAR(100))";
 		
@@ -833,9 +859,13 @@ function Authenticate(){
     function SaveGrantee(participantObj)
     {
     	//alert(granteeObj.FirstName);
-    	var sql ="INSERT INTO Participants (FirstName,LastName,UniqueID,Image,Level,Points,LocationID,GroupID,IsNew,IsUpdate) VALUES ('" + participantObj.FirstName +"','"
-		+ participantObj.LastName +"',"+ "'"+participantObj.UniqueID+"','"+ participantObj.Image +"'"+",'"+participantObj.Level+"','"+participantObj.Points+"','"+participantObj.LocationID+"','"+
-		participantObj.GroupID +"','"+participantObj.IsNew +"','"+participantObj.IsUpdate +"')"; 
+    	var sql ="INSERT INTO Participants (FirstName,LastName,UniqueID,Image,Category,Influencer,InfluencerID,Payout,Level,Points,LocationID,GroupID,IsNew,IsUpdate,IsLevelCompleted) VALUES ('" 
+    	+ participantObj.FirstName  + "','"
+		+ participantObj.LastName + "','" + participantObj.UniqueID+"','"+ participantObj.Image +"','"
+		+ participantObj.Category + "','" + participantObj.Influencer +"','"
+		+ participantObj.InfluencerID +"','"+ participantObj.Payout+"','"
+		+ participantObj.Level+"','"+participantObj.Points+"','"+participantObj.LocationID+"','"
+		+ participantObj.GroupID +"','"+participantObj.IsNew +"','"+participantObj.IsUpdate +"','0')"; 
 	
 	     db.transaction(function(tx)
 	     {	     	
@@ -859,7 +889,10 @@ function Authenticate(){
     } 
     function SaveUser_success()
     {
-    	CleanTables();
+    	if(--mutexUsers==0)
+    	{
+    		CleanTables();
+    	}
     }
     
     function SaveGranteePerformance(granteePerformanceObj,userUniqueId)
@@ -880,8 +913,9 @@ function Authenticate(){
     function SaveGame(gameObj)
     {
     	   	    	
-    	var sql ="INSERT INTO Game (ID,Name) VALUES ('" + gameObj.ID +"','"
-		+ gameObj.Name +"')"; 
+    	var sql ="INSERT INTO Game (ID,Name,PregnancyLevelID,NewMomLevelID) VALUES ('" + gameObj.ID 
+    	+"','"+ gameObj.Name +"','"+ gameObj.PregnancyLevelID +"','"+ gameObj.NewMomLevelID 
+    	+"')"; 
 		       
 	     db.transaction(function(tx)
 	     {	     	
@@ -892,7 +926,7 @@ function Authenticate(){
     function SaveLevel(levelObj)
     {
     	   	    	
-    	var sql ="INSERT INTO Levels (ID,Name) VALUES ('" + levelObj.ID +"','"
+    	var sql ="INSERT INTO Levels (ID,LevelNo,Name) VALUES ('" + levelObj.ID +"','"+ levelObj.LevelNo + "','" 
 		+ levelObj.Name +"')"; 
 		       
 	     db.transaction(function(tx)
@@ -904,8 +938,9 @@ function Authenticate(){
     function SaveObjective(objectiveObj,levelId)
     {
     	   	    	
-    	var sql ="INSERT INTO Objectives (ID,Name,PlusPoints,MinusPoints,LevelId) VALUES ('" + objectiveObj.ID 
-    	+"','"+ objectiveObj.Name +"','"+  objectiveObj.PlusPoints +"','"+  objectiveObj.MinusPoints +"','"+levelId +"')"; 
+    	var sql ="INSERT INTO Objectives (ID,Name,PlusPoints,MinusPoints,Mandatory,Sequence,LevelId) VALUES ('" + objectiveObj.ID 
+    	+"','"+ objectiveObj.Name +"','"+  objectiveObj.PlusPoints +"','"+  objectiveObj.MinusPoints +"','"+  objectiveObj.Mandatory +"','"+  objectiveObj.Sequence +"','"
+    	+levelId +"')"; 
 		       
 	     db.transaction(function(tx)
 	     {	     	
@@ -916,8 +951,8 @@ function Authenticate(){
     function SaveEvent(eventObj)
     {
     	   	    	
-    	var sql ="INSERT INTO Events (ID,Name,StartDate,EndDate) VALUES ('" + eventObj.ID +"','"
-		+ eventObj.Name +"','" + eventObj.StartDate +"','" + eventObj.EndDate +  "')"; 
+    	var sql ="INSERT INTO Events (ID,Name,AmountPerParticipant,BaseAmount,StartDate,EndDate) VALUES ('" + eventObj.ID 
+    	+"','"+ eventObj.Name +"','" + eventObj.AmountPerParticipant +"','"+ eventObj.BaseAmount +"','" +eventObj.StartDate +"','" + eventObj.EndDate +  "')"; 
 		       
 	     db.transaction(function(tx)
 	     {	     	
@@ -928,8 +963,8 @@ function Authenticate(){
     function SaveLocation(locationObj)
     {
     	   	    	
-    	var sql ="INSERT INTO Locations (ID,Name,City,State) VALUES ('" + locationObj.ID +"','"
-		+ locationObj.Name +"','" + locationObj.City +"','" + locationObj.State +  "')"; 
+    	var sql ="INSERT INTO Locations (ID,Name,WinnerID,WinningAmount,City,State) VALUES ('" + locationObj.ID +"','"
+		+ locationObj.Name +"','" + locationObj.WinnerID +"','" + locationObj.WinningAmount +"','" + locationObj.City +"','" + locationObj.State +  "')"; 
 		       
 	     db.transaction(function(tx)
 	     {	     	
@@ -963,7 +998,7 @@ function DownloadFilefail()
 	$('#busy').html(mutexImages);
 	if(--mutexImages==0)
      {
-      					//$('#selectevent').show();	
+      					
 			 			$('#selectevent').attr('style','visibility:visible');
 			 			$('#btnBack').show();
 			 			$('#busy').hide();
@@ -990,7 +1025,20 @@ function MetadataLoadComplete_success() {
 	if(--mutexDB==0)
 	{
 		$('#busy').html('..........');
-        DownloadParticipantImages(); 		
+	   if(arrImagesToDownload.length > 0 )
+        {
+        	DownloadParticipantImages(); 		
+        }
+        else
+        {
+        	  // make an entry into Login Table
+			db.transaction(function(tx)
+		     {	     	
+		     	tx.executeSql("INSERT INTO LoginStatus (Status) VALUES ('1')");    	
+		     }
+		     , transaction_error,LoginExistingUser_success);	
+			 return;
+        }
 	}
 }
 
@@ -998,7 +1046,7 @@ function SaveDB_success() {
 	
 	if(--mutexDB==0)
 	{
-		$('#busy').html('&#2325;&#2366;&#2352;&#2381;&#2351;&#2352;&#2340;'); // Downloading
+		$('#busy').html(LOGIN_MESSAGE_BUSY_DOWNLOADING); // Downloading
   		LoadMetadata();		
 	}
 }
@@ -1007,10 +1055,7 @@ function transaction_error(tx, error) {
 	$('#busy').hide();
     alert("Database Error: " + error);
 }
-function DeleteTableComplete_success() {
-	//$('#busy').html('Database Created');
-	alert('deletetable');
-}
+
  // function to be called at last
  
  //----- Reset Functionality
@@ -1024,7 +1069,7 @@ function DeleteTableComplete_success() {
 function ResetDevice(){
 	mutexReset=3;
 	$('#busy').show();
-	$('#busy').html('&#2325;&#2366;&#2352;&#2381;&#2351;&#2352;&#2340;');		// Deleting Data
+	$('#busy').html(LOGIN_MESSAGE_BUSY_DELETEDATA);		// Deleting Data
 	
     	// Delete Event Table 
     db.transaction(function(tx)
@@ -1064,7 +1109,7 @@ function ResetDevice(){
  {
  	if(--mutexReset==0)
  	{	
-   		$('#busy').html('&#2325;&#2366;&#2352;&#2381;&#2351; &#2360;&#2350;&#2381;&#2346;&#2370;&#2352;&#2381;&#2339;'); // Reset Complete			
+   		$('#busy').html(LOGIN_MESSAGE_BUSY_DELETEDATACONFIRM); // Reset Complete			
  		 		
  		setTimeout(function(){ 	
    			RedirectToPage('login.html'); 

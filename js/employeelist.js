@@ -4,8 +4,7 @@ var filter='';
 var locationId;
 var scroll = new iScroll('wrapper', { vScrollbar: false, hScrollbar:false, hScroll: false });
 
-function getUrlVars() {
-	//alert('hi');
+function getUrlVars() {	
     var vars = [], hash;
     var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
     for(var i = 0; i < hashes.length; i++)
@@ -19,7 +18,7 @@ function getUrlVars() {
 
 
 //Add Button Events
-  window.addEventListener('load', function() {
+window.addEventListener('load', function() {
 				
 				var buttonSynchronize;
 				var buttonLogout ;
@@ -57,17 +56,14 @@ document.addEventListener("deviceready", onDeviceReady, false);
 function onDeviceReady() {	
     db = window.openDatabase("GranteeDirectoryDB", "1.0", "PhoneGap Demo", 200000);
 
-    locationId= getUrlVars()["locationId"];
-    //$('#MainHeading').html('&#2346;&#2381;&#2352;&#2340;&#2367;&#2349;&#2366;&#2327;&#2367;&#2351;&#2379;&#2306;');	
+    locationId= getUrlVars()["locationId"];  
 	
-	
-	$('#btnSynchronize').html('<br>&#2357;&#2367;&#2325;&#2354;&#2381;&#2346;');
-	$('#btnLogout').html('<br>&#2348;&#2306;&#2342; &#2325;&#2352;&#2375;&#2306;');
-	
+	// Asign Hindi Texts
+	$('#btnSynchronize').html('<br>'+INDEX_BUTTON_OPTION);
+	$('#btnLogout').html('<br>'+INDEX_BUTTON_LOGOUT);
 	
 	
 	
-	//alert('Index');
 	db.transaction(function(tx)
 	     {	     	
 	     	tx.executeSql('select ID from events',[],CheckLoginStatus);	     	
@@ -96,10 +92,12 @@ function Logout()
 			     , EventTable_error); 
 	
 }
+
 function Logout_success()
 {
 	RedirectToPage('login.html');
 }
+
 function CheckLoginStatus(tx, results){
 	 var len = results.rows.length;
 	 
@@ -139,7 +137,7 @@ function GetParticipantList(tx, results){
 	    }
 }
 
-//alert($.md5('abc123'));
+
 function getEmployees(tx) {	 
 	
 	 /*
@@ -178,63 +176,18 @@ function getEmployees_success(tx, results) {
     
     $('#employeeList').append('<li data-role="list-divider"><li/>');
     $('#employeeList').append('<li><a href="influencers.html?locationId='+locationId +'"  target="_self">' +
-	 '<h2>&#2346;&#2381;&#2352;&#2349;&#2366;&#2357;&#2358;&#2366;&#2354;&#2368;</h2></li>');
+	 '<h2>'+INDEX_LABEL_INFLUENCER+'</h2></li>');
     
 	setTimeout(function(){
 		scroll.refresh();
 	},100);
-	//	db = null;
+	
 }
 
-function populateDB(tx) {
- 
- // alert('populateDB');
-	$('#busy').show();
-   // tx.executeSql('DROP TABLE IF EXISTS Participants');
-	var sql = 
-					"CREATE TABLE IF NOT EXISTS Participants ( "+
-						"ID INTEGER PRIMARY KEY AUTOINCREMENT, " +		
-						"FirstName VARCHAR(50), " +
-						"LastName VARCHAR(50), " +
-						"UniqueID VARCHAR(50), " +
-						"Image VARCHAR(100), " + 
-						"Level INTEGER, " +
-						"Points INTEGER, " +
-						"LocationID VARCHAR(10), " +						
-						"GroupID VARCHAR(10), " +						
-						"IsNew INTEGER, " +
-						"IsUpdate INTEGER)";
-		
-
-	 tx.executeSql(sql);
-	 
-	/*
-	tx.executeSql("INSERT INTO grantee (firstName,lastName,uniqueID,image,level,points,location,state,localgroup,city) VALUES ('Vikas','Sharma','bcc9bb8b-6956-ac35-373d-eba0fd342bf3','vikas_sharma.jpg',1,100,'Chandni Chowk','Delhi','SD','Delhi')");
-    tx.executeSql("INSERT INTO grantee (firstName,lastName,uniqueID,image,level,points,location,state,localgroup,city) VALUES ('Steven','Wells','a01718f3-178f-43ec-9dc5-a45d2f784e9d','steven_wells.jpg',3,250,'Mount Lukens','L.A','SD','California')");
-    */
-}
 function RedirectToPage(pageUrl) {
-	$('#busy').hide();
-	//alert("Employee Deleted");		
-    window.location=pageUrl;
+	$('#busy').hide();		
+    window.location=pageUrl+"?locationId="+locationId;
 }
 
-
-function convertToEntities(inputStr) {
-  var tstr = inputStr;
-  var bstr = '';
-  for(i=0; i<tstr.length; i++)
-  {
-    if(tstr.charCodeAt(i)>127)
-    {
-      bstr += '&#' + tstr.charCodeAt(i) + ';';
-    }
-    else
-    {
-      bstr += tstr.charAt(i);
-    }
-  }
-   return bstr;
-}
 
 

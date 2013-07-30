@@ -5,9 +5,10 @@ var eventDataJSONObject;
 var arrImagesToDownload = [];
 //var arrImagesToUpload = [];
 var eventJson = {};
-eventJson.ID = "4";
+eventJson.ID = "10";
 eventJson.Name = "Masema Drive";
 eventJson.Participants = [];
+eventJson.Locations = [];
 
 var locationId;
 var groupId;
@@ -41,7 +42,7 @@ document.addEventListener('DOMContentLoaded', loaded, false);
 function RedirectToPage(pageUrl) {
 	$('#busy').hide();
 	//alert("Employee Deleted");		
-    window.location=pageUrl+"?locationId="+locationId+"&groupId="+groupId;
+    window.location=pageUrl+"?locationId="+locationId;
 }
 
 
@@ -85,7 +86,7 @@ function RedirectToPage(pageUrl) {
 			
 		}, false);
   
-	document.addEventListener("deviceready", onDeviceReady, false);
+document.addEventListener("deviceready", onDeviceReady, false);
 
 
 
@@ -108,6 +109,8 @@ function onDeviceReady() {
     locationId= getUrlVars()["locationId"];
     groupId= getUrlVars()["groupId"];
     
+   
+    
     $('#busy').hide();
     
     // Assign the hindi lables
@@ -128,7 +131,7 @@ function UploadData()
 
 function UploadParticipantData(tx)
 {       
-     var sql = "Select FirstName,LastName,UniqueID,Image,Level,Points,LocationID,GroupID,IsNew,IsUpdate from Participants";
+     var sql = "Select FirstName,LastName,UniqueID,Image,Level,Points,LocationID,GroupID,IsNew,IsUpdate,Category,Influencer,InfluencerID,Payout from Participants";
      var pLen,DTO;
      
      
@@ -155,8 +158,10 @@ function UploadParticipantData(tx)
                               }
                               if(index==pLen-1)
                               {
-                                 DTO = JSON.stringify(eventJson);
-           					     UploadtoServer(DTO);
+                              	
+                              	 tx.executeSql("select ID,WinnerID,WinningAmount from Locations",[],AppendLocations)
+                                 //DTO = JSON.stringify(eventJson);
+           					     //  UploadtoServer(DTO);
            					    // alert(DTO);
            					     
            					   //  $('#eventinfo').append(DTO);
@@ -168,6 +173,20 @@ function UploadParticipantData(tx)
                 }
             });
 }
+
+function AppendLocations(tx,results)
+{
+	 var len = results.rows.length;
+     eventJson.Locations = [];
+                for (var i = 0; i < len; i++) {
+                    var evtLocation = results.rows.item(i);
+                    eventJson.Locations.push(evtLocation);
+                   }
+	
+	 DTO = JSON.stringify(eventJson);	 
+     UploadtoServer(DTO);
+}
+
 
 function UploadtoServer(participantPerformance)
 {
@@ -230,12 +249,17 @@ function UploadtoServer(participantPerformance)
 						"LastName VARCHAR(50), " +
 						"UniqueID VARCHAR(50), " +
 						"Image VARCHAR(100), " + 
+						"Category INTEGER, " +
+						"Influencer INTEGER, " +
+						"InfluencerID INTEGER, " +
+						"Payout INTEGER, " +
 						"Level INTEGER, " +
 						"Points INTEGER, " +
 						"LocationID VARCHAR(10), " +						
 						"GroupID VARCHAR(10), " +						
 						"IsNew INTEGER, " +
-						"IsUpdate INTEGER)";
+						"IsUpdate INTEGER, " +
+						"IsLevelCompleted INTEGER)";
 		
 		db.transaction(function(tx)
 	     {	     	
@@ -256,6 +280,8 @@ function UploadtoServer(participantPerformance)
 						"CREATE TABLE IF NOT EXISTS Events ( "+
 						"ID INTEGER PRIMARY KEY, " +		
 						"Name VARCHAR(50), " +
+						"AmountPerParticipant INTEGER, " +	
+						"BaseAmount INTEGER, " +	
 						"StartDate VARCHAR(50), " +											
 						"EndDate VARCHAR(50))";
 		
@@ -300,7 +326,9 @@ function UploadtoServer(participantPerformance)
     	var sqlDeleteGame = 
 						"CREATE TABLE IF NOT EXISTS Game ( "+												
 						"ID VARCHAR(10), " +										
-						"Name VARCHAR(100))";
+						"Name VARCHAR(100), "+
+						"PregnancyLevelID INTEGER, "+
+						"NewMomLevelID INTEGER)";
 		
 		
 		db.transaction(function(tx)
@@ -311,7 +339,7 @@ function UploadtoServer(participantPerformance)
 	     
 	     //**********************************************************************************************
 	     
-	     //********************************* Delete and Recreate game Table ******************************
+	      //********************************* Delete and Recreate Levels Table ******************************
     	
     	db.transaction(function(tx)
 	     {	     	
@@ -321,7 +349,8 @@ function UploadtoServer(participantPerformance)
     	
     	var sqlDeleteLevels = 
 						"CREATE TABLE IF NOT EXISTS Levels ( "+												
-						"ID VARCHAR(10), " +										
+						"ID VARCHAR(10), " +	
+						"LevelNo INTEGER, " +										
 						"Name VARCHAR(100))";
 		
 		
@@ -333,7 +362,7 @@ function UploadtoServer(participantPerformance)
 	     
 	     //**********************************************************************************************
 	     
-	     //********************************* Delete and Recreate game Table ******************************
+	     //********************************* Delete and Recreate Objectives Table ******************************
     	
     	db.transaction(function(tx)
 	     {	     	
@@ -346,7 +375,9 @@ function UploadtoServer(participantPerformance)
 						"ID VARCHAR(10), " +		
 						"Name VARCHAR(100), " +		
 						"PlusPoints INTEGER, " +		
-						"MinusPoints INTEGER, " +									
+						"MinusPoints INTEGER, " +	
+						"Mandatory INTEGER, " +	
+						"Sequence INTEGER, " +									
 						"LevelId VARCHAR(10))";
 		
 		
@@ -356,11 +387,11 @@ function UploadtoServer(participantPerformance)
 	     }
 	     , transaction_error, SaveDB_success);  
 	     
-	     //**********************************************************************************************    
+	     //**************************************************************************************************   
 	     
 	     
 	     
-	    //********************************* Delete and Recreate Locations Table ******************************
+	 //********************************* Delete and Recreate Locations Table ******************************
     	
     	db.transaction(function(tx)
 	     {	     	
@@ -372,6 +403,8 @@ function UploadtoServer(participantPerformance)
 						"CREATE TABLE IF NOT EXISTS Locations ( "+												
 						"ID VARCHAR(10), " +
 						"Name VARCHAR(100), " +		
+						"WinnerID VARCHAR(50), " +	
+						"WinningAmount INTEGER, " +
 						"City VARCHAR(100), " +							
 						"State VARCHAR(100))";
 		
@@ -677,12 +710,16 @@ function UploadtoServer(participantPerformance)
 			
     }
     
-    function SaveGrantee(participantObj)
+   function SaveGrantee(participantObj)
     {
     	//alert(granteeObj.FirstName);
-    	var sql ="INSERT INTO Participants (FirstName,LastName,UniqueID,Image,Level,Points,LocationID,GroupID,IsNew,IsUpdate) VALUES ('" + participantObj.FirstName +"','"
-		+ participantObj.LastName +"',"+ "'"+participantObj.UniqueID+"','"+ participantObj.Image +"'"+",'"+participantObj.Level+"','"+participantObj.Points+"','"+participantObj.LocationID+"','"+
-		participantObj.GroupID +"','"+participantObj.IsNew +"','"+participantObj.IsUpdate +"')"; 
+    	var sql ="INSERT INTO Participants (FirstName,LastName,UniqueID,Image,Category,Influencer,InfluencerID,Payout,Level,Points,LocationID,GroupID,IsNew,IsUpdate,IsLevelCompleted) VALUES ('" 
+    	+ participantObj.FirstName  + "','"
+		+ participantObj.LastName + "','" + participantObj.UniqueID+"','"+ participantObj.Image +"','"
+		+ participantObj.Category + "','" + participantObj.Influencer +"','"
+		+ participantObj.InfluencerID +"','"+ participantObj.Payout+"','"
+		+ participantObj.Level+"','"+participantObj.Points+"','"+participantObj.LocationID+"','"
+		+ participantObj.GroupID +"','"+participantObj.IsNew +"','"+participantObj.IsUpdate +"','0')"; 
 	
 	     db.transaction(function(tx)
 	     {	     	
@@ -690,7 +727,7 @@ function UploadtoServer(participantPerformance)
 	     }
 	     	     , transaction_error, MetadataLoadComplete_success);
 			
-    }    
+    }  
     
     function SaveGranteePerformance(granteePerformanceObj,userUniqueId)
     {
@@ -711,20 +748,21 @@ function UploadtoServer(participantPerformance)
     function SaveGame(gameObj)
     {
     	   	    	
-    	var sql ="INSERT INTO Game (ID,Name) VALUES ('" + gameObj.ID +"','"
-		+ gameObj.Name +"')"; 
+    	var sql ="INSERT INTO Game (ID,Name,PregnancyLevelID,NewMomLevelID) VALUES ('" + gameObj.ID 
+    	+"','"+ gameObj.Name +"','"+ gameObj.PregnancyLevelID +"','"+ gameObj.NewMomLevelID 
+    	+"')"; 
 		       
 	     db.transaction(function(tx)
 	     {	     	
 	     	tx.executeSql(sql);	     	
 	     }
 	     , transaction_error, MetadataLoadComplete_success);
-    }   
+    }    
     
-    function SaveLevel(levelObj)
+     function SaveLevel(levelObj)
     {
     	   	    	
-    	var sql ="INSERT INTO Levels (ID,Name) VALUES ('" + levelObj.ID +"','"
+    	var sql ="INSERT INTO Levels (ID,LevelNo,Name) VALUES ('" + levelObj.ID +"','"+ levelObj.LevelNo + "','" 
 		+ levelObj.Name +"')"; 
 		       
 	     db.transaction(function(tx)
@@ -733,12 +771,12 @@ function UploadtoServer(participantPerformance)
 	     }
 	     , transaction_error, MetadataLoadComplete_success);
     }   
-  
     function SaveObjective(objectiveObj,levelId)
     {
     	   	    	
-    	var sql ="INSERT INTO Objectives (ID,Name,PlusPoints,MinusPoints,LevelId) VALUES ('" + objectiveObj.ID 
-    	+"','"+ objectiveObj.Name +"','"+  objectiveObj.PlusPoints +"','"+  objectiveObj.MinusPoints +"','"+levelId +"')"; 
+    	var sql ="INSERT INTO Objectives (ID,Name,PlusPoints,MinusPoints,Mandatory,Sequence,LevelId) VALUES ('" + objectiveObj.ID 
+    	+"','"+ objectiveObj.Name +"','"+  objectiveObj.PlusPoints +"','"+  objectiveObj.MinusPoints +"','"+  objectiveObj.Mandatory +"','"+  objectiveObj.Sequence +"','"
+    	+levelId +"')"; 
 		       
 	     db.transaction(function(tx)
 	     {	     	
@@ -747,11 +785,11 @@ function UploadtoServer(participantPerformance)
 	     , transaction_error, MetadataLoadComplete_success);
     }  
     
-    function SaveEvent(eventObj)
+     function SaveEvent(eventObj)
     {
     	   	    	
-    	var sql ="INSERT INTO Events (ID,Name,StartDate,EndDate) VALUES ('" + eventObj.ID +"','"
-		+ eventObj.Name +"','" + eventObj.StartDate +"','" + eventObj.EndDate +  "')"; 
+    	var sql ="INSERT INTO Events (ID,Name,AmountPerParticipant,BaseAmount,StartDate,EndDate) VALUES ('" + eventObj.ID 
+    	+"','"+ eventObj.Name +"','" + eventObj.AmountPerParticipant +"','"+ eventObj.BaseAmount +"','" +eventObj.StartDate +"','" + eventObj.EndDate +  "')"; 
 		       
 	     db.transaction(function(tx)
 	     {	     	
@@ -760,18 +798,18 @@ function UploadtoServer(participantPerformance)
 	     , transaction_error, MetadataLoadComplete_success);
     } 
    
-    function SaveLocation(locationObj)
+   function SaveLocation(locationObj)
     {
     	   	    	
-    	var sql ="INSERT INTO Locations (ID,Name,City,State) VALUES ('" + locationObj.ID +"','"
-		+ locationObj.Name +"','" + locationObj.City +"','" + locationObj.State +  "')"; 
+    	var sql ="INSERT INTO Locations (ID,Name,WinnerID,WinningAmount,City,State) VALUES ('" + locationObj.ID +"','"
+		+ locationObj.Name +"','" + locationObj.WinnerID +"','" + locationObj.WinningAmount +"','" + locationObj.City +"','" + locationObj.State +  "')"; 
 		       
 	     db.transaction(function(tx)
 	     {	     	
 	     	tx.executeSql(sql);	     	
 	     }
 	     , transaction_error, MetadataLoadComplete_success);
-    } 
+    }  
    
     function SaveGroup(groupObj,locationId)
     {
@@ -800,7 +838,16 @@ function MetadataLoadComplete_success() {
 	if(--mutexDB==0)
 	{
 		$('#busy').html('Downloading Images');
+		
+		if(arrImagesToDownload.length>0)
+		{
 		DownloadParticipantImages();	
+		}
+		else
+		{
+			$('#busy').html('Sync Complete');
+            $('#busy').hide();
+		}
 	}
 }
 
