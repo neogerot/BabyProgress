@@ -16,7 +16,9 @@
    	</p>
    	
 	</div>
-	<div id="title">		
+	<div id="title">
+		
+		<label id="selecteventlabel" style="display: none;"></label>			
    	</div>		
 	<div id="login">
 		<span id="message" class="errorMessage"></span>
@@ -24,21 +26,18 @@
 		 value="testgrantor@masema.com" type="text" class="txtBox">   
 		<input name="password" id="password" placeholder="" 
 		value="abc123" type="password" class="txtBox">   
-		<a href="#" data-role="button" data-theme="b" id="btnLogin" class="buttonHindi" style="left:7px;width:97%;">Login</a>		
+		<a href="#" data-role="button" data-theme="b" id="btnLogin" class="buttonHindi" style="left:7px;width:97%;" onclick="Authenticate();">Login</a>		
 		<a href="#" data-role="button" data-theme="b" id="btnResetOption" onclick="ShowResetOption();" class="buttonHindi" style="left:7px;width:97%;">Reset Device</a>	
 	</div>
 	
-	<div id="selectevent" style="display:none;">
-		<fieldset data-role="controlgroup">
-		<legend id="selecteventlabel"></legend>
-		
+	<div id="selectevent" style="display:none;">			
 		<div id="wrapper" class="wrapperLogin">
 	  		<div id="scroller">		
 				<ul id="eventlist" data-role="listview" data-inset="true">	  				  			
 			  	</ul> 
 	  	</div>
 	  	</div>
-     	</fieldset>
+     	
      		
 	</div>
 	<div id="resetdevice" style="display:none;">	

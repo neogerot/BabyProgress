@@ -46,8 +46,8 @@ function getUrlVars() {
 			function rotateImages(){
 					var origsrc = $('#rotate_images').attr('src');
 			        var src = '';
-			        //var imagerootPath=window.rootFS.fullPath+'/photos/';//'images/';//window.rootFS.fullPath+'/photos/';
-			        var imagerootPath='images/';
+			        var imagerootPath=window.rootFS.fullPath+'/photos/';//'images/';//window.rootFS.fullPath+'/photos/';
+			       // var imagerootPath='images/';
 			        if (origsrc == 'img/person_blank.png') src = ParticipantCollection[currentParticipant].Image;
 			       
 			        currentParticipant++;

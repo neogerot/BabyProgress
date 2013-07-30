@@ -132,21 +132,22 @@ function PopulateUserCollection_success(tx,results)
 
 window.addEventListener('load', function() {
 			var buttonLogin,buttonSelectEvent,buttonBack;	
-			buttonLogin = document.getElementById('btnLogin');
+			//buttonLogin = document.getElementById('btnLogin');
 			
 			buttonBack = document.getElementById('btnBack');
 			
 	
 			// Android 2.2 needs FastClick to be instantiated before the other listeners so that the stopImmediatePropagation hack can work.
-			FastClick.attach(buttonLogin);		
+			//FastClick.attach(buttonLogin);		
 			
 			FastClick.attach(buttonBack);
 	
+	/*
 			buttonLogin.addEventListener('touchend', function(event) {				
 				Authenticate();
 			}, false);
 			
-			
+	*/
 			buttonBack.addEventListener('touchend', function(event) {				
 				RedirectToPage('login.html');
 			}, false);
@@ -174,9 +175,11 @@ window.addEventListener('load', function() {
  {
  
  			  $('#busy').hide();	
-			  $('#login').hide();				    		
+			  
+			  $('#login').attr('style','visibility:hidden');				    		
 			 
 			  $('#selectevent').attr('style','visibility:visible');	
+			  $('#selecteventlabel').attr('style','visibility:visible');	
 			  $('#btnBack').show();
 			  
 			  PopulateLocations();
@@ -1002,6 +1005,7 @@ function DownloadFilefail()
 			 			$('#selectevent').attr('style','visibility:visible');
 			 			$('#btnBack').show();
 			 			$('#busy').hide();
+			 			
 			db.transaction(function(tx)
 			     {	     	
 			     	tx.executeSql("INSERT INTO LoginStatus (Status) VALUES ('1')");    	
