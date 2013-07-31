@@ -325,6 +325,10 @@ function PopulateProfile_success(tx,results){
 		$('#influencerId').selectmenu("refresh", true);		
 	    $('#influencerId').selectmenu("disable");
 	    
+	    var photopath=window.rootFS.fullPath +"/photos/"+ participant.Image;
+	    
+	    $('#imgCaptured').attr('src',photopath);
+	    
 	 //	$('#locationId').find("option[value='"+participant.LocationID+"']").attr("selected", true);
 	//	$('#groupId').find("option[value='"+participant.GroupID+"']").attr("selected", true);
 	//	$('#level').find("option[value='"+participant.Level+"']").attr("selected", true);		

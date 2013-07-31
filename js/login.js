@@ -15,7 +15,7 @@ var mutexUsers=0;
 
 // Add IScroll
 var myScroll;
-var myScroll = new iScroll('wrapper', { vScrollbar: false, hScrollbar:false, hScroll: false,useTransform:true });
+//var myScroll = new iScroll('wrapper', { vScrollbar: false, hScrollbar:false, hScroll: false,useTransform:true });
 
 //---------------------
 
@@ -107,9 +107,7 @@ function PopulateLocations_success(tx,results)
 	  $('#eventlist').trigger( "create" );	 
 	  $('#wrapper').trigger( "create" );	
 	  
-	  setTimeout(function(){
-		myScroll.refresh();
-	});
+	
 	
 }
 function PopulateUserCollection_success(tx,results)
