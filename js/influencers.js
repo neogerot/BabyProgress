@@ -64,11 +64,24 @@ function onDeviceReady() {
     groupId= getUrlVars()["groupId"];
    // alert(groupId +' '+locationId);
     //$('#MainHeading').html('&#2346;&#2381;&#2352;&#2340;&#2367;&#2349;&#2366;&#2327;&#2367;&#2351;&#2379;&#2306;');	
-	$('#btnAdd').html('<br>&#2346;&#2381;&#2352;&#2349;&#2366;&#2357;&#2358;&#2366;&#2354;&#2368; &#2332;&#2379;&#2396;&#2375; ');
-	$('#btnBack').html('<br>&#2357;&#2366;&#2346;&#2360;');
+	
+	$('#btnAdd').html('<br>'+INFLUENCER_BUTTON_ADD);
+	$('#btnBack').html('<br>'+INFLUENCER_BUTTON_BACK);
+	$('#lblLocationName').html('<strong>'+INDEX_LABEL_LOCATIONNAME +':</strong>');
 		
 	 db.transaction(GetParticipants, transaction_error);   
   
+}
+function GetLocationName_success(tx,results)
+{
+	  var len = results.rows.length;
+	  if(len>0)
+	  {
+	  	var location=results.rows.item(0);
+	  	locationName=location.Name;
+	  	$('#lblLocationName').append(locationName);
+	  }
+	  
 }
 
 function Search()
@@ -118,15 +131,16 @@ function GetParticipants(tx) {
 	
 	   var  sql = "select p.ID,p.FirstName, p.LastName, p.UniqueID, p.Image "
   			  + 	" from Participants p " 
-  			  +  " where p.groupId=:groupId and p.Influencer=1"
+  			  +  " where p.LocationID=:locationId and p.Influencer=1"
 			  +  " order by p.FirstName,p.LastName ";	;	
 		
 		
-		tx.executeSql(sql, [groupId], GetParticipants_success);			
+		tx.executeSql(sql, [locationId], GetParticipants_success);			
 		
 }
 
 function GetParticipants_success(tx, results) {
+	
 	$('#busy').hide();
     var len = results.rows.length;
    
@@ -136,13 +150,15 @@ function GetParticipants_success(tx, results) {
     for (var i=0; i<len; i++) {
     	var participant = results.rows.item(i);
 		
-	 $('#employeeList').append('<li><a href="employeedetails.html?uid='+ participant.UniqueID +'&locationId='+locationId+'&groupId='+groupId+'" target="_self">' +
+	 $('#employeeList').append('<li><a href="addemployeenew.html?uid='+ participant.UniqueID +'&locationId='+locationId+'&groupId='+groupId+'&influencer=1" target="_self">' +
 	 '<h2>'+ participant.FirstName + ' ' + participant.LastName+ '</h2>');
     }
     
-	setTimeout(function(){
-		scroll.refresh();
-	},100);
+	var  sql = "select ID,Name "
+  			  + 	" from Locations loc " 
+  			  +  " where loc.ID=:locationId ";
+			  
+	tx.executeSql(sql, [locationId], GetLocationName_success);	
 	//	db = null;
 }
 

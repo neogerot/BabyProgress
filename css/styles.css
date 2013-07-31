@@ -83,7 +83,7 @@ li .bubble {
 	border-bottom: 1px solid #ccc;
 	border-top: 1px solid #fff;
 	background-color: #fafafa;
-	font-size: 20px;
+	font-size: 16px;
 }
 
 #busy {
@@ -285,7 +285,7 @@ display: inline-block;
 
 .header
 {	
-	font-size: 24px;
+	font-size: 30px;
 	height:100px;
 	vertical-align:middle;	
 }
@@ -320,6 +320,14 @@ display: inline-block;
 	overflow: auto;
 	border-top: 1px solid #fff;	
 } 
+.wrapperInfluencer{
+	position: absolute; 
+	top: 130px; 
+	bottom: 20px;
+	width: 100%;
+	overflow: auto;
+	border-top: 1px solid #fff;	
+} 
 .wrapperLogin {
 	position: absolute; 
 	top: 140px; 
@@ -328,6 +336,7 @@ display: inline-block;
 	overflow: auto;
 	border-top: 1px solid #fff;	
 } 
+
 .lblTitle{
 	
 	font-size: 18px;
@@ -357,14 +366,14 @@ input.ui-input-text, textarea.ui-input-text {
 	margin: .5em 0;
 	min-height: 1.4em;
 	line-height: 1.4em;
-	font-size: 35px;
+	font-size: 28px;
 	display: block;
 	width: 100%;
 	outline: 0;
 }
 
 .ui-btn-inner {
-	font-size: 30px;
+	font-size: 28px;
 	padding: .6em 20px;
 	min-width: .75em;
 	display: block;
@@ -373,4 +382,17 @@ input.ui-input-text, textarea.ui-input-text {
 	overflow: hidden;
 	white-space: nowrap;
 	zoom: 1;
+}
+
+.ui-header .ui-title, .ui-footer .ui-title {
+	min-height: 1.1em;
+	text-align: center;
+	font-size: 24px;
+	display: block;
+	margin: .6em 30% .8em;
+	padding: 0;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+	outline: 0!important;
 }

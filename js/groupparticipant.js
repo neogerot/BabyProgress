@@ -91,7 +91,7 @@ function SearchParticipant(tx)
 	 var  sql = "select p.ID,p.FirstName, p.LastName, p.UniqueID, p.Image,p.LocationID "
   			  + 	" from Participants p " 
   			  +  " where p.GroupID="+ groupId 
-  			  + " and LOWER(p.firstName) LIKE :filter OR LOWER(p.lastName) LIKE :filter "
+  			  + " and (LOWER(p.firstName) LIKE :filter OR LOWER(p.lastName) LIKE :filter) and p.Influencer=0"
 			  +  " order by p.FirstName,p.LastName ";
 		
 		

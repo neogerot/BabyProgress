@@ -15,7 +15,7 @@ var originalGroupId;
 var originalImage;
 //----- 
 
-var influencer;
+var flagIsInfluencer;
 var influencerId;
 var PregnancyLevelID,NewMomLevelID;
 
@@ -70,7 +70,7 @@ window.addEventListener('load', function() {
 			
 
 		buttonBack.addEventListener('touchend', function(event) {
-			 RedirectToPage("groupparticipants.html"); 
+			GoBack();
 		}, false);
 		
 		buttonCapture.addEventListener('touchend', function(event) {
@@ -88,7 +88,18 @@ window.addEventListener("orientationchange", function() {
 	
 }, false);
 */
-
+function GoBack()
+{
+	
+	 if(flagIsInfluencer==1)
+	 {
+	 	RedirectToPage("influencers.html");
+	 }
+	 else
+	 {
+	 	RedirectToPage("groupparticipants.html"); 
+	 }
+}
 document.addEventListener("deviceready", onDeviceReady, false);
 
 function gotFS(fileSystem) {
@@ -109,10 +120,10 @@ function onDeviceReady() {
 	 // Get all Query String Parameters
 		 locationId= getUrlVars()["locationId"];
 		 groupId = getUrlVars()["groupId"];
-		 influencer=getUrlVars()["influencer"];
+		 flagIsInfluencer=getUrlVars()["influencer"];
 		 
-		  if (typeof influencer === "undefined") {	
-		  	influencer=0;
+		  if (typeof flagIsInfluencer === "undefined") {	
+		  	flagIsInfluencer=0;
 		  }
 		    if (typeof groupId === "undefined") {	
 		  	groupId=0;
@@ -163,11 +174,13 @@ function InitializeDBParameters_success(tx,results)
 	 	NewMomLevelID=game.NewMomLevelID;
 	 }
   // Populate the avaialble Influencers
-	db.transaction(function(tx)
-	     {	     	
-	     	tx.executeSql('Select ID,UniqueID,FirstName,LastName from participants where influencer=1 ',[],PopulateInfluencer_success);    	
-	     }
-	     , transaction_error);
+   
+		db.transaction(function(tx)
+		     {	     	
+		     	tx.executeSql('Select ID,UniqueID,FirstName,LastName from participants p where p.LocationID='+locationId+' and p.influencer=1 ',[],PopulateInfluencer_success);    	
+		     }
+		     , transaction_error);
+   
 }
 
 function PopulateInfluencer_success(tx,results)
@@ -196,6 +209,12 @@ function PopulateInfluencer_success(tx,results)
 	$('#categorySelect').trigger( "create" );
 	
 	// Populate the Profile in case of Update
+	if(flagIsInfluencer==1)
+	{
+		$('#categorySelect').hide();
+		$('#influencerSelect').hide();		
+	}
+	
 	if(flagIsUpdate==1)
 		{
 			var  sql = "select e.ID,e.FirstName, e.LastName, e.UniqueID,e.Level, e.Image,e.Category,e.InfluencerID,e.LocationID,e.GroupID,e.IsNew,e.IsUpdate "
@@ -385,8 +404,8 @@ function addEmployee()
 function UpdateEmployeeInDB(tx)
 {		
 	var updatedGroupId=groupId;
-	var isInfluencer=0;
-	if(isInfluencer == 1)
+
+	if(flagIsInfluencer == 1)
 	{
 		updatedGroupId=0;
 	}
@@ -403,7 +422,14 @@ function UpdateEmployeeInDB(tx)
 function UpdateEmployeeInDB_success(tx,results) {
 	
 	setTimeout(function(){ 	
-  	 RedirectToPage("groupparticipants.html");
+		 if(flagIsInfluencer == 1)
+		 {
+		 	 RedirectToPage("influencers.html");
+		 }
+		 else
+		 {
+  			 RedirectToPage("groupparticipants.html");
+  		 }
 }, 1000);
 	
 }
@@ -423,7 +449,7 @@ function addEmployeeInDB(tx)
 	$('#busy').show();		
 	var sql = "INSERT INTO Participants (FirstName,LastName,UniqueID,Image,Category,Influencer,InfluencerID,Payout,Level,Points,LocationID,GroupID,IsNew,IsUpdate,IsLevelCompleted) VALUES ('" + $('#firstName').val() +"','"
 		+ $('#lastName').val() +"','" + $('#uid').val()+ "','"+ $('#uid').val() +".jpg" +"','" + $('#categoryId').val()
-		+"','" + influencer + "','"+ $('#influencerId').val()+ "','0'" 
+		+"','" + flagIsInfluencer + "','"+ $('#influencerId').val()+ "','0'" 
 		+",'"+levelId +"','0','"+locationId+"','" + groupId+"','1','0','0')"; 
 		
 	
@@ -445,7 +471,7 @@ function addEmployeeInDB_success(tx,results) {
 			  +  " where o.LevelId= "+levelId;
 			 
 				
-	if(influencer==0)
+	if(flagIsInfluencer==0)
 	{
 		tx.executeSql(sqlPerformance, [], getObjectives_success);	
 	}

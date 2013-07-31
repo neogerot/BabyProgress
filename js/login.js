@@ -179,6 +179,7 @@ window.addEventListener('load', function() {
 			  $('#login').attr('style','visibility:hidden');				    		
 			 
 			  $('#selectevent').attr('style','visibility:visible');	
+			  
 			  $('#selecteventlabel').attr('style','visibility:visible');	
 			  $('#btnBack').show();
 			  
@@ -362,7 +363,7 @@ function Authenticate(){
     	//$('#busy').show();
     	/*------------------ delete and recreate all the tables ----------------------------------*/
     	
-    	// Delete and Recreate grantee Table 
+    	// Delete and Recreate Participants Table 
     	db.transaction(function(tx)
 	     {	     	
 	     	tx.executeSql('DROP TABLE IF EXISTS Participants');    	
@@ -386,6 +387,7 @@ function Authenticate(){
 						"GroupID VARCHAR(10), " +						
 						"IsNew INTEGER, " +
 						"IsUpdate INTEGER, " +
+						"TodayPoints INTEGER, " +
 						"IsLevelCompleted INTEGER)";
 		
 		db.transaction(function(tx)
@@ -453,7 +455,9 @@ function Authenticate(){
     	var sqlDeleteGame = 
 						"CREATE TABLE IF NOT EXISTS Game ( "+												
 						"ID VARCHAR(10), " +										
-						"Name VARCHAR(100), "+
+						"Name VARCHAR(100), "+ 
+						"InfluencerRegAmount INTEGER, "+ 
+						"InfluencerPerformanceAmount INTEGER, "+ 
 						"PregnancyLevelID INTEGER, "+
 						"NewMomLevelID INTEGER)";
 		
@@ -862,13 +866,13 @@ function Authenticate(){
     function SaveGrantee(participantObj)
     {
     	//alert(granteeObj.FirstName);
-    	var sql ="INSERT INTO Participants (FirstName,LastName,UniqueID,Image,Category,Influencer,InfluencerID,Payout,Level,Points,LocationID,GroupID,IsNew,IsUpdate,IsLevelCompleted) VALUES ('" 
+    	var sql ="INSERT INTO Participants (FirstName,LastName,UniqueID,Image,Category,Influencer,InfluencerID,Payout,Level,Points,LocationID,GroupID,IsNew,IsUpdate,TodayPoints,IsLevelCompleted) VALUES ('" 
     	+ participantObj.FirstName  + "','"
 		+ participantObj.LastName + "','" + participantObj.UniqueID+"','"+ participantObj.Image +"','"
 		+ participantObj.Category + "','" + participantObj.Influencer +"','"
 		+ participantObj.InfluencerID +"','"+ participantObj.Payout+"','"
 		+ participantObj.Level+"','"+participantObj.Points+"','"+participantObj.LocationID+"','"
-		+ participantObj.GroupID +"','"+participantObj.IsNew +"','"+participantObj.IsUpdate +"','0')"; 
+		+ participantObj.GroupID +"','"+participantObj.IsNew +"','"+participantObj.IsUpdate +"','0','0')";   
 	
 	     db.transaction(function(tx)
 	     {	     	
@@ -916,8 +920,8 @@ function Authenticate(){
     function SaveGame(gameObj)
     {
     	   	    	
-    	var sql ="INSERT INTO Game (ID,Name,PregnancyLevelID,NewMomLevelID) VALUES ('" + gameObj.ID 
-    	+"','"+ gameObj.Name +"','"+ gameObj.PregnancyLevelID +"','"+ gameObj.NewMomLevelID 
+    	var sql ="INSERT INTO Game (ID,Name,InfluencerRegAmount,InfluencerPerformanceAmount,PregnancyLevelID,NewMomLevelID) VALUES ('" + gameObj.ID 
+    	+"','"+ gameObj.Name +"','"+ gameObj.InfluencerRegAmount +"','"+ gameObj.InfluencerPerformanceAmount +"','"+ gameObj.PregnancyLevelID +"','"+gameObj.NewMomLevelID 
     	+"')"; 
 		       
 	     db.transaction(function(tx)
@@ -926,6 +930,7 @@ function Authenticate(){
 	     }
 	     , transaction_error, MetadataLoadComplete_success);
     }   
+    
     function SaveLevel(levelObj)
     {
     	   	    	
@@ -1010,7 +1015,7 @@ function DownloadFilefail()
 			     {	     	
 			     	tx.executeSql("INSERT INTO LoginStatus (Status) VALUES ('1')");    	
 			     }
-			     , transaction_error,PopulateLocations);	
+			     , transaction_error,LoginExistingUser_success);	
 			 									
 	   return;
      }

@@ -6,7 +6,7 @@ var groupId,locationId;
 var db;
 var IsCurrentLevelCompleted=0;
 var currentLevel;
-
+var totalPoints;
 
 //----------------------Mutex
 
@@ -54,8 +54,9 @@ window.addEventListener("orientationchange", function() {
 
 function onDeviceReady() {
 	console.log("opening database");
-	$('#btnBack').html('<br>&#2357;&#2366;&#2346;&#2360;');
-	$('#btnSubmit').html('<hr width="0">'+"&#2360;&#2369;&#2352;&#2325;&#2381;&#2359;&#2367;&#2340; &#2325;&#2352;&#2375;");
+	
+	$('#btnBack').html('<br>'+PARTICIPANTDETAIL_BUTTON_BACK);
+	$('#btnSubmit').html('<hr width="0">'+PARTICIPANTDETAIL_BUTTON_ENTRYSUBMIT);
 	
 	locationId= getUrlVars()["locationId"];
     groupId= getUrlVars()["groupId"];
@@ -100,7 +101,8 @@ function getEmployee_success(tx, results) {
 	$('#participantEdit').attr('href',"addemployeenew.html?uid="+ participant.UniqueID+"&locationId="+locationId+"&groupId="+groupId); 	
 	$('#fullName').text(participant.FirstName + ' ' + participant.LastName);
 	//$('#level').html("<strong>Level:</strong>"+employee.levelname + ",<strong>Points:</strong>"+ employee.Points);
-	$('#level').html("<hr><h2>"+PARTICIPANTDETAIL_LABEL_POINTS+":</strong>"+ participant.Points +"</h2>");
+	
+	//$('#level').html("<hr><h2>"+PARTICIPANTDETAIL_LABEL_POINTS+":</strong>"+ participant.Points +"</h2>");
 	$('#location').html("<hr><h3>"+participant.locationname
 	 +'<hr>'+ participant.groupname +"</h3>" );
 	//$('#btnEditDetails').attr('href',"addemployeenew.html?uid="+ employee.UniqueID); 	
@@ -134,16 +136,18 @@ function getObjectives_success(tx, results) {
 	// Traverse all the Objectives	
 	 
 	 $('#objectives').append('<li data-role="list-divider"><strong>'+PARTICIPANTDETAIL_LABEL_CURRENTOBJECTIVES+':</strong> <span class="ui-li-count">'+len+'</span></li>');
-	 
+	 totalPoints=0;
 	 for (var i=0; i<len; i++) {
 	 	var objective = results.rows.item(i);	 	
 	 	
-	 /*	
-	 $('#objectives').append('<li><div class="ui-grid-a"><div class="ui-block-a"><h2>'+objective.Name+'</h2><p>(+'+objective.PlusPoints+',-'+objective.MinusPoints+')</p>'
-	 +'</div><div class="ui-block-b"><select name="checkbox-'+objective.ID +'" id="checkbox-'+ objective.ID 
-	 +'" data-role="slider" class="floatright"><option value="off">Off</option><option value="on">On</option></select></div></div></li>');
-	 */
-	
+	if(objective.Completed==1)
+	{
+     	totalPoints +=objective.PlusPoints;
+	}
+	else
+	{
+		totalPoints -=objective.MinusPoints;
+	}
 	 $('#objectives').append('<li><fieldset data-role="controlgroup" data-type="horizontal"><input type="checkbox" name="'+objective.ID +'" id="'+ objective.ID 
 	 +'"><label for="'+objective.ID+'">'+objective.Name+' (<small>+'+objective.PlusPoints+',-'+objective.MinusPoints+'</small>)</label></fieldset></li>');
 	 
@@ -152,15 +156,14 @@ function getObjectives_success(tx, results) {
 	$('#'+objective.ID).prop('checked', objective.Completed);
 
 
-	
-		
-	// Assign the on change function
-	/*
-	$('#checkbox-'+objective.ID).on('click',function(){
-		  alert($('#checkbox-'+objective.ID).attr('id')+": "+ $('#checkbox-'+objective.ID).val()); 
-		});
-		*/
 	 } // End of for loop
+	 
+	if(totalPoints<0)
+	{
+		totalPoints=0;
+	}
+	
+	$('#level').html("<hr><h2>"+PARTICIPANTDETAIL_LABEL_POINTS+":</strong>"+ totalPoints +"</h2>");
 	 
 	var lblObjectiveSave="&nbsp;";
 	$('#objectives').append('<li data-role="list-divider"><strong>'+lblObjectiveSave+'</strong></li>');
@@ -230,7 +233,7 @@ function Submit_success(tx)
 }
 function CheckCurrentLevelStatus(tx)
 {	
-	
+	// Get all the objectives of the Participant where the status is not completed..
 	var sqlCheckLevelStatus=    "select per.ID,obj.Name,obj.PlusPoints,obj.MinusPoints,obj.Mandatory,obj.Sequence,per.Completed " +
 								"from Participants p  " +
 								" JOIN Performance per on p.UniqueID = per.UniqueID " +
@@ -248,6 +251,7 @@ function UpdateLevelCompletedStatus(tx,results)
 	IsCurrentLevelCompleted=0;
 	if(len==0)
 	{
+		// In case of no objective pending for the Participant the level is completed..
 		IsCurrentLevelCompleted=1;
 	}
 	// Logic to check whether the Level is completed
@@ -334,15 +338,16 @@ function GetNextObjectives_success(tx,results)
 	 	 $('#objectives').append('<li><fieldset data-role="controlgroup" data-type="horizontal"><input type="checkbox" name="'+objective.ID +'" id="'+ objective.ID 
 	 +'" readonly=true><label for="'+objective.ID+'">'+objective.Name+' (<small>+'+objective.PlusPoints+',-'+objective.MinusPoints+'</small>)</label></fieldset></li>');
 	 
- 
-	 // Set value of status of objective
-	// $('#'+objective.ID).prop('checked', objective.Completed);
-	 	
+ 	
 	 }	
+	 
 	 $('#objectives').trigger( "create" );	
 	
 	
 	setTimeout(function(){
 		scroll.refresh();
 	});
+	
+	
+	
 }

@@ -5,8 +5,9 @@ var eventDataJSONObject;
 var arrImagesToDownload = [];
 //var arrImagesToUpload = [];
 var eventJson = {};
-eventJson.ID = "10";
-eventJson.Name = "Masema Drive";
+
+//eventJson.ID = "10";
+//eventJson.Name = "Masema Drive";
 eventJson.Participants = [];
 eventJson.Locations = [];
 
@@ -49,7 +50,8 @@ function RedirectToPage(pageUrl) {
   /*  File System 
    * 
    */
-  function gotFS(fileSystem) {
+  
+function gotFS(fileSystem) {
     console.log("got filesystem");
     //alert("file system loaded");
     $('#busy').hide();
@@ -109,15 +111,30 @@ function onDeviceReady() {
     locationId= getUrlVars()["locationId"];
     groupId= getUrlVars()["groupId"];
     
-   
-    
+       
     $('#busy').hide();
     
     // Assign the hindi lables
-    $('#btnLottery').html('<br>&#2354;&#2366;&#2335;&#2352;&#2368;');
-    $('#btnBack').html('<br>&#2357;&#2366;&#2346;&#2360;');
-    $('#btnUploadParticipantImages').html('<br>&#2337;&#2375;&#2335;&#2366; &#2309;&#2346;&#2354;&#2379;&#2337;');
+    $('#btnLottery').html('<br>'+SYNCHRONIZE_BUTTON_LOTTERY);
+    $('#btnBack').html('<br>'+SYNCHRONIZE_BUTTON_BACK);
+    $('#btnUploadParticipantImages').html('<br>'+SYNCHRONIZE_BUTTON_UPLOADDATA);
     
+    
+   db.transaction(function(tx)
+			     {	     	
+			     	tx.executeSql("Select ID,Name,AmountPerParticipant,BaseAmount from Events ",[],GetEventData_success);    	
+			     }
+			     , transaction_error);
+}
+function GetEventData_success(tx,results)
+{
+	  var len = results.rows.length;
+	  
+	   for (var i=0; i<len; i++) {
+	 		var eventData = results.rows.item(i);	
+	 		eventJson.ID = eventData.ID;
+			eventJson.Name = eventData.Name;
+	 	}
 }
 
     
@@ -197,7 +214,7 @@ function UploadtoServer(participantPerformance)
     type       : "POST",
     url        : uploadurl,
     crossDomain: true,
-    beforeSend : function() {$('#busy').show(); $('#busy').html('Uploading Data');},
+    beforeSend : function() {$('#busy').show(); $('#busy').html(SYNCHRONIZE_MESSAGE_UPLOADINGDATA);},
     complete   : function() {},
     data       : {username : 'admin', password : 'admin',bypass:'1',type:'upload',upload:participantPerformance},
     dataType   : 'json',
@@ -208,18 +225,18 @@ function UploadtoServer(participantPerformance)
        if(eventDataJSONObject==false)
        {
        	// alert('Error while Uploading data');
-       	  alert('Error Uploading Data'); 
+       	  alert(SYNCHRONIZE_MESSAGE_ERRORUPLOADINGDATA); 
        	  $('#busy').hide(); 
 	       	return;
        }
-       $('#busy').html('Uploading Images');
+       $('#busy').html(SYNCHRONIZE_MESSAGE_UPLOADINGIMAGES);
        UploadParticipantImages();
       // CleanTables();
       // UploadParticipantImages();
     },
     error      : function() {
         //console.error("error");
-        alert('Problem Uploading Data');  
+        alert(SYNCHRONIZE_MESSAGE_ERRORUPLOADINGDATA);  
         $('#busy').hide();
                         
     }
@@ -235,7 +252,7 @@ function UploadtoServer(participantPerformance)
     	//$('#busy').show();
     	/*------------------ delete and recreate all the tables ----------------------------------*/
     	
-    	// Delete and Recreate grantee Table 
+    	// Delete and Recreate Participants Table 
     	db.transaction(function(tx)
 	     {	     	
 	     	tx.executeSql('DROP TABLE IF EXISTS Participants');    	
@@ -259,6 +276,7 @@ function UploadtoServer(participantPerformance)
 						"GroupID VARCHAR(10), " +						
 						"IsNew INTEGER, " +
 						"IsUpdate INTEGER, " +
+						"TodayPoints INTEGER, " +
 						"IsLevelCompleted INTEGER)";
 		
 		db.transaction(function(tx)
@@ -266,7 +284,6 @@ function UploadtoServer(participantPerformance)
 	     	tx.executeSql(sqlDeleteParticipants);    	
 	     }
 	     , transaction_error, SaveDB_success);
-    	
     	   	
     	
     	// Delete and Recreate Event Table 
@@ -326,7 +343,9 @@ function UploadtoServer(participantPerformance)
     	var sqlDeleteGame = 
 						"CREATE TABLE IF NOT EXISTS Game ( "+												
 						"ID VARCHAR(10), " +										
-						"Name VARCHAR(100), "+
+						"Name VARCHAR(100), "+ 
+						"InfluencerRegAmount INTEGER, "+ 
+						"InfluencerPerformanceAmount INTEGER, "+ 
 						"PregnancyLevelID INTEGER, "+
 						"NewMomLevelID INTEGER)";
 		
@@ -713,13 +732,13 @@ function UploadtoServer(participantPerformance)
    function SaveGrantee(participantObj)
     {
     	//alert(granteeObj.FirstName);
-    	var sql ="INSERT INTO Participants (FirstName,LastName,UniqueID,Image,Category,Influencer,InfluencerID,Payout,Level,Points,LocationID,GroupID,IsNew,IsUpdate,IsLevelCompleted) VALUES ('" 
+    	var sql ="INSERT INTO Participants (FirstName,LastName,UniqueID,Image,Category,Influencer,InfluencerID,Payout,Level,Points,LocationID,GroupID,IsNew,IsUpdate,TodayPoints,IsLevelCompleted) VALUES ('" 
     	+ participantObj.FirstName  + "','"
 		+ participantObj.LastName + "','" + participantObj.UniqueID+"','"+ participantObj.Image +"','"
 		+ participantObj.Category + "','" + participantObj.Influencer +"','"
 		+ participantObj.InfluencerID +"','"+ participantObj.Payout+"','"
 		+ participantObj.Level+"','"+participantObj.Points+"','"+participantObj.LocationID+"','"
-		+ participantObj.GroupID +"','"+participantObj.IsNew +"','"+participantObj.IsUpdate +"','0')"; 
+		+ participantObj.GroupID +"','"+participantObj.IsNew +"','"+participantObj.IsUpdate +"','0','0')";   
 	
 	     db.transaction(function(tx)
 	     {	     	
@@ -727,7 +746,8 @@ function UploadtoServer(participantPerformance)
 	     }
 	     	     , transaction_error, MetadataLoadComplete_success);
 			
-    }  
+    }    
+     
     
     function SaveGranteePerformance(granteePerformanceObj,userUniqueId)
     {
@@ -745,11 +765,11 @@ function UploadtoServer(participantPerformance)
 		
     }   
     
-    function SaveGame(gameObj)
+   function SaveGame(gameObj)
     {
     	   	    	
-    	var sql ="INSERT INTO Game (ID,Name,PregnancyLevelID,NewMomLevelID) VALUES ('" + gameObj.ID 
-    	+"','"+ gameObj.Name +"','"+ gameObj.PregnancyLevelID +"','"+ gameObj.NewMomLevelID 
+    	var sql ="INSERT INTO Game (ID,Name,InfluencerRegAmount,InfluencerPerformanceAmount,PregnancyLevelID,NewMomLevelID) VALUES ('" + gameObj.ID 
+    	+"','"+ gameObj.Name +"','"+ gameObj.InfluencerRegAmount +"','"+ gameObj.InfluencerPerformanceAmount +"','"+ gameObj.PregnancyLevelID +"','"+gameObj.NewMomLevelID 
     	+"')"; 
 		       
 	     db.transaction(function(tx)
@@ -757,7 +777,7 @@ function UploadtoServer(participantPerformance)
 	     	tx.executeSql(sql);	     	
 	     }
 	     , transaction_error, MetadataLoadComplete_success);
-    }    
+    }   
     
      function SaveLevel(levelObj)
     {
@@ -837,15 +857,15 @@ function MetadataLoadComplete_success() {
 	//alert(mutexDB);
 	if(--mutexDB==0)
 	{
-		$('#busy').html('Downloading Images');
+		$('#busy').html(SYNCHRONIZE_MESSAGE_DOWNLOADINGIMAGES);
 		
 		if(arrImagesToDownload.length>0)
 		{
-		DownloadParticipantImages();	
+			DownloadParticipantImages();	
 		}
 		else
 		{
-			$('#busy').html('Sync Complete');
+			$('#busy').html(SYNCHRONIZE_MESSAGE_UPLOADSUCCESSFUL);
             $('#busy').hide();
 		}
 	}
@@ -855,7 +875,7 @@ function SaveDB_success() {
 	
 	if(--mutexDB==0)
 	{
-		$('#busy').html('Downloading Data');
+		$('#busy').html(SYNCHRONIZE_MESSAGE_DOWNLOADINGDATA);
 		LoadMetadata();		
 	}
 }
@@ -865,9 +885,8 @@ function transaction_error(tx, error) {
     alert("Database Error: " + error);
 }
 
-function DeleteTableComplete_success() {
-	//$('#busy').html('Database Created');
-	alert('deletetable');
+function DeleteTableComplete_success() {	
+	
 }
  // function to be called at last
  
@@ -902,7 +921,7 @@ function DeleteTableComplete_success() {
                                           $('#busy').html(mutexDownloadImages);
                                          	if(--mutexDownloadImages==0)
                                          	{                                         		
-                                         		$('#busy').html('Sync Complete');
+                                         		$('#busy').html(SYNCHRONIZE_MESSAGE_UPLOADSUCCESSFUL);
                                          		$('#busy').hide();
                                          		
                                          	}
@@ -912,7 +931,7 @@ function DeleteTableComplete_success() {
                                            	$('#busy').html(mutexDownloadImages);
                                            	if(--mutexDownloadImages==0)
                                          	{
-                                         		$('#busy').html('Sync Complete');
+                                         		$('#busy').html(SYNCHRONIZE_MESSAGE_UPLOADSUCCESSFUL);
                                          		$('#busy').hide();
                                          		
                                          	}
@@ -935,7 +954,7 @@ function DeleteTableComplete_success() {
  	$('#busy').html(mutexDownloadImages);
 	if(--mutexDownloadImages==0)
      {
-     	$('#busy').html('Sync Complete');
+     	$('#busy').html(SYNCHRONIZE_MESSAGE_UPLOADSUCCESSFUL);
        $('#busy').hide();       
      }
  }  
@@ -1004,7 +1023,7 @@ function DeleteTableComplete_success() {
            $('#busy').html(mutexUploadImages);
            if(--mutexUploadImages==0)
            {
-           	 $('#busy').html('Clean');
+           	 $('#busy').html(SYNCHRONIZE_MESSAGE_DELETINGLOCALDATA);
            	 DeleteImages();
            }
       }
@@ -1014,7 +1033,7 @@ function DeleteTableComplete_success() {
  	$('#busy').html(mutexUploadImages);
 	if(--mutexUploadImages==0)
      {
-       $('#busy').html('Deleting Local Images');
+       $('#busy').html(SYNCHRONIZE_MESSAGE_DELETINGLOCALDATA);
        DeleteImages();
      }
  } 
@@ -1027,7 +1046,7 @@ function DeleteTableComplete_success() {
  
  function failDeleteDirectory(){
     //	alert('Error in Delete Directory');
- 	 $('#busy').html('...');
+ 	 $('#busy').html(SYNCHRONIZE_MESSAGE_DELETINGLOCALDATA);
      CleanTables();
  }
  
@@ -1057,7 +1076,7 @@ function DeleteTableComplete_success() {
   	 $('#busy').html(mutexUploadImages);
 	if(--mutexUploadImages==0)
            {
-           	 $('#busy').html('Deleting Local Data');
+           	 $('#busy').html(SYNCHRONIZE_MESSAGE_DELETINGLOCALDATA);
            	 CleanTables();
            }
 	
@@ -1067,7 +1086,7 @@ function DeleteTableComplete_success() {
   	 $('#busy').html(mutexUploadImages);
 	if(--mutexUploadImages==0)
            {
-           	 $('#busy').html('Deleting Local Data');
+           	 $('#busy').html(SYNCHRONIZE_MESSAGE_DELETINGLOCALDATA);
            	 CleanTables();
            }
 }

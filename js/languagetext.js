@@ -17,8 +17,8 @@ var LOGIN_MESSAGE_ERROR_AUTHENTICATION="आप इस क्रिया को 
 
 var LOGIN_MESSAGE_BUSY_AUTHENTICATION="उपयोगकर्ता सत्यापन";
 var LOGIN_MESSAGE_BUSY_DOWNLOADING="डेटा प्राप्ति में कार्यरत";
-var LOGIN_MESSAGE_BUSY_DELETEDATA="डेटा नष्ट किया जा रहा है";
-var LOGIN_MESSAGE_BUSY_DELETEDATACONFIRM="सफलतापूर्वक डेटा नष्ट हो गया";
+var LOGIN_MESSAGE_BUSY_DELETEDATA="डिवाइस तैयार की जा रही है";
+var LOGIN_MESSAGE_BUSY_DELETEDATACONFIRM="प्रयोग के लिए डिवाइस तैयार";
 
 
 //-------------------------------------------------------------------------------------
@@ -66,23 +66,34 @@ var PARTICIPANT_MESSAGE_BUSY_ADDRECORD="विवरण सुरक्षित
 var PARTICIPANTDETAIL_LABEL_POINTS="अर्जित स्र्पये";
 var PARTICIPANTDETAIL_LABEL_CURRENTOBJECTIVES ="मौजूदा स्तर के लक्ष्य";
 var PARTICIPANTDETAIL_LABEL_NEXTOBJECTIVES ="आपके अगले लक्ष्य है";
+var PARTICIPANTDETAIL_BUTTON_BACK="वापस";
+var PARTICIPANTDETAIL_BUTTON_ENTRYSUBMIT="सुरक्षित करे"; 
 //-----------------------------------------------------------------------------
 
 
 //--------------------------------- LOTTERY  ---------------------------------------------
 var LOTTERY_BUTTON_BACK="वापस";
-var LOTTERY_MESSAGE_WINNER="आज की लाटरी जीती है;"
+var LOTTERY_MESSAGE_WINNER="आज की लाटरी जीती है";
 //-----------------------------------------------------------------------------
 
+//--------------------------------- INFLUENCER  ---------------------------------------------
+var INFLUENCER_BUTTON_BACK="वापस";
+var INFLUENCER_BUTTON_ADD="सहायक जोड़े";
+//-------------------------------------------------------------------------------------------
+
+//----------------------------------- SYNCHRONIZE ----------------------------------------------
+var SYNCHRONIZE_BUTTON_BACK="वापस";
+var SYNCHRONIZE_BUTTON_LOTTERY="लाटरी ";
+var SYNCHRONIZE_BUTTON_UPLOADDATA="सर्वर पे डेटा भेजे";
+
+var SYNCHRONIZE_MESSAGE_UPLOADINGDATA="सर्वर पे डेटा जा रहा है";
+var SYNCHRONIZE_MESSAGE_DOWNLOADINGDATA="सर्वर से डेटा आ रहा है";
+var SYNCHRONIZE_MESSAGE_UPLOADINGIMAGES="फोटो सर्वर पे जा रही है";
+var SYNCHRONIZE_MESSAGE_ERRORUPLOADINGDATA="डेटा भेजने में परेशानी";
+var SYNCHRONIZE_MESSAGE_DELETINGLOCALDATA="डिवाइस तैयार की जा रही है";
+var SYNCHRONIZE_MESSAGE_DOWNLOADINGIMAGES="फोटो सर्वर से आ रही है ";
+var SYNCHRONIZE_MESSAGE_UPLOADSUCCESSFUL="कार्य सफलतापूर्वक हो गया";
 
 
+//-----------------------------------------------------------------------------------------------
 
-
-/*
-var LOGIN_BUTTON_LOGIN="प्रवेश";
-var LOGIN_BUTTON_LOGIN="प्रवेश";
-var LOGIN_BUTTON_LOGIN="प्रवेश";
-var LOGIN_BUTTON_LOGIN="प्रवेश";
-var LOGIN_BUTTON_LOGIN="प्रवेश";
-var LOGIN_BUTTON_LOGIN="प्रवेश";
- */

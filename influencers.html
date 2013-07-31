@@ -2,9 +2,10 @@
 <html>
     <head>
         <title>Ma-se-Ma</title>
-        <meta name="viewport" content="width=device-width,initial-scale=1"/>
-        <link rel="stylesheet" href="css/styles.css" />    
+        <meta name="viewport" content="width=device-width,initial-scale=1"/> 
+         <meta http-equiv="content-type" content="text/html; charset=utf-8" />            
         <link rel="stylesheet" href="css/jquery.mobile-1.3.1.min.css">  
+        <link rel="stylesheet" href="css/styles.css" />   
        
     </head>
 
@@ -13,14 +14,17 @@
 	<div data-role="header" data-theme="b" class="header">	
 	<p>		
 		<h1 class="header"></h1>	
-		
 		<a href="#" data-role="button" data-inline="true" data-theme="b" id="btnBack" class="buttonHindi">Back</a>			 	    
-		<a href="#" data-role="button" data-inline="true" data-theme="b" id="btnAdd" data-icon="plus" class="buttonHindi" ></a>	
+		<a href="#" data-role="button" data-inline="true" data-theme="b" id="btnAdd" class="buttonHindi" ></a>	
    	</p>
    	
 	</div>
-		
-	<div id="wrapper" class="wrapperGroup">
+	
+	<div id="titleMain">									
+   			<label id="lblLocationName" class="lblTitle"></label>   		
+   	</div>	
+   			
+	<div id="wrapper" class="wrapperInfluencer">
 		<div id="scroller">
 			<ul id="employeeList" data-role="listview" data-inset="true">	  				  			
 	  		</ul>   
@@ -30,6 +34,7 @@
 	<div id="busy">Loading...</div>
     <div id="footer">@2013</div>
     
+    <script src="js/languagetext.js"></script>
 	<script src="phonegap.js"></script>
     <script src="js/jquery.js"></script>
     <script src="js/iscroll-lite.js"></script>
