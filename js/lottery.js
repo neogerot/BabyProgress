@@ -4,7 +4,7 @@ var count;
 			var numberOfParticipants;	
 			var myParticipants = [];
 			var currentParticipant;
-			var speed=50;
+			var speed=300;
 			var winneruid;
 			var ParticipantCollection = [];	
 			var locationId;
@@ -26,10 +26,8 @@ function getUrlVars() {
 		
 			function Initialize(){
 			    count= 1 + Math.floor(Math.random() * numberOfParticipants);
-			    timesToRotate=5;			    
-			    currentParticipant=0;			   
-			   // $('#counter').html("count:"+count+" Times:"+timesToRotate);
-			   					
+			    timesToRotate=10;			    
+			    currentParticipant=0;	
 			}
 			
 			function SelectWinner(){	
@@ -41,12 +39,12 @@ function getUrlVars() {
 						setTimeout(function(){					 							
 				 			rotateImages();	
 				 	}, speed);
-			}
+			    }
 			
 			function rotateImages(){
 					var origsrc = $('#rotate_images').attr('src');
 			        var src = '';
-			        var imagerootPath=window.rootFS.fullPath+'/photos/';//'images/';//window.rootFS.fullPath+'/photos/';
+			        var imagerootPath=window.rootFS.fullPath+'/photos/';
 			       // var imagerootPath='images/';
 			        if (origsrc == 'img/person_blank.png') src = ParticipantCollection[currentParticipant].Image;
 			       
@@ -103,7 +101,7 @@ function getUrlVars() {
 			
 			function SaveWinner_success()
 			{
-				$('#counter').append(' <h3>'+ParticipantCollection[currentParticipant].FirstName+ ' '+ParticipantCollection[currentParticipant].LastName
+				$('#counter').append(' <h3>'+LOTTERY_MESSAGE_WINNER+ " : " + ParticipantCollection[currentParticipant].FirstName+ ' '+ParticipantCollection[currentParticipant].LastName
 				   			+ ' ('+ParticipantCollection[currentParticipant].locationname +')' 
 				   			+ '<br> '+ParticipantCollection[currentParticipant].WinningAmount+'</h3>');
 			  
@@ -113,6 +111,7 @@ function getUrlVars() {
 			
 	
 //------------------------------ Initialize System Resources---------------------------------------------------
+
 //------------------------------ File System Initialization Starts---------------------------------------------
  document.addEventListener('deviceready', function() {                
     window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
@@ -156,9 +155,7 @@ window.addEventListener('load', function() {
 			
 			buttonBack.addEventListener('touchend', function(event) {				
 				RedirectToPage('index.html');
-			}, false);
-					
-			
+			}, false);			
 			
 		}, false);
   

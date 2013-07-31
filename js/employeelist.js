@@ -2,6 +2,7 @@ var db;
 var dbCreated = false;
 var filter='';
 var locationId;
+var locationName;
 var scroll = new iScroll('wrapper', { vScrollbar: false, hScrollbar:false, hScroll: false });
 
 function getUrlVars() {	
@@ -57,10 +58,11 @@ function onDeviceReady() {
     db = window.openDatabase("GranteeDirectoryDB", "1.0", "PhoneGap Demo", 200000);
 
     locationId= getUrlVars()["locationId"];  
-	
+    
 	// Asign Hindi Texts
 	$('#btnSynchronize').html('<br>'+INDEX_BUTTON_OPTION);
 	$('#btnLogout').html('<br>'+INDEX_BUTTON_LOGOUT);
+	$('#lblLocationName').html('<strong>'+INDEX_LABEL_LOCATIONNAME +':</strong>');
 	
 	
 	
@@ -182,6 +184,22 @@ function getEmployees_success(tx, results) {
 		scroll.refresh();
 	},100);
 	
+	  var  sql = "select ID,Name "
+  			  + 	" from Locations loc " 
+  			  +  " where loc.ID=:locationId ";
+			  
+	tx.executeSql(sql, [locationId], GetLocationName_success);		
+}
+function GetLocationName_success(tx,results)
+{
+	  var len = results.rows.length;
+	  if(len>0)
+	  {
+	  	var location=results.rows.item(0);
+	  	locationName=location.Name;
+	  	$('#lblLocationName').append(locationName);
+	  }
+	  
 }
 
 function RedirectToPage(pageUrl) {

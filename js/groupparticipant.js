@@ -82,7 +82,7 @@ function onDeviceReady() {
 
 function Search()
 {
-	 filter= $('#txtSearch').val();
+	 filter= $('#txtSearch').val().toLowerCase();
 	 
 	 db.transaction(SearchParticipant, transaction_error);	
 }
@@ -90,11 +90,12 @@ function SearchParticipant(tx)
 {
 	 var  sql = "select p.ID,p.FirstName, p.LastName, p.UniqueID, p.Image,p.LocationID "
   			  + 	" from Participants p " 
-  			  +  " where p.GroupID=:groupId "
-			  +  " order by p.FirstName,p.LastName ";	;	
+  			  +  " where p.GroupID="+ groupId 
+  			  + " and LOWER(p.firstName) LIKE :filter OR LOWER(p.lastName) LIKE :filter "
+			  +  " order by p.FirstName,p.LastName ";
 		
 		
-		tx.executeSql(sql, [groupId], GetParticipants_success);		
+		tx.executeSql(sql, ["%"+filter+"%"], GetParticipants_success);		
 }
 
 function EventTable_error(tx, error)
@@ -137,6 +138,7 @@ function GetParticipants(tx) {
 
 function GetParticipants_success(tx, results) {
 	$('#busy').hide();
+	$('#employeeList').html('');
     var len = results.rows.length;
    
     var photopath="/sdcard";

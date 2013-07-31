@@ -17,7 +17,7 @@ window.addEventListener('load', function() {
 		testB = document.getElementById('btnBack');
 		buttonSubmit=	document.getElementById('btnSubmit'); 
 		// Android 2.2 needs FastClick to be instantiated before the other listeners so that the stopImmediatePropagation hack can work.
-		FastClick.attach(testB);		
+		//FastClick.attach(testB);		
 
 		testB.addEventListener('touchend', function(event) {
 			 RedirectToPage('groupparticipants.html'); 
@@ -100,8 +100,9 @@ function getEmployee_success(tx, results) {
 	$('#participantEdit').attr('href',"addemployeenew.html?uid="+ participant.UniqueID+"&locationId="+locationId+"&groupId="+groupId); 	
 	$('#fullName').text(participant.FirstName + ' ' + participant.LastName);
 	//$('#level').html("<strong>Level:</strong>"+employee.levelname + ",<strong>Points:</strong>"+ employee.Points);
-	$('#level').html("<strong>Points:</strong>"+ participant.Points);
-	$('#location').html(participant.locationname +'<br>'+ participant.groupname );
+	$('#level').html("<hr><h2>"+PARTICIPANTDETAIL_LABEL_POINTS+":</strong>"+ participant.Points +"</h2>");
+	$('#location').html("<hr><h3>"+participant.locationname
+	 +'<hr>'+ participant.groupname +"</h3>" );
 	//$('#btnEditDetails').attr('href',"addemployeenew.html?uid="+ employee.UniqueID); 	
 	//alert("addemployeenew.html?uid="+ employee.UniqueID);
 	currentLevel=participant.LevelNo;
@@ -131,8 +132,8 @@ function getObjectives_success(tx, results) {
 	//alert('getObjectives_success');
 	var len = results.rows.length;
 	// Traverse all the Objectives	
-	 var lblObjectives="&#2354;&#2325;&#2381;&#2359;&#2381;&#2351;";
-	 $('#objectives').append('<li data-role="list-divider"><strong>'+lblObjectives+':</strong> <span class="ui-li-count">'+len+'</span></li>');
+	 
+	 $('#objectives').append('<li data-role="list-divider"><strong>'+PARTICIPANTDETAIL_LABEL_CURRENTOBJECTIVES+':</strong> <span class="ui-li-count">'+len+'</span></li>');
 	 
 	 for (var i=0; i<len; i++) {
 	 	var objective = results.rows.item(i);	 	
@@ -324,8 +325,8 @@ function GetNextObjectives_success(tx,results)
    var len = results.rows.length;
   //alert(len);
 	// Traverse all the Objectives	
-	 var lblObjectives="&#2310;&#2346;&#2325;&#2375; &#2309;&#2327;&#2354;&#2375; &#2354;&#2325;&#2381;&#2359;&#2381;&#2351; &#2361;&#2376;";
-	 $('#objectives').append('<li data-role="list-divider"><strong>'+lblObjectives+':</strong> <span class="ui-li-count">'+len+'</span></li>');
+	
+	 $('#objectives').append('<li data-role="list-divider"><strong>'+PARTICIPANTDETAIL_LABEL_NEXTOBJECTIVES+':</strong> <span class="ui-li-count">'+len+'</span></li>');
 	 
 	 for (var i=0; i<len; i++) {
 	 	var objective = results.rows.item(i);	 

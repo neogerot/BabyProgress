@@ -34,6 +34,7 @@ function getUrlVars() {
     return vars;
 }
 
+/*
 function loaded() {
 
 	setTimeout(function () { 
@@ -55,6 +56,7 @@ function loaded() {
 document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
 document.addEventListener('DOMContentLoaded', loaded, false);
 
+*/
 
 window.addEventListener('load', function() {
 		var buttonBack;	
@@ -77,6 +79,7 @@ window.addEventListener('load', function() {
 		
 	}, false);
 	
+	/*
 window.addEventListener("orientationchange", function() {
    setTimeout(function(){
 		scroll.refresh();
@@ -84,6 +87,7 @@ window.addEventListener("orientationchange", function() {
      
 	
 }, false);
+*/
 
 document.addEventListener("deviceready", onDeviceReady, false);
 
@@ -169,7 +173,7 @@ function InitializeDBParameters_success(tx,results)
 function PopulateInfluencer_success(tx,results)
 {
 	var len = results.rows.length;
-	var strLocationOptions='<div data-role="fieldcontain"><label for="influencerId" class="select"><strong>'+PARTICIPANT_SELECT_INFLUENCER+'</strong></label><select name="influencerId" id="influencerId" data-native-menu="false"><option value="0" data-placeholder="true">&#2360;&#2361;&#2366;&#2351;&#2325; &#2330;&#2369;&#2344;&#2367;&#2351;&#2375;</option>';
+	var strLocationOptions='<div data-role="fieldcontain"><select name="influencerId" id="influencerId" data-native-menu="false"><option value="0" data-placeholder="true">&#2360;&#2361;&#2366;&#2351;&#2325; &#2330;&#2369;&#2344;&#2367;&#2351;&#2375;</option>';
 	var strLocationClose='</select></div>';
 	
 	 for (var i=0; i<len; i++) {
@@ -181,7 +185,7 @@ function PopulateInfluencer_success(tx,results)
 	$('#influencerSelect').trigger( "create" );
 	
 	
-	var strCategoryOptions='<div data-role="fieldcontain"><label for="categoryId" class="select"><strong>'+PARTICIPANT_SELECT_CATEGORY +'</strong></label><select name="categoryId" id="categoryId" data-native-menu="false"><option value="0" data-placeholder="true">&#2358;&#2381;&#2352;&#2375;&#2339;&#2368; &#2330;&#2369;&#2344;&#2367;&#2351;&#2375;</option>';
+	var strCategoryOptions='<div data-role="fieldcontain"><select name="categoryId" id="categoryId" data-native-menu="false"><option value="0" data-placeholder="true">&#2358;&#2381;&#2352;&#2375;&#2339;&#2368; &#2330;&#2369;&#2344;&#2367;&#2351;&#2375;</option>';
 	var strCategoryClose='</select></div>';
 	strCategoryOptions +='<option value=1>'+PARTICIPANT_SELECT_CATEGORY_OPTION_PREGNANT+'</option>';
 	strCategoryOptions +='<option value=2>'+PARTICIPANT_SELECT_CATEGORY_OPTION_NEWMOM+'</option>';

@@ -79,12 +79,11 @@ li .bubble {
 }
 
 #scroller li {
-	padding: 0 10px;	
-	line-height: 40px;
+	padding: 0 10px;		
 	border-bottom: 1px solid #ccc;
 	border-top: 1px solid #fff;
 	background-color: #fafafa;
-	font-size: 14px;
+	font-size: 20px;
 }
 
 #busy {
@@ -192,6 +191,7 @@ li .bubble {
 
 #capture img{	
 	top:10px;	
+	padding-top:10px;	
 	padding-left:100px;	
 	width:300px;
 	height:200px;
@@ -298,7 +298,7 @@ display: inline-block;
 
 .wrapperMain {
 	position: absolute; 
-	top: 120px; 
+	top: 130px; 
 	bottom: 20px;
 	width: 100%;
 	overflow: auto;
@@ -306,7 +306,7 @@ display: inline-block;
 } 
 .wrapperAdd {
 	position: absolute; 
-	top: 340px; 
+	top: 320px; 
 	bottom: 20px;
 	width: 100%;
 	overflow: auto;
@@ -322,12 +322,19 @@ display: inline-block;
 } 
 .wrapperLogin {
 	position: absolute; 
-	top: 170px; 
+	top: 140px; 
 	bottom: 20px;
 	width: 100%;
 	overflow: auto;
 	border-top: 1px solid #fff;	
 } 
+.lblTitle{
+	
+	font-size: 18px;
+	font-weight:bold;
+	text-align:center;
+	
+}
 
 .ui-controlgroup .ui-controlgroup-controls, .ui-controlgroup .ui-radio, .ui-controlgroup .ui-checkbox, .ui-controlgroup .ui-select, .ui-controlgroup li {
 -webkit-border-radius: inherit;
@@ -350,8 +357,20 @@ input.ui-input-text, textarea.ui-input-text {
 	margin: .5em 0;
 	min-height: 1.4em;
 	line-height: 1.4em;
-	font-size: 24px;
+	font-size: 35px;
 	display: block;
 	width: 100%;
 	outline: 0;
+}
+
+.ui-btn-inner {
+	font-size: 30px;
+	padding: .6em 20px;
+	min-width: .75em;
+	display: block;
+	position: relative;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+	zoom: 1;
 }

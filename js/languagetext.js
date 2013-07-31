@@ -28,7 +28,7 @@ var INDEX_BUTTON_OPTION="विकल्प";
 var INDEX_BUTTON_LOGOUT="बंद करे"; 
 
 var INDEX_LABEL_INFLUENCER="सहायक";
-
+var INDEX_LABEL_LOCATIONNAME="स्थान का नाम";
 
 
 //-------------------------------------------------------------------------------------
@@ -61,9 +61,22 @@ var PARTICIPANT_MESSAGE_BUSY_ADDRECORD="विवरण सुरक्षित
 
 //--------------------------------------------------------------------------------------------------
 
+
+//--------------------------------- PARTICIPANT DETAILS  ---------------------------------------------
+var PARTICIPANTDETAIL_LABEL_POINTS="अर्जित स्र्पये";
+var PARTICIPANTDETAIL_LABEL_CURRENTOBJECTIVES ="मौजूदा स्तर के लक्ष्य";
+var PARTICIPANTDETAIL_LABEL_NEXTOBJECTIVES ="आपके अगले लक्ष्य है";
+//-----------------------------------------------------------------------------
+
+
 //--------------------------------- LOTTERY  ---------------------------------------------
 var LOTTERY_BUTTON_BACK="वापस";
+var LOTTERY_MESSAGE_WINNER="आज की लाटरी जीती है;"
 //-----------------------------------------------------------------------------
+
+
+
+
 
 /*
 var LOGIN_BUTTON_LOGIN="प्रवेश";
