@@ -3,7 +3,7 @@ var dbCreated = false;
 var filter='';
 var locationId;
 var groupId;
-var scroll = new iScroll('wrapper', { vScrollbar: false, hScrollbar:false, hScroll: false });
+
 
 function getUrlVars() {
 	//alert('hi');
@@ -47,11 +47,6 @@ function getUrlVars() {
 				
 			}, false);
 			
-window.addEventListener("orientationchange", function() {
-   setTimeout(function(){
-		scroll.refresh();
-	});	 
-}, false);
 
 
 

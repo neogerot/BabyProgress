@@ -1,14 +1,14 @@
-var scroll = new iScroll('wrapper', { vScrollbar: false, hScrollbar:false, hScroll: false });
+
 
 var uid = getUrlVars()["uid"];
 var groupId,locationId;
-//alert('id:'+id);
+
 var db;
 var IsCurrentLevelCompleted=0;
 var currentLevel;
 var totalPoints;
 
-//----------------------Mutex
+//----------------------Mutex------------------------------------------------------------------------------------
 
 document.addEventListener("deviceready", onDeviceReady, false);
 
@@ -29,11 +29,7 @@ window.addEventListener('load', function() {
 		
 	}, false);	
     	
-window.addEventListener("orientationchange", function() {
-   setTimeout(function(){
-		scroll.refresh();
-	});	 
-}, false);
+
 
 /*  File System 
    * 
@@ -118,7 +114,7 @@ function endsWith(str, suffix) {
 // load Objectives of the Participant
 function getObjectives(tx) {
 	$('#busy').show();
-	var  sql = "select per.ID,obj.Name,obj.PlusPoints,obj.MinusPoints,obj.Mandatory,obj.Sequence,per.Completed " +
+	var  sql = "select per.ID,obj.Name,obj.PlusPoints,obj.MinusPoints,obj.Mandatory,obj.Sequence,p.Points,per.Completed " +
 				"from Participants p  " +
 				" JOIN Performance per on p.UniqueID = per.UniqueID " +
 				" JOIN Objectives obj on per.ObjectiveId = obj.ID " +
@@ -139,6 +135,10 @@ function getObjectives_success(tx, results) {
 	 totalPoints=0;
 	 for (var i=0; i<len; i++) {
 	 	var objective = results.rows.item(i);	 	
+	 	if(i==0)
+	 	{
+	 	   totalPoints=objective.Points;
+	 	}
 	 	
 	if(objective.Completed==1)
 	{
@@ -165,16 +165,11 @@ function getObjectives_success(tx, results) {
 	
 	$('#level').html("<hr><h2>"+PARTICIPANTDETAIL_LABEL_POINTS+":</strong>"+ totalPoints +"</h2>");
 	 
-	var lblObjectiveSave="&nbsp;";
-	$('#objectives').append('<li data-role="list-divider"><strong>'+lblObjectiveSave+'</strong></li>');
-	
-	
+		
 	$('#objectives').trigger( "create" );	
 	
 	
-	setTimeout(function(){
-		scroll.refresh();
-	});
+	
 	
 		
 }
@@ -222,7 +217,7 @@ function SubmitPerformance()
 function Submit_success(tx)
 {
 		
-	 $('#objectives').html("");  // clear the scroller
+	 $('#objectives').html("");  // clear the objectives
 	 $('#submitbutton').hide();  // hide the submit button
 	 
 	 
@@ -276,8 +271,8 @@ function GetNextObjectives(tx)
 				" order by obj.Sequence"; 
 				 	
 			 tx.executeSql(sqlNextLevel,[],GetNextObjectives_success);
-	}
-	 else
+   }
+  else
 	 {
 		  sqlNextLevel = "select per.ID,obj.Name,obj.PlusPoints,obj.MinusPoints,per.Completed " +
 				"from Participants p  " +
@@ -344,10 +339,25 @@ function GetNextObjectives_success(tx,results)
 	 $('#objectives').trigger( "create" );	
 	
 	
-	setTimeout(function(){
-		scroll.refresh();
-	});
 	
 	
+	 // Get Total Points to display after the successful update of objectives..
+	 
+	 var sqlTotalPoints = "Select (SUM(CASE Completed WHEN 1 THEN PlusPoints ELSE -MinusPoints END)+ Max(p.Points)) as Total from Participants p "
+	   						 +" JOIN Performance per on p.UniqueID = per.UniqueID "
+	  						  + "JOIN Objectives obj on per.ObjectiveId = obj.ID "
+	   							 +" where p.UniqueID=:uid";
+	 tx.executeSql(sqlTotalPoints, [uid], UpdateScore);	 
+  
 	
+}
+function UpdateScore(tx,results)
+{
+	 var len = results.rows.length;
+	 if(len>0)
+	 {
+		var performance=results.rows.item(0);
+		totalPoints =performance.Total>0?performance.Total:0
+		$('#level').html("<hr><h2>"+PARTICIPANTDETAIL_LABEL_POINTS+":</strong>"+ totalPoints +"</h2>");
+	}
 }

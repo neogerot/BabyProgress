@@ -13,10 +13,6 @@ var mutexImages;
 var mutexReset;
 var mutexUsers=0;
 
-// Add IScroll
-var myScroll;
-//var myScroll = new iScroll('wrapper', { vScrollbar: false, hScrollbar:false, hScroll: false,useTransform:true });
-
 //---------------------
 
 //------------------------------ Initialize System Resources---------------------------------------------------
@@ -101,8 +97,8 @@ function PopulateLocations_success(tx,results)
 	
    for (var i=0; i<len; i++) {
     	var location = results.rows.item(i);
-	    $('#eventlist').append('<li><a href="index.html?locationId='+ location.ID +'" target="_self">' +
-	 '<h2>'+ location.Name +'</h2>');
+	    $('#eventlist').append('<a href="index.html?locationId='+ location.ID +'" target="_self" style="text-decoration:none;"><li>' +
+	 '<h2>'+ location.Name +'</h2></li></a>');
    } 	
 	  $('#eventlist').trigger( "create" );	 
 	  $('#wrapper').trigger( "create" );	

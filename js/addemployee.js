@@ -1,6 +1,6 @@
 var id = 0;
 var db;
-var scroll;
+
 
 var insertedUniqueId;
 var uid ;
@@ -34,29 +34,7 @@ function getUrlVars() {
     return vars;
 }
 
-/*
-function loaded() {
 
-	setTimeout(function () { 
-        scroll = new iScroll('wrapper', { 
-		useTransform: false,
-		onBeforeScrollStart: function (e) {
-			var target = e.target;
-			while (target.nodeType != 1) target = target.parentNode;
-
-		
-		if (target.tagName != 'SELECT' && target.tagName != 'INPUT' && target.tagName != 'TEXTAREA')
-				e.preventDefault();
-		}
-	});
-        }, 100);       
-  
- }
-
-document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
-document.addEventListener('DOMContentLoaded', loaded, false);
-
-*/
 
 window.addEventListener('load', function() {
 		var buttonBack;	
@@ -79,15 +57,7 @@ window.addEventListener('load', function() {
 		
 	}, false);
 	
-	/*
-window.addEventListener("orientationchange", function() {
-   setTimeout(function(){
-		scroll.refresh();
-	},0);
-     
 	
-}, false);
-*/
 function GoBack()
 {
 	
@@ -451,10 +421,10 @@ function addEmployeeInDB(tx)
 	}	
 	
 	$('#busy').show();		
-	var sql = "INSERT INTO Participants (FirstName,LastName,UniqueID,Image,Category,Influencer,InfluencerID,Payout,Level,Points,LocationID,GroupID,IsNew,IsUpdate,IsLevelCompleted) VALUES ('" + $('#firstName').val() +"','"
+	var sql = "INSERT INTO Participants (FirstName,LastName,UniqueID,Image,Category,Influencer,InfluencerID,Payout,Level,Points,LocationID,GroupID,IsNew,IsUpdate,TodayPoints,IsLevelCompleted) VALUES ('" + $('#firstName').val() +"','"
 		+ $('#lastName').val() +"','" + $('#uid').val()+ "','"+ $('#uid').val() +".jpg" +"','" + $('#categoryId').val()
 		+"','" + flagIsInfluencer + "','"+ $('#influencerId').val()+ "','0'" 
-		+",'"+levelId +"','0','"+locationId+"','" + groupId+"','1','0','0')"; 
+		+",'"+levelId +"','0','"+locationId+"','" + groupId+"','1','0','0','0')"; 
 		
 	
 	tx.executeSql(sql,[],addEmployeeInDB_success,transaction_error);

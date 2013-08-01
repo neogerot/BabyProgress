@@ -3,7 +3,7 @@ var dbCreated = false;
 var filter='';
 var locationId;
 var locationName;
-var scroll = new iScroll('wrapper', { vScrollbar: false, hScrollbar:false, hScroll: false });
+
 
 function getUrlVars() {	
     var vars = [], hash;
@@ -44,11 +44,7 @@ window.addEventListener('load', function() {
 				
 			}, false);
 			
-window.addEventListener("orientationchange", function() {
-   setTimeout(function(){
-		scroll.refresh();
-	});	 
-}, false);
+
 
 
 
@@ -172,17 +168,14 @@ function getEmployees_success(tx, results) {
     for (var i=0; i<len; i++) {
     	var group = results.rows.item(i);
 		
-	 $('#employeeList').append('<li><a href="groupparticipants.html?groupId='+ group.ID + '&locationId='+locationId +'"  target="_self">' +
-	 '<h2>'+ group.Name +'</h2></li>');
+	 $('#employeeList').append('<a href="groupparticipants.html?groupId='+ group.ID + '&locationId='+locationId +'"  target="_self" style="text-decoration:none;"><li>' +
+	 '<h2>'+ group.Name +'</h2></li></a>');
     }
     
-    $('#employeeList').append('<li data-role="list-divider"><li/>');
-    $('#employeeList').append('<li><a href="influencers.html?locationId='+locationId +'"  target="_self">' +
-	 '<h2>'+INDEX_LABEL_INFLUENCER+'</h2></li>');
+   
+    $('#employeeList').append('<a href="influencers.html?locationId='+locationId +'"  target="_self" style="text-decoration:none;"><li>' +
+	 '<h2>'+INDEX_LABEL_INFLUENCER+'</h2></li></a>');
     
-	setTimeout(function(){
-		scroll.refresh();
-	},100);
 	
 	  var  sql = "select ID,Name "
   			  + 	" from Locations loc " 

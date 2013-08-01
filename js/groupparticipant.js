@@ -3,7 +3,9 @@ var dbCreated = false;
 var filter='';
 var locationId;
 var groupId;
-var scroll = new iScroll('wrapper', { vScrollbar: false, hScrollbar:false, hScroll: false });
+var locationName;
+var groupName;
+
 
 function getUrlVars() {
 
@@ -52,12 +54,8 @@ function getUrlVars() {
 			
 				
 			}, false);
-			
-window.addEventListener("orientationchange", function() {
-   setTimeout(function(){
-		scroll.refresh();
-	});	 
-}, false);
+		
+
 
 
 
@@ -76,8 +74,31 @@ function onDeviceReady() {
 	$('#btnSearch').html('<br>'+GROUP_BUTTON_SEARCH);
 	$('#txtSearch').attr("placeholder",GROUP_TEXTBOX_PLACEHOLDER_SEARCH);
 	
-	 db.transaction(GetParticipants, transaction_error);   
-  
+	
+   var  sql = "select loc.Name as locationName,g.Name as groupName "
+  			  + 	" from Locations loc " 
+  			  +		" join groups g on loc.ID=g.locationID "
+  			  +  " where loc.ID=:locationId and g.ID=:groupId";
+			  
+   db.transaction(function(tx)
+	     {	     	
+	     	tx.executeSql(sql, [locationId,groupId], GetLocationName_success);	     	
+	     }
+	     , EventTable_error); 
+	
+}
+
+function GetLocationName_success(tx,results)
+{
+	  var len = results.rows.length;
+	  if(len>0)
+	  {
+	  	var location=results.rows.item(0);
+	  	locationName=location.locationName;
+	  	groupName=location.groupName;	     	
+	  }
+	  
+	 db.transaction(GetParticipants, transaction_error);    
 }
 
 function Search()
@@ -132,7 +153,8 @@ function GetParticipants(tx) {
 			  +  " order by p.FirstName,p.LastName ";	;	
 		
 		
-		tx.executeSql(sql, [groupId], GetParticipants_success);			
+		tx.executeSql(sql, [groupId], GetParticipants_success);		
+		
 		
 }
 
@@ -142,19 +164,16 @@ function GetParticipants_success(tx, results) {
     var len = results.rows.length;
    
     var photopath="/sdcard";
-     $('#employeeList').append('<li data-role="list-divider"></li>');
+     $('#employeeList').append('<li data-role="list-divider">'+'<strong>'+GROUP_LABEL_GROUPLOCATIONNAME +': </strong>' + groupName + '(' +locationName+ ')</li>');
      
     for (var i=0; i<len; i++) {
     	var participant = results.rows.item(i);
 		
-	 $('#employeeList').append('<li><a href="employeedetails.html?uid='+ participant.UniqueID +'&locationId='+locationId+'&groupId='+groupId+'" target="_self">' +
-	 '<h2>'+ participant.FirstName + ' ' + participant.LastName+ '</h2>');
+	 $('#employeeList').append('<a href="employeedetails.html?uid='+ participant.UniqueID +'&locationId='+locationId+'&groupId='+groupId+'" target="_self" style="text-decoration:none;"><li>' +
+	 '<h2>'+ participant.FirstName + ' ' + participant.LastName+ '</h2></li></a>');
     }
     
-	setTimeout(function(){
-		scroll.refresh();
-	},100);
-	//	db = null;
+	
 }
 
 function RedirectToPage(pageUrl) {

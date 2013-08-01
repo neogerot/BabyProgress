@@ -1,6 +1,6 @@
 /* Perform Synchornization functions here*/
 var db;
-var myScroll;
+
 var eventDataJSONObject;
 var arrImagesToDownload = [];
 //var arrImagesToUpload = [];
@@ -20,25 +20,6 @@ var mutexDownloadImages;
 var mutexUploadImages;
 //----------------------
 
-
-function loaded() {
-	setTimeout(function () { 
-                myScroll = new iScroll('wrapper', {
-		useTransform: false,
-		onBeforeScrollStart: function (e) {
-			var target = e.target;
-			while (target.nodeType != 1) target = target.parentNode;
-
-		
-		if (target.tagName != 'SELECT' && target.tagName != 'INPUT' && target.tagName != 'TEXTAREA')
-				e.preventDefault();
-		}
-	});
-        }, 100);  
-}
-
-document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
-document.addEventListener('DOMContentLoaded', loaded, false);
 
 function RedirectToPage(pageUrl) {
 	$('#busy').hide();
