@@ -12,6 +12,7 @@ var mutexDB=0;
 var mutexImages;
 var mutexReset;
 var mutexUsers=0;
+var loggedInUserName;
 
 //---------------------
 
@@ -115,13 +116,7 @@ function PopulateUserCollection_success(tx,results)
 	    UserCollection[appUser.UserName.toLowerCase()]=appUser.Password;
    } 	
    	
-   	db.transaction(function(tx)
-			     {	     	
-			     	tx.executeSql("Select Status from LoginStatus ");    	
-			     }
-			     , transaction_error,EventTable_error);
-			     
-	    
+       
 }
 
 window.addEventListener('load', function() {
@@ -181,21 +176,16 @@ window.addEventListener('load', function() {
  }
  
 // This function will authenticate the User from the Server and Get the Events information to choose for the Device..
-/*
- *  db.transaction(function(tx)
-				     {	     	
-				     	tx.executeSql("INSERT INTO LoginStatus (Status) VALUES ('1')");    	
-				     }
-				     , transaction_error,LoginExistingUser_success);	
- */
+
 function Authenticate(){
 	
 	 // First try to authenticate locally..	 
 	
 	$('#busy').html(LOGIN_MESSAGE_BUSY_AUTHENTICATION); // Authenticating
 	$('#busy').show();	
+	loggedInUserName=$('#username').val().toLowerCase();
 	
-	 if($.md5($('#password').val())==UserCollection[$('#username').val().toLowerCase()])
+	 if($.md5($('#password').val())==UserCollection[loggedInUserName])
 	 {
 	 	// If successful show option to selec the location if flagDataExist==1
 	 	if(flagDataExist==1)
@@ -203,7 +193,7 @@ function Authenticate(){
 			  // Make an entry into Login Table
 				db.transaction(function(tx)
 				     {	     	
-				     	tx.executeSql("INSERT INTO LoginStatus (Status) VALUES ('1')");    	
+				     	tx.executeSql("INSERT INTO LoginStatus (Status,UserName) VALUES ('1','"+ loggedInUserName +"')");    	
 				     }
 				     , transaction_error,LoginExistingUser_success);		
 	  	  	return;
@@ -237,9 +227,13 @@ function Authenticate(){
 			    		 // Check if there are some values in the Event Table if exists then redirect directly to Index page 
 			    		 if(flagDataExist==1)
 			    		 {
-			    		 	 $('#busy').hide();		   		 	 	
-			    		  	 $('#selectevent').attr('style','visibility:visible');				    		 	 
-			    		 	 return;
+			    		 	 // Make an entry into Login Table
+									db.transaction(function(tx)
+									     {	     	
+									     	tx.executeSql("INSERT INTO LoginStatus (Status,UserName) VALUES ('1','"+ loggedInUserName +"')");    	
+									     }
+									     , transaction_error,LoginExistingUser_success);		
+						  	  	return;
 			    		 }
 			    		 
 			    		 
@@ -265,6 +259,11 @@ function Authenticate(){
 			    		 });
 			    	 
 		  			 }
+				}
+				else if(this.readyState == 4 && this.status != 200)
+				{
+					 alert(LOGIN_MESSAGE_ERROR_NETWORK);
+				     $('#busy').hide();	
 				}
 	};			
 			  xhr1.send();
@@ -312,7 +311,7 @@ function Authenticate(){
 			 									   // make an entry into Login Table
 												db.transaction(function(tx)
 												     {	     	
-												     	tx.executeSql("INSERT INTO LoginStatus (Status) VALUES ('1')");    	
+												     	tx.executeSql("INSERT INTO LoginStatus (Status,UserName) VALUES ('1','"+ loggedInUserName +"')");    	
 												     }
 												     , transaction_error,LoginExistingUser_success);	
 			 									 return;
@@ -330,7 +329,7 @@ function Authenticate(){
 			 									   // make an entry into Login Table
 												db.transaction(function(tx)
 												     {	     	
-												     	tx.executeSql("INSERT INTO LoginStatus (Status) VALUES ('1')");    	
+												     	tx.executeSql("INSERT INTO LoginStatus (Status,UserName) VALUES ('1','"+ loggedInUserName +"')");    	
 												     }
 												     , transaction_error,LoginExistingUser_success);	
 			 									 return;
@@ -567,7 +566,7 @@ function Authenticate(){
 	     
 	     //**********************************************************************************************  
 	       
-	        	 //********************************* Delete and Recreate LoginStatus Table ******************************
+	    //********************************* Delete and Recreate LoginStatus Table ******************************
     	
     	db.transaction(function(tx)
 	     {	     	
@@ -576,8 +575,9 @@ function Authenticate(){
 	     , transaction_error, SaveDB_success);
     	
     	var sqlDeleteLoginStatus = 
-						"CREATE TABLE IF NOT EXISTS LoginStatus ( "+	
-						"Status INTEGER)";
+						"CREATE TABLE IF NOT EXISTS LoginStatus ( "	
+						+"UserName INTEGER, "
+						+"Status INTEGER)";
 		
 		
 		db.transaction(function(tx)
@@ -1007,7 +1007,7 @@ function DownloadFilefail()
 			 			
 			db.transaction(function(tx)
 			     {	     	
-			     	tx.executeSql("INSERT INTO LoginStatus (Status) VALUES ('1')");    	
+			     	tx.executeSql("INSERT INTO LoginStatus (Status,UserName) VALUES ('1','"+ loggedInUserName +"')");    	
 			     }
 			     , transaction_error,LoginExistingUser_success);	
 			 									

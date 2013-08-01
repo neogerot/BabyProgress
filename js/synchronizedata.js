@@ -114,10 +114,23 @@ function GetEventData_success(tx,results)
 	   for (var i=0; i<len; i++) {
 	 		var eventData = results.rows.item(i);	
 	 		eventJson.ID = eventData.ID;
-			eventJson.Name = "";// eventData.Name;			
+				
+			
 	 	}
+	 	
+	 	// Get Logged in user information..	 	
+	 	tx.executeSql("Select UserName from LoginStatus ",[],GetLoggedInUser_success);    
 }
-
+function GetLoggedInUser_success(tx,results)
+{
+	 var len = results.rows.length;
+	  
+	   for (var i=0; i<len; i++) {
+	   	var loggedInUser = results.rows.item(i);	
+	   	eventJson.UserName=loggedInUser.UserName;	 // ID of User that is logged-IN
+	   	eventJson.Name = "MASEMA REGISTRATIONDRIVE";// eventData.Name;	
+	   }
+}
     
 //-------------------------------------------  Synchronize Functions ---------------------------------------
 
@@ -129,7 +142,7 @@ function UploadData()
 
 function UploadParticipantData(tx)
 {       
-     var sql = "Select FirstName,LastName,UniqueID,Image,Level,Points,LocationID,GroupID,IsNew,IsUpdate,Category,Influencer,InfluencerID,Payout from Participants";
+     var sql = "Select REPLACE(FirstName,' ','-') AS FirstName,REPLACE(LastName,' ','-') as LastName,UniqueID,Image,Level,Points,LocationID,GroupID,IsNew,IsUpdate,Category,Influencer,InfluencerID,Payout from Participants";
      var pLen,DTO;
      
      
@@ -199,7 +212,7 @@ function UploadtoServer(participantPerformance)
     beforeSend : function() {$('#busy').show(); $('#busy').html(SYNCHRONIZE_MESSAGE_UPLOADINGDATA);},
     complete   : function() {},
     data       : {username : 'admin', password : 'admin',bypass:'1',type:'upload',upload:participantPerformance},
-    dataType   : 'json',
+    dataType   : 'json',    
     success    : function(response) {
         //console.error(JSON.stringify(response));
       // alert('Data Uploaded'+ response);
@@ -218,7 +231,7 @@ function UploadtoServer(participantPerformance)
     },
     error      : function() {
         //console.error("error");
-        alert(SYNCHRONIZE_MESSAGE_ERRORUPLOADINGDATA);  
+        alert(SYNCHRONIZE_MESSAGE_ERROR_NETWORK);  
         $('#busy').hide();
                         
     }
