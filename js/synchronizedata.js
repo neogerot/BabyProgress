@@ -114,7 +114,7 @@ function GetEventData_success(tx,results)
 	   for (var i=0; i<len; i++) {
 	 		var eventData = results.rows.item(i);	
 	 		eventJson.ID = eventData.ID;
-			eventJson.Name = eventData.Name;
+			eventJson.Name = "";// eventData.Name;			
 	 	}
 }
 
@@ -181,7 +181,8 @@ function AppendLocations(tx,results)
                     eventJson.Locations.push(evtLocation);
                    }
 	
-	 DTO = JSON.stringify(eventJson);	 
+	 DTO = JSON.stringify(eventJson);	
+	// alert(DTO); 
      UploadtoServer(DTO);
 }
 

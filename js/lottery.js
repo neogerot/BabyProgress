@@ -45,7 +45,7 @@ function getUrlVars() {
 					var origsrc = $('#rotate_images').attr('src');
 			        var src = '';
 			        var imagerootPath=window.rootFS.fullPath+'/photos/';
-			       // var imagerootPath='images/';
+			        //var imagerootPath='images/';
 			        if (origsrc == 'img/person_blank.png') src = ParticipantCollection[currentParticipant].Image;
 			       
 			        currentParticipant++;
@@ -103,7 +103,7 @@ function getUrlVars() {
 			{
 				$('#counter').append(' <h3>'+LOTTERY_MESSAGE_WINNER+ " : " + ParticipantCollection[currentParticipant].FirstName+ ' '+ParticipantCollection[currentParticipant].LastName
 				   			+ ' ('+ParticipantCollection[currentParticipant].locationname +')' 
-				   			+ '<br> '+ParticipantCollection[currentParticipant].WinningAmount+'</h3>');
+				   			+ '<br> '+ LOTTERY_MESSAGE_WINNINGAMOUNT +': '+ ParticipantCollection[currentParticipant].WinningAmount+'</h3>');
 			  
 			    $('#winner').show();	
 				    
