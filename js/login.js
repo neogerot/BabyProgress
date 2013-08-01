@@ -38,12 +38,10 @@ function onDeviceReady() {
     db = window.openDatabase("GranteeDirectoryDB", "1.0", "PhoneGap Demo", 200000);    
     $('#busy').hide();
     $('#message').hide();	
+    $('#selectevent').hide();
   
     // Assign Hindi Texts  
-  
-     
-     $('#selectevent').hide();
-    
+      
      $('#mainHeading').html(LOGIN_HEADING_MAIN);
     
      $('#btnLogin').html('<br>'+ LOGIN_BUTTON_LOGIN);
@@ -101,11 +99,10 @@ function PopulateLocations_success(tx,results)
 	    $('#eventlist').append('<a href="index.html?locationId='+ location.ID +'" target="_self" style="text-decoration:none;"><li>' +
 	 '<h2>'+ location.Name +'</h2></li></a>');
    } 	
-	  $('#eventlist').trigger( "create" );	 
-	  $('#wrapper').trigger( "create" );	
-	  
-	
-	
+	  $('#eventlist').trigger("create");	 
+	  $('#wrapper').trigger("create");	
+	  $('#selectevent').trigger("create");	
+	  $('#selectevent').show();	
 }
 function PopulateUserCollection_success(tx,results)
 {
@@ -163,11 +160,8 @@ window.addEventListener('load', function() {
  function LoginExistingUser_success()
  {
  
- 			  $('#busy').hide();	
-			  
-			  $('#login').hide();				    		
-			 
-			 	
+ 			  $('#busy').hide();
+			  $('#login').hide();				 	
 			  $('#selectevent').show();
 			  $('#selecteventlabel').show();	
 			  $('#btnBack').show();
