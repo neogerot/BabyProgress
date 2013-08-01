@@ -16,9 +16,17 @@
    	</p>
    	
 	</div>
-	<div id="title">
-		
-		<label id="selecteventlabel" style="display: none;"></label>			
+	<div id="title">		
+		<label id="selecteventlabel" style="display: none;"></label>	
+		<div id="selectevent">			
+		<div id="wrapper" class="wrapperLogin">
+	  		<div id="scroller">		
+				<ul id="eventlist" data-role="listview" data-inset="true">	  				  			
+			  	</ul> 
+	     	</div>
+	    </div>    	
+     		
+	 </div>		
    	</div>		
 	<div id="login">
 		<span id="message" class="errorMessage"></span>
@@ -30,16 +38,8 @@
 		<a href="#" data-role="button" data-theme="b" id="btnResetOption" onclick="ShowResetOption();" class="buttonHindi" style="left:7px;width:97%;">Reset Device</a>	
 	</div>
 	
-	<div id="selectevent">			
-		<div id="wrapper" class="wrapperLogin">
-	  		<div id="scroller">		
-				<ul id="eventlist" data-role="listview" data-inset="true">	  				  			
-			  	</ul> 
-	  	</div>
-	  	</div>
-     	
-     		
-	</div>
+	
+	
 	<div id="resetdevice" style="display:none;">	
 		<center><img src="img/caution.png" id="imgCaution" style="text-align:center;"></center>
 		<a href="#" data-role="button" data-theme="b" id="btnReset" onclick="ResetDevice();" class="buttonHindi" style="left:7px;width:97%;">Sure ?...Press to continue</a>		
