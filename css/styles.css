@@ -81,8 +81,8 @@ li .bubble {
 
 #scroller li {
 	padding: 10px 10px 30px 10px;		
-	border-bottom: 1px solid #ccc;
-	border-top: 1px solid #fff;
+	border-bottom: 1px solid #000;
+	border-top: 1px solid #000;
 	background-color: #fafafa;
 	font-size: 20px;
 	

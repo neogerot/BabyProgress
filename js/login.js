@@ -41,8 +41,8 @@ function onDeviceReady() {
   
     // Assign Hindi Texts  
   
-     $('#selectevent').attr('style','visibility:hidden');
-   
+     
+     $('#selectevent').hide();
     
      $('#mainHeading').html(LOGIN_HEADING_MAIN);
     
@@ -165,11 +165,11 @@ window.addEventListener('load', function() {
  
  			  $('#busy').hide();	
 			  
-			  $('#login').attr('style','visibility:hidden');				    		
+			  $('#login').hide();				    		
 			 
-			  $('#selectevent').attr('style','visibility:visible');	
-			  
-			  $('#selecteventlabel').attr('style','visibility:visible');	
+			 	
+			  $('#selectevent').show();
+			  $('#selecteventlabel').show();	
 			  $('#btnBack').show();
 			  
 			  PopulateLocations();
@@ -324,7 +324,7 @@ function Authenticate(){
                                            	if(--mutexImages==0)
                                          	{
                                          		
-			 									 $('#selectevent').attr('style','visibility:visible');
+			 									 $('#selectevent').show();
 			 									 $('#btnBack').show();
 			 									   // make an entry into Login Table
 												db.transaction(function(tx)
@@ -1001,7 +1001,7 @@ function DownloadFilefail()
 	if(--mutexImages==0)
      {
       					
-			 			$('#selectevent').attr('style','visibility:visible');
+			 			$('#selectevent').show();
 			 			$('#btnBack').show();
 			 			$('#busy').hide();
 			 			

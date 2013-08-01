@@ -134,6 +134,8 @@ function onDeviceReady() {
     locationId= getUrlVars()["locationId"];
     
      $('#btnBack').html('<br>'+ LOTTERY_BUTTON_BACK);
+     $('#btnStart').html('<br>'+ LOTTERY_BUTTON_START);
+     
     
     db = window.openDatabase("GranteeDirectoryDB", "1.0", "PhoneGap Demo", 200000);     
     db.transaction(getEmployee, transaction_error);	    

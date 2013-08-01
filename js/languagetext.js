@@ -76,6 +76,7 @@ var PARTICIPANTDETAIL_BUTTON_ENTRYSUBMIT="सुरक्षित करे";
 var LOTTERY_BUTTON_BACK="वापस";
 var LOTTERY_MESSAGE_WINNER="आज की लाटरी जीती है";
 var LOTTERY_MESSAGE_WINNINGAMOUNT="ईनाम की राशि";
+var LOTTERY_BUTTON_START="आरंभ करे";
 //-----------------------------------------------------------------------------
 
 //--------------------------------- INFLUENCER  ---------------------------------------------
