@@ -312,7 +312,7 @@ display: inline-block;
 } 
 .wrapperAdd {
 	position: absolute; 
-	top: 320px; 
+	top: 100px; 
 	bottom: 20px;
 	width: 100%;
 	overflow: auto;

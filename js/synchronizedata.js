@@ -1036,7 +1036,10 @@ function DeleteTableComplete_success() {
 //------------------------------------ Delete Images------------------------------------
  function DeleteImages()
  {
- 	window.rootFS.getDirectory("photos", {create: false, exclusive: false}, getDirForDeleteSuccess, failDeleteDirectory);
+ 	//window.rootFS.getDirectory("photos", {create: false, exclusive: false}, getDirForDeleteSuccess, failDeleteDirectory);
+ 	// Now do not delete any images .. date 16 Aug 2013
+ 	CleanTables();
+ 	
  }
  
  function failDeleteDirectory(){
