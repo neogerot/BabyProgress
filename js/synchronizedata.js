@@ -1021,10 +1021,8 @@ function GetPhotosforUpload_success(tx,results)
 	   for (var i=0; i<len; i++) {
 	 		var photouploadParticipant = results.rows.item(i);		 		 
 			 uploadPhoto(window.rootFS.fullPath + "/photos/" + photouploadParticipant.Image);			
-	 	}
-	 	
-	 	// Get Logged in user information..	 	
-	 	tx.executeSql("Select UserName from LoginStatus ",[],GetLoggedInUser_success);    
+	 	}	 	
+	 
 }
     
  function uploadPhoto(imageURI) {
