@@ -156,7 +156,7 @@ function InitializeDBParameters_success(tx,results)
 function PopulateInfluencer_success(tx,results)
 {
 	var len = results.rows.length;
-	var strLocationOptions='<div data-role="fieldcontain"><select name="influencerId" id="influencerId" data-native-menu="false"><option value="0" data-placeholder="true">&#2360;&#2361;&#2366;&#2351;&#2325; &#2330;&#2369;&#2344;&#2367;&#2351;&#2375;</option>';
+	var strLocationOptions='<div data-role="fieldcontain"><select name="influencerId" id="influencerId" data-native-menu="false"><option value="0" data-placeholder="true">'+PARTICIPANT_SELECT_INFLUENCER+'</option>';
 	var strLocationClose='</select></div>';
 	
 	 for (var i=0; i<len; i++) {
@@ -168,7 +168,7 @@ function PopulateInfluencer_success(tx,results)
 	$('#influencerSelect').trigger( "create" );
 	
 	
-	var strCategoryOptions='<div data-role="fieldcontain"><select name="categoryId" id="categoryId" data-native-menu="false"><option value="0" data-placeholder="true">&#2358;&#2381;&#2352;&#2375;&#2339;&#2368; &#2330;&#2369;&#2344;&#2367;&#2351;&#2375;</option>';
+	var strCategoryOptions='<div data-role="fieldcontain"><select name="categoryId" id="categoryId" data-native-menu="false"><option value="0" data-placeholder="true">'+PARTICIPANT_SELECT_CATEGORY+'</option>';
 	var strCategoryClose='</select></div>';
 	strCategoryOptions +='<option value=1>'+PARTICIPANT_SELECT_CATEGORY_OPTION_PREGNANT+'</option>';
 	strCategoryOptions +='<option value=2>'+PARTICIPANT_SELECT_CATEGORY_OPTION_NEWMOM+'</option>';
@@ -421,10 +421,10 @@ function addEmployeeInDB(tx)
 	}	
 	
 	$('#busy').show();		
-	var sql = "INSERT INTO Participants (FirstName,LastName,UniqueID,Image,Category,Influencer,InfluencerID,Payout,Level,Points,LocationID,GroupID,IsNew,IsUpdate,TodayPoints,IsLevelCompleted) VALUES ('" + $('#firstName').val() +"','"
+	var sql = "INSERT INTO Participants (FirstName,LastName,UniqueID,Image,Category,Influencer,InfluencerID,Payout,Level,Points,LocationID,GroupID,IsNew,IsUpdate,TodayPoints,IsPhotoUpdate,IsLevelCompleted) VALUES ('" + $('#firstName').val() +"','"
 		+ $('#lastName').val() +"','" + $('#uid').val()+ "','"+ $('#uid').val() +".jpg" +"','" + $('#categoryId').val()
 		+"','" + flagIsInfluencer + "','"+ $('#influencerId').val()+ "','0'" 
-		+",'"+levelId +"','0','"+locationId+"','" + groupId+"','1','0','0','0')"; 
+		+",'"+levelId +"','0','"+locationId+"','" + groupId+"','1','0','0','1','0')"; 
 		
 	
 	tx.executeSql(sql,[],addEmployeeInDB_success,transaction_error);
@@ -505,6 +505,22 @@ function copyPhoto(fileEntry) {
                 fileEntry.copyTo(dir, originalImage, onCopySuccess, fail); 
             }, fail); 
     }, fail); 
+    
+    // in case of update mark the record as IsPhotoUpdate=1
+   
+  if(flagIsUpdate==1)
+  {
+  	 db.transaction(function(tx)
+			     {	     	
+			     	tx.executeSql("update Participants set IsPhotoUpdate=1 where UniqueID=:uid",[uid],photoUpdated_success);    	
+			     }
+			     , transaction_error);   
+  }
+}
+
+function photoUpdated_success()
+{
+	console.log("photo updated");
 }
 
 function onCopySuccess(entry) {

@@ -272,6 +272,7 @@ function UploadtoServer(participantPerformance)
 						"IsNew INTEGER, " +
 						"IsUpdate INTEGER, " +
 						"TodayPoints INTEGER, " +
+						"IsPhotoUpdate INTEGER, " +
 						"IsLevelCompleted INTEGER)";
 		
 		db.transaction(function(tx)
@@ -852,17 +853,24 @@ function MetadataLoadComplete_success() {
 	//alert(mutexDB);
 	if(--mutexDB==0)
 	{
-		$('#busy').html(SYNCHRONIZE_MESSAGE_DOWNLOADINGIMAGES);
+		/*
+					$('#busy').html(SYNCHRONIZE_MESSAGE_DOWNLOADINGIMAGES);
+					
+					if(arrImagesToDownload.length>0)
+					{
+						
+						DownloadParticipantImages();	
+					}
+					else
+					{
+						$('#busy').html(SYNCHRONIZE_MESSAGE_UPLOADSUCCESSFUL);
+			            $('#busy').hide();
+					}
+		*/
 		
-		if(arrImagesToDownload.length>0)
-		{
-			DownloadParticipantImages();	
-		}
-		else
-		{
-			$('#busy').html(SYNCHRONIZE_MESSAGE_UPLOADSUCCESSFUL);
-            $('#busy').hide();
-		}
+		// Now do not download the Images while uploading data
+		$('#busy').html(SYNCHRONIZE_MESSAGE_UPLOADSUCCESSFUL);
+        $('#busy').hide();
 	}
 }
 
@@ -984,13 +992,39 @@ function DeleteTableComplete_success() {
   //  alert('entries')
     var i;
     mutexUploadImages=entries.length;
-    $('#busy').html(mutexUploadImages);
-    for (i=0; i<entries.length; i++) {
-        if (entries[i].name.indexOf(".jpg") != -1) {
-          // alert(window.rootFS.fullPath + "/photos/" + entries[i].name);
-            uploadPhoto(window.rootFS.fullPath + "/photos/" + entries[i].name);
-        }
-    }
+    $('#busy').html(mutexUploadImages);  
+    
+    /*
+		    for (i=0; i<entries.length; i++) {
+		        if (entries[i].name.indexOf(".jpg") != -1) {
+		          // alert(window.rootFS.fullPath + "/photos/" + entries[i].name);
+		            uploadPhoto(window.rootFS.fullPath + "/photos/" + entries[i].name);
+		        }
+		    }
+    */
+   
+     // Instead of uploading all the photos now only upload photos having their flag set as 1 for photoupdate
+    // GetPhotosforUpload();
+    
+    db.transaction(function(tx)
+			     {	     	
+			     	tx.executeSql("Select ID,Image from Participants where IsPhotoUpdate=1",[],GetPhotosforUpload_success);    	
+			     }
+			     , transaction_error);
+}
+
+// This function will only upload those Images which are updated
+function GetPhotosforUpload_success(tx,results)
+{
+	  var len = results.rows.length;
+	  
+	   for (var i=0; i<len; i++) {
+	 		var photouploadParticipant = results.rows.item(i);		 		 
+			 uploadPhoto(window.rootFS.fullPath + "/photos/" + photouploadParticipant.Image);			
+	 	}
+	 	
+	 	// Get Logged in user information..	 	
+	 	tx.executeSql("Select UserName from LoginStatus ",[],GetLoggedInUser_success);    
 }
     
  function uploadPhoto(imageURI) {

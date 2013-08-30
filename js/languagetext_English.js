@@ -85,7 +85,7 @@ var INFLUENCER_BUTTON_ADD="Add Influencer";//"सहायक जोड़े";
 //-------------------------------------------------------------------------------------------
 
 //----------------------------------- SYNCHRONIZE ----------------------------------------------
-var SYNCHRONIZE_BUTTON_BACK="Back";"वापस";
+var SYNCHRONIZE_BUTTON_BACK="Back";//"वापस";
 var SYNCHRONIZE_BUTTON_LOTTERY="Lottery";//"लाटरी ";
 var SYNCHRONIZE_BUTTON_UPLOADDATA="Upload Data";//"सर्वर पे डेटा भेजे";
 

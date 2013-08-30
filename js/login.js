@@ -375,6 +375,7 @@ function Authenticate(){
 						"IsNew INTEGER, " +
 						"IsUpdate INTEGER, " +
 						"TodayPoints INTEGER, " +
+						"IsPhotoUpdate INTEGER, " +
 						"IsLevelCompleted INTEGER)";
 		
 		db.transaction(function(tx)
