@@ -69,6 +69,9 @@ var PARTICIPANTDETAIL_LABEL_CURRENTOBJECTIVES ="मौजूदा स्तर 
 var PARTICIPANTDETAIL_LABEL_NEXTOBJECTIVES ="आपके अगले लक्ष्य है";
 var PARTICIPANTDETAIL_BUTTON_BACK="वापस";
 var PARTICIPANTDETAIL_BUTTON_ENTRYSUBMIT="सुरक्षित करे"; 
+var PARTICIPANTDETAIL_LABEL_PAYOUT="भुगतान राशि"; 
+var PARTICIPANTDETAIL_BUTTON_RESETPERFORMANCE="उद्देश्य रीसेट";
+var PARTICIPANTDETAIL_MESSAGE_RESETPERFORMANCE="सफलतापूर्वक उद्देश्य रीसेट";
 //-----------------------------------------------------------------------------
 
 

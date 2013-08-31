@@ -18,7 +18,7 @@ var LOGIN_MESSAGE_ERROR_NETWORK="You are not connected with Internet currently";
 var LOGIN_MESSAGE_BUSY_AUTHENTICATION="Authenticating";//"उपयोगकर्ता सत्यापन";
 var LOGIN_MESSAGE_BUSY_DOWNLOADING="Downloading data";//"डेटा प्राप्ति में कार्यरत";
 var LOGIN_MESSAGE_BUSY_DELETEDATA="Device is being prepared" ;//"डिवाइस तैयार की जा रही है";
-var LOGIN_MESSAGE_BUSY_DELETEDATACONFIRM="Device is not ready for use";//"प्रयोग के लिए डिवाइस तैयार";
+var LOGIN_MESSAGE_BUSY_DELETEDATACONFIRM="Device is now ready for use";//"प्रयोग के लिए डिवाइस तैयार";
 
 
 //-------------------------------------------------------------------------------------
@@ -69,6 +69,9 @@ var PARTICIPANTDETAIL_LABEL_CURRENTOBJECTIVES ="Current Objectives";//"मौज
 var PARTICIPANTDETAIL_LABEL_NEXTOBJECTIVES ="Next Objectives";//"आपके अगले लक्ष्य है";
 var PARTICIPANTDETAIL_BUTTON_BACK="Back";//"वापस";
 var PARTICIPANTDETAIL_BUTTON_ENTRYSUBMIT="Save";//"सुरक्षित करे"; 
+var PARTICIPANTDETAIL_LABEL_PAYOUT="Payout Amount";//"भुगतान राशि"; 
+var PARTICIPANTDETAIL_BUTTON_RESETPERFORMANCE="Reset Objectives"; //"उद्देश्य रीसेट";
+var PARTICIPANTDETAIL_MESSAGE_RESETPERFORMANCE="Objectives Reset Successfully"; //"सफलतापूर्वक उद्देश्य रीसेट";
 //-----------------------------------------------------------------------------
 
 

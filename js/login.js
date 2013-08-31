@@ -369,6 +369,7 @@ function Authenticate(){
 						"InfluencerID INTEGER, " +
 						"Payout INTEGER, " +
 						"Level INTEGER, " +
+						"InitialLevel INTEGER, " +
 						"Points INTEGER, " +
 						"LocationID VARCHAR(10), " +						
 						"GroupID VARCHAR(10), " +						
@@ -855,12 +856,12 @@ function Authenticate(){
     function SaveGrantee(participantObj)
     {
     	//alert(granteeObj.FirstName);
-    	var sql ="INSERT INTO Participants (FirstName,LastName,UniqueID,Image,Category,Influencer,InfluencerID,Payout,Level,Points,LocationID,GroupID,IsNew,IsUpdate,TodayPoints,IsLevelCompleted) VALUES ('" 
+    	var sql ="INSERT INTO Participants (FirstName,LastName,UniqueID,Image,Category,Influencer,InfluencerID,Payout,Level,InitialLevel,Points,LocationID,GroupID,IsNew,IsUpdate,TodayPoints,IsLevelCompleted) VALUES ('" 
     	+ participantObj.FirstName  + "','"
 		+ participantObj.LastName + "','" + participantObj.UniqueID+"','"+ participantObj.Image +"','"
 		+ participantObj.Category + "','" + participantObj.Influencer +"','"
 		+ participantObj.InfluencerID +"','"+ participantObj.Payout+"','"
-		+ participantObj.Level+"','"+participantObj.Points+"','"+participantObj.LocationID+"','"
+		+ participantObj.Level+"','"+ participantObj.Level+"','"+participantObj.Points+"','"+participantObj.LocationID+"','"
 		+ participantObj.GroupID +"','"+participantObj.IsNew +"','"+participantObj.IsUpdate +"','0','0')";   
 	
 	     db.transaction(function(tx)
