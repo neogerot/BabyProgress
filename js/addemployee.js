@@ -433,8 +433,8 @@ function addEmployeeInDB(tx)
 	
 	
 	$('#busy').show();		
-	var sql = "INSERT INTO Participants (FirstName,LastName,UniqueID,Image,Category,Influencer,InfluencerID,Payout,Level,InitialLevel,Points,LocationID,GroupID,IsNew,IsUpdate,TodayPoints,IsPhotoUpdate,IsLevelCompleted) VALUES ('" + $('#firstName').val() +"','"
-		+ $('#lastName').val() +"','" + $('#uid').val()+ "','"+ $('#uid').val() +".jpg" +"','" + $('#categoryId').val()
+	var sql = "INSERT INTO Participants (FirstName,LastName,UniqueID,ParentUniqueID,Image,Category,Influencer,InfluencerID,Payout,Level,InitialLevel,Points,LocationID,GroupID,IsNew,IsUpdate,TodayPoints,IsPhotoUpdate,IsLevelCompleted) VALUES ('" + $('#firstName').val() +"','"
+		+ $('#lastName').val() +"','" + $('#uid').val()+ "',0,'"+ $('#uid').val() +".jpg" +"','" + $('#categoryId').val()
 		+"','" + flagIsInfluencer + "','"+ $('#influencerId').val()+ "','0'" 
 		+",'"+levelId +"','"+levelId +"','0','"+locationId+"','" + groupId+"','1','0','0','1','0')"; 
 		

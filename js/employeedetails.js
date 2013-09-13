@@ -271,8 +271,11 @@ function getObjectives_success(tx, results) {
 	 
 	 var sqlTotalPoints = "Select (SUM(CASE Completed WHEN 1 THEN PlusPoints ELSE -MinusPoints END)+ Max(p.Points)) as Total from Participants p "
 	   						 +" JOIN Performance per on p.UniqueID = per.UniqueID "
-	  						  + "JOIN Objectives obj on per.ObjectiveId = obj.ID "
-	   							 +" where p.UniqueID=:uid";
+	  						  + " JOIN Objectives obj on per.ObjectiveId = obj.ID "
+	  						  + " JOIN Levels lev on lev.ID=obj.LevelId and lev.LevelNo<>"+currentLevel
+	   							 +" where p.UniqueID=:uid"
+	   							 +" and per.IsSkip<>1";
+	   							 
 	 tx.executeSql(sqlTotalPoints, [uid], UpdateScore);			
 }
 
@@ -496,7 +499,8 @@ function GetNextObjectives_success(tx,results)
 	 
 	 var sqlTotalPoints = "Select (SUM(CASE Completed WHEN 1 THEN PlusPoints ELSE -MinusPoints END)+ Max(p.Points)) as Total from Participants p "
 	   						 +" JOIN Performance per on p.UniqueID = per.UniqueID "
-	  						  + "JOIN Objectives obj on per.ObjectiveId = obj.ID "
+	  						  + " JOIN Objectives obj on per.ObjectiveId = obj.ID "
+	  						  + " JOIN Levels lev on lev.ID=obj.LevelId and lev.LevelNo<>"+currentLevel
 	   							 +" where p.UniqueID=:uid"
 	   							 +" and per.IsSkip<>1";
 	 tx.executeSql(sqlTotalPoints, [uid], UpdateScore);	 
