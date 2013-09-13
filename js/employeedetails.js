@@ -269,7 +269,7 @@ function getObjectives_success(tx, results) {
 	
 	// Get Total Points to display after the successful update of objectives..
 	 
-	 var sqlTotalPoints = "Select (SUM(CASE Completed WHEN 1 THEN PlusPoints ELSE -MinusPoints END)+ Max(p.Points)) as Total from Participants p "
+	 var sqlTotalPoints = "Select (SUM(CASE Completed WHEN 1 THEN PlusPoints ELSE -MinusPoints END)) as Total from Participants p "
 	   						 +" JOIN Performance per on p.UniqueID = per.UniqueID "
 	  						  + " JOIN Objectives obj on per.ObjectiveId = obj.ID "
 	  						  + " JOIN Levels lev on lev.ID=obj.LevelId and lev.LevelNo<>"+currentLevel
@@ -497,7 +497,7 @@ function GetNextObjectives_success(tx,results)
 	
 	 // Get Total Points to display after the successful update of objectives..
 	 
-	 var sqlTotalPoints = "Select (SUM(CASE Completed WHEN 1 THEN PlusPoints ELSE -MinusPoints END)+ Max(p.Points)) as Total from Participants p "
+	 var sqlTotalPoints = "Select (SUM(CASE Completed WHEN 1 THEN PlusPoints ELSE -MinusPoints END)) as Total from Participants p "
 	   						 +" JOIN Performance per on p.UniqueID = per.UniqueID "
 	  						  + " JOIN Objectives obj on per.ObjectiveId = obj.ID "
 	  						  + " JOIN Levels lev on lev.ID=obj.LevelId and lev.LevelNo<>"+currentLevel
@@ -510,11 +510,14 @@ function GetNextObjectives_success(tx,results)
 function UpdateScore(tx,results)
 {
 	 var len = results.rows.length;
+	 totalPoints=0;
 	 if(len>0)
 	 {	 	
 		var performance=results.rows.item(0);
 		totalPoints = performance.Total-$('#payout').val();
-		totalPoints=totalPoints>0?totalPoints:0
-		$('#level').html("<hr><h2>"+PARTICIPANTDETAIL_LABEL_POINTS_PREVIOUS+ ":" + ServerPoints + "<hr>"+ PARTICIPANTDETAIL_LABEL_POINTS+":"+ totalPoints + "</h2>");
+		
 	}
+	totalPoints +=ServerPoints;
+	totalPoints=totalPoints>0?totalPoints:0
+		$('#level').html("<hr><h2>"+PARTICIPANTDETAIL_LABEL_POINTS_PREVIOUS+ ":" + ServerPoints + "<hr>"+ PARTICIPANTDETAIL_LABEL_POINTS+":"+ totalPoints + "</h2>");
 }
