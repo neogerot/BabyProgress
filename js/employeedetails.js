@@ -511,6 +511,6 @@ function UpdateScore(tx,results)
 		var performance=results.rows.item(0);
 		totalPoints = performance.Total-$('#payout').val();
 		totalPoints=totalPoints>0?totalPoints:0
-		$('#level').html("<hr><h2>"+PARTICIPANTDETAIL_LABEL_POINTS+":"+ totalPoints +"<hr>"+ PARTICIPANTDETAIL_LABEL_POINTS_PREVIOUS+":"+ServerPoints+"</h2>");
+		$('#level').html("<hr><h2>"+PARTICIPANTDETAIL_LABEL_POINTS_PREVIOUS+ ":" + ServerPoints + "<hr>"+ PARTICIPANTDETAIL_LABEL_POINTS+":"+ totalPoints + "</h2>");
 	}
 }

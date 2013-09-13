@@ -142,7 +142,7 @@ function UploadData()
 
 function UploadParticipantData(tx)
 {       
-     var sql = "Select REPLACE(FirstName,' ','-') AS FirstName,REPLACE(LastName,' ','-') as LastName,UniqueID,Image,Level,InitialLevel,Points,LocationID,GroupID,IsNew,IsUpdate,Category,Influencer,InfluencerID,Payout from Participants";
+     var sql = "Select REPLACE(FirstName,' ','-') AS FirstName,REPLACE(LastName,' ','-') as LastName,UniqueID,ParentUniqueID,Image,Level,InitialLevel,Points,LocationID,GroupID,IsNew,IsUpdate,Category,Influencer,InfluencerID,Payout from Participants";
      var pLen,DTO;
      
      
