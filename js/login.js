@@ -363,6 +363,7 @@ function Authenticate(){
 						"FirstName VARCHAR(50), " +
 						"LastName VARCHAR(50), " +
 						"UniqueID VARCHAR(50), " +
+						"ParentUniqueID VARCHAR(50), " +
 						"Image VARCHAR(100), " + 
 						"Category INTEGER, " +
 						"Influencer INTEGER, " +
@@ -422,8 +423,9 @@ function Authenticate(){
 						"CREATE TABLE IF NOT EXISTS Performance ( "+
 						"ID INTEGER PRIMARY KEY AUTOINCREMENT, " +							
 						"UniqueID VARCHAR(50), " +
-						"ObjectiveID  VARCHAR(10), " +						
-						"Completed INTEGER)";
+						"ObjectiveID  VARCHAR(10), " +		
+						"Completed INTEGER, " +  				
+						"IsSkip INTEGER)";
 		
 		
 		db.transaction(function(tx)
@@ -856,13 +858,13 @@ function Authenticate(){
     function SaveGrantee(participantObj)
     {
     	//alert(granteeObj.FirstName);
-    	var sql ="INSERT INTO Participants (FirstName,LastName,UniqueID,Image,Category,Influencer,InfluencerID,Payout,Level,InitialLevel,Points,LocationID,GroupID,IsNew,IsUpdate,TodayPoints,IsLevelCompleted) VALUES ('" 
+    	var sql ="INSERT INTO Participants (FirstName,LastName,UniqueID,ParentUniqueID,Image,Category,Influencer,InfluencerID,Payout,Level,InitialLevel,Points,LocationID,GroupID,IsNew,IsUpdate,TodayPoints,IsLevelCompleted) VALUES ('" 
     	+ participantObj.FirstName  + "','"
-		+ participantObj.LastName + "','" + participantObj.UniqueID+"','"+ participantObj.Image +"','"
+		+ participantObj.LastName + "','" + participantObj.UniqueID+"','"+ participantObj.ParentUniqueID +"','"+ participantObj.Image +"','"
 		+ participantObj.Category + "','" + participantObj.Influencer +"','"
 		+ participantObj.InfluencerID +"','"+ participantObj.Payout+"','"
 		+ participantObj.Level+"','"+ participantObj.Level+"','"+participantObj.Points+"','"+participantObj.LocationID+"','"
-		+ participantObj.GroupID +"','"+participantObj.IsNew +"','"+participantObj.IsUpdate +"','0','0')";   
+		+ participantObj.GroupID +"','"+participantObj.IsNew +"','"+participantObj.IsUpdate +"','0','"+participantObj.IsLevelCompleted+"')";   
 	
 	     db.transaction(function(tx)
 	     {	     	
@@ -892,12 +894,12 @@ function Authenticate(){
     	}
     }
     
-    function SaveGranteePerformance(granteePerformanceObj,userUniqueId)
+   function SaveGranteePerformance(granteePerformanceObj,userUniqueId)
     {
     	//alert(userUniqueId + '#'+ granteePerformanceObj.ObjectiveID + '-' + granteePerformanceObj.Completed );
     	    	
-    	var sql ="INSERT INTO Performance (UniqueID,ObjectiveID,Completed) VALUES ('" + userUniqueId +"','"
-		+ granteePerformanceObj.ObjectiveID +"',"+ "'"+granteePerformanceObj.Completed +"')"; 
+    	var sql ="INSERT INTO Performance (UniqueID,ObjectiveID,Completed,IsSkip) VALUES ('" + userUniqueId +"','"
+		+ granteePerformanceObj.ObjectiveID +"','"+granteePerformanceObj.Completed +"','"+granteePerformanceObj.IsSkip +"')"; 
 		       
 	     db.transaction(function(tx)
 	     {	     	
@@ -906,7 +908,8 @@ function Authenticate(){
 	     , transaction_error, MetadataLoadComplete_success);
 	     
 		
-    }   
+    }  
+    
     function SaveGame(gameObj)
     {
     	   	    	

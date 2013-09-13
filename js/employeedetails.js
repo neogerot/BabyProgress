@@ -15,10 +15,12 @@ var totalPoints;
 document.addEventListener("deviceready", onDeviceReady, false);
 
 window.addEventListener('load', function() {
-		var testB,buttonSubmit;	
+		var testB,buttonSubmit,buttonSkip;	
 		testB = document.getElementById('btnBack');
 		buttonSubmit=	document.getElementById('btnSubmit'); 
 		buttonResetPerformance=document.getElementById('btnResetPerformance'); 
+		buttonSkip=document.getElementById('btnSkip'); 
+		
 		// Android 2.2 needs FastClick to be instantiated before the other listeners so that the stopImmediatePropagation hack can work.
 		//FastClick.attach(testB);		
 
@@ -33,6 +35,11 @@ window.addEventListener('load', function() {
 		buttonResetPerformance.addEventListener('touchend', function(event) {
 			ResetPerformance();
 		}, false);
+		
+		buttonSkip.addEventListener('touchend', function(event) {
+			SkipLevel();
+		}, false);
+		
 		
 	}, false);	
     	
@@ -60,6 +67,7 @@ function onDeviceReady() {
 	
 	$('#btnBack').html('<br>'+PARTICIPANTDETAIL_BUTTON_BACK);
 	$('#btnSubmit').html('<hr width="0">'+PARTICIPANTDETAIL_BUTTON_ENTRYSUBMIT);
+	$('#btnSkip').html('<hr width="0">'+PARTICIPANT_BUTTON_SKIPLEVEL);
 	$('#btnResetPerformance').html('<hr width="0">'+PARTICIPANTDETAIL_BUTTON_RESETPERFORMANCE +'<hr width="0">');
 	$('#lblPayout').html('<br><h2>'+PARTICIPANTDETAIL_LABEL_PAYOUT+'</h2>');
 	
@@ -79,6 +87,44 @@ function transaction_error(tx, error) {
 	$('#busy').hide();
     alert("Database Error: " + error);
 }
+
+function SkipLevel()
+{
+  // Mark the IsSkip field of the performance of the participant as 1 for this level
+  // And insert the next level objectives 	 
+  //alert(currentLevel);
+   $('#objectives').html("");  // clear the objectives
+   db.transaction(SkipCurrentLevel, transaction_error,MoveToNextObjectives);
+}
+
+function MoveToNextObjectives()
+{
+	  db.transaction(GetNextObjectives, transaction_error);
+}
+
+function SkipCurrentLevel(tx)
+{
+	var sqlSkipCurrentLevel = "Select per.ID from Performance per "
+    +" JOIN Participants p ON p.UniqueID=per.UniqueID " 
+    +" JOIN Levels lev ON lev.ID=p.Level "
+    +" JOIN Objectives obj ON obj.LevelId=lev.ID and obj.ID=per.ObjectiveID "
+    +" WHERE p.UniqueID='" + uid +"' and lev.LevelNo="+currentLevel ;
+	
+	tx.executeSql(sqlSkipCurrentLevel,[],SkipCurrentLevel_success);
+}
+
+function SkipCurrentLevel_success(tx,results)
+{
+	 IsCurrentLevelCompleted=1;
+	 var len = results.rows.length;
+	  for (var i=0; i<len; i++) {
+	  		var performance = results.rows.item(i);	
+	  		var sqlUpdatePerformanceSkipStatus = "update Performance  set IsSkip=1 "
+										+ " where ID=" + performance.ID;
+			tx.executeSql(sqlUpdatePerformanceSkipStatus, [], SubmitPerformanceDB_success);	
+	  }
+}
+
 
 function ResetPerformance()
 {
@@ -147,10 +193,10 @@ function getEmployee_success(tx, results) {
 	//$('#level').html("<strong>Level:</strong>"+employee.levelname + ",<strong>Points:</strong>"+ employee.Points);
 	
 	//$('#level').html("<hr><h2>"+PARTICIPANTDETAIL_LABEL_POINTS+":</strong>"+ participant.Points +"</h2>");	
-	$('#location').html('<hr><h3>'+participant.locationname
-	 +'<hr>'+ participant.groupname +'</h3>' );
+	$('#location').html('<hr><h3>'+ participant.groupname +'</h3>' );
 	//$('#btnEditDetails').attr('href',"addemployeenew.html?uid="+ employee.UniqueID); 	
 	//alert("addemployeenew.html?uid="+ employee.UniqueID);
+	IsCurrentLevelCompleted=0;
 	currentLevel=participant.LevelNo;
 	InitialLevelId=participant.InitialLevel;
 	ServerPoints=participant.Points;
@@ -270,15 +316,17 @@ function SubmitPerformance()
 	db.transaction(SubmitPerformanceDB, transaction_error,Submit_success);	
 }
 
+// This method will be called after updating all the current Objectives
+// It will check if the current level is completed for the participant
+// And in case level is completed do further actions of level changing locally 
 function Submit_success(tx)
 {
 		
 	 $('#objectives').html("");  // clear the objectives
-	// $('#submitbutton').hide();  // hide the submit button
-	 
-	 
+	 // $('#submitbutton').hide();  // hide the submit button
+	 	 
 	 // Check if the current level is completed for the participant..
-	db.transaction(CheckCurrentLevelStatus, transaction_error);
+	  db.transaction(CheckCurrentLevelStatus, transaction_error);
 	 // Get the next Level Objectives..	 
 	
 }
@@ -298,6 +346,7 @@ function CheckCurrentLevelStatus(tx)
 	tx.executeSql(sqlCheckLevelStatus,[uid,currentLevel],UpdateLevelCompletedStatus);		
 					
 } 
+
 function UpdateLevelCompletedStatus(tx,results)
 {	
 	var len = results.rows.length;
@@ -309,13 +358,14 @@ function UpdateLevelCompletedStatus(tx,results)
 	}
 	// Logic to check whether the Level is completed
 	var payout=$('#payout').val();
-	// Update IsLevelCompleted column of the Participant		  
-	var sqlUpdateLevelCompleteStatus = "update Participants set IsLevelCompleted=:IsCurrentLevelCompleted,Payout=:payout "
+	// Update Payout column of the Participant		  
+	var sqlUpdateLevelCompleteStatus = "update Participants set Payout=:payout "
 										+ " where UniqueID=:uid";
 			
-	tx.executeSql(sqlUpdateLevelCompleteStatus,[IsCurrentLevelCompleted,payout,uid],GetNextObjectives);
+	tx.executeSql(sqlUpdateLevelCompleteStatus,[payout,uid],GetNextObjectives);
 		
 }
+
 function GetNextObjectives(tx)
 {
    
@@ -345,7 +395,7 @@ function GetNextObjectives(tx)
    }
 }
 
-// This function will insert the next objectives in the Performance table
+// This function will update the Level in the Participant Table
 function UpdateParticipantLevel(tx,results)
 {
 	var len = results.rows.length;
@@ -356,6 +406,7 @@ function UpdateParticipantLevel(tx,results)
 	}			
 }
 
+// This function will select the next objectives in the Performance table
 function SelectNextObjectives(tx)
 {
    var sqlNextLevel = "select obj.ID,obj.Name,obj.PlusPoints,obj.MinusPoints,obj.Mandatory,obj.Sequence " +
@@ -367,6 +418,7 @@ function SelectNextObjectives(tx)
    tx.executeSql(sqlNextLevel,[],InsertNextObjectives);
 }
 
+// This function will insert the next objectives in the Performance table
 function InsertNextObjectives(tx,results)
 {
 	var len = results.rows.length;
@@ -374,13 +426,13 @@ function InsertNextObjectives(tx,results)
 	for (var i=0; i<len; i++) {
 		var objective = results.rows.item(i);	 
 			
-		var sqlObjective="INSERT INTO Performance (UniqueID,ObjectiveID,Completed) VALUES ('" + uid +"','"
-		+ objective.ID +"',"+ "'0')"; 	
+		var sqlObjective="INSERT INTO Performance (UniqueID,ObjectiveID,Completed,IsSkip) VALUES ('" + uid +"','"
+		+ objective.ID +"',"+ "'0','0')"; 	
 			       
 		tx.executeSql(sqlObjective);		
 	}
 	
-	 db.transaction(getEmployee, transaction_error);		      
+	db.transaction(getEmployee, transaction_error);		      
 }
 
 function SubmitPerformanceDB(tx)
@@ -445,7 +497,8 @@ function GetNextObjectives_success(tx,results)
 	 var sqlTotalPoints = "Select (SUM(CASE Completed WHEN 1 THEN PlusPoints ELSE -MinusPoints END)+ Max(p.Points)) as Total from Participants p "
 	   						 +" JOIN Performance per on p.UniqueID = per.UniqueID "
 	  						  + "JOIN Objectives obj on per.ObjectiveId = obj.ID "
-	   							 +" where p.UniqueID=:uid";
+	   							 +" where p.UniqueID=:uid"
+	   							 +" and per.IsSkip<>1";
 	 tx.executeSql(sqlTotalPoints, [uid], UpdateScore);	 
   
 	
@@ -456,8 +509,8 @@ function UpdateScore(tx,results)
 	 if(len>0)
 	 {	 	
 		var performance=results.rows.item(0);
-		totalPoints = ServerPoints+performance.Total-$('#payout').val();
+		totalPoints = performance.Total-$('#payout').val();
 		totalPoints=totalPoints>0?totalPoints:0
-		$('#level').html("<hr><h2>"+PARTICIPANTDETAIL_LABEL_POINTS+":</strong>"+ totalPoints +"</h2>");
+		$('#level').html("<hr><h2>"+PARTICIPANTDETAIL_LABEL_POINTS+":"+ totalPoints +"<hr>"+ PARTICIPANTDETAIL_LABEL_POINTS_PREVIOUS+":"+ServerPoints+"</h2>");
 	}
 }

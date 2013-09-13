@@ -18,6 +18,8 @@ var originalImage;
 var flagIsInfluencer;
 var influencerId;
 var PregnancyLevelID,NewMomLevelID;
+var flagMultipleProfile;
+var ParentUniqueID;
 
 
 
@@ -91,6 +93,7 @@ function onDeviceReady() {
 		 locationId= getUrlVars()["locationId"];
 		 groupId = getUrlVars()["groupId"];
 		 flagIsInfluencer=getUrlVars()["influencer"];
+		 flagMultipleProfile=0;
 		 
 		  if (typeof flagIsInfluencer === "undefined") {	
 		  	flagIsInfluencer=0;
@@ -371,7 +374,24 @@ function addEmployee()
 	}
 	else
 	{
+		uid=$('#uid').val();
 		$('#busy').html(PARTICIPANT_MESSAGE_BUSY_ADDRECORD);	
+		if($('#categoryId').val()==1 ||$('#categoryId').val()==3 )
+			{		
+				levelId = PregnancyLevelID;
+				if($('#categoryId').val()==3)
+					{
+						flagMultipleProfile=1;  // If the participant is to be registered as multiple profiles
+												// One as the Pregant
+												// Other as the New Mom
+												// Pregnant acts as the Parent of the Other
+				    }
+			}
+			else
+			{
+				levelId = NewMomLevelID;
+			}
+				
 		db.transaction(addEmployeeInDB);	
 	}
 }
@@ -411,20 +431,12 @@ function UpdateEmployeeInDB_success(tx,results) {
 function addEmployeeInDB(tx)
 {	
 	
-	if($('#categoryId').val()==1 ||$('#categoryId').val()==3 )
-	{		
-		levelId = PregnancyLevelID;
-	}
-	else
-	{
-		levelId = NewMomLevelID;
-	}	
 	
 	$('#busy').show();		
-	var sql = "INSERT INTO Participants (FirstName,LastName,UniqueID,Image,Category,Influencer,InfluencerID,Payout,Level,Points,LocationID,GroupID,IsNew,IsUpdate,TodayPoints,IsPhotoUpdate,IsLevelCompleted) VALUES ('" + $('#firstName').val() +"','"
+	var sql = "INSERT INTO Participants (FirstName,LastName,UniqueID,Image,Category,Influencer,InfluencerID,Payout,Level,InitialLevel,Points,LocationID,GroupID,IsNew,IsUpdate,TodayPoints,IsPhotoUpdate,IsLevelCompleted) VALUES ('" + $('#firstName').val() +"','"
 		+ $('#lastName').val() +"','" + $('#uid').val()+ "','"+ $('#uid').val() +".jpg" +"','" + $('#categoryId').val()
 		+"','" + flagIsInfluencer + "','"+ $('#influencerId').val()+ "','0'" 
-		+",'"+levelId +"','0','"+locationId+"','" + groupId+"','1','0','0','1','0')"; 
+		+",'"+levelId +"','"+levelId +"','0','"+locationId+"','" + groupId+"','1','0','0','1','0')"; 
 		
 	
 	tx.executeSql(sql,[],addEmployeeInDB_success,transaction_error);
@@ -436,7 +448,7 @@ function addEmployeeInDB(tx)
 function addEmployeeInDB_success(tx,results) {
 	console.log("Employee Added"+results.insertId);
 	
-	insertedUniqueId=$('#uid').val();
+	insertedUniqueId=uid;
 	
 	// Insert the performance of User in the Performance Table 
 	// Get all the associated Objectives with the Level
@@ -465,18 +477,36 @@ function getObjectives_success(tx, results) {
 	for (var i=0; i<len; i++) {
 		var objective = results.rows.item(i);	 
 			
-		var sqlObjective="INSERT INTO Performance (UniqueID,ObjectiveID,Completed) VALUES ('" + insertedUniqueId +"','"
-		+ objective.ID +"',"+ "'0')"; 
+		var sqlObjective="INSERT INTO Performance (UniqueID,ObjectiveID,Completed,IsSkip) VALUES ('" + insertedUniqueId +"','"
+		+ objective.ID +"',"+ "'0','0')"; 
 		       
-		       
-		       tx.executeSql(sqlObjective);    
-		
+	    tx.executeSql(sqlObjective);   		
 	}
 	
+	if(flagMultipleProfile==1)
+	{
+		// Add a new profile for the same participant as new mom
+		flagMultipleProfile=0;
+		levelId = NewMomLevelID;
+		ParentUniqueID=$('#uid').val();
+		AnotherUniqueID=guid();
+		uid=AnotherUniqueID;
+		
+		var sql = "INSERT INTO Participants (FirstName,LastName,UniqueID,ParentUniqueID,Image,Category,Influencer,InfluencerID,Payout,Level,InitialLevel,Points,LocationID,GroupID,IsNew,IsUpdate,TodayPoints,IsPhotoUpdate,IsLevelCompleted) VALUES ('" + $('#firstName').val() +"','"
+		+ $('#lastName').val() +"','" + AnotherUniqueID + "','" + ParentUniqueID +"','"  +  ParentUniqueID +".jpg" +"','" + "2"
+		+"','" + flagIsInfluencer + "','"+ $('#influencerId').val()+ "','0'" 
+		+",'"+levelId +"','"+levelId +"','0','"+locationId+"','" + groupId+"','1','0','0','1','0')"; 
+		
 	
-	setTimeout(function(){ 	
-  	 RedirectToPage("groupparticipants.html");
-  }, 1000);
+	    tx.executeSql(sql,[],addEmployeeInDB_success,transaction_error);
+	
+    }
+    else
+    {
+    	setTimeout(function(){ 	
+		  	 RedirectToPage("groupparticipants.html");
+		  }, 1000);
+    }
 }
 
 

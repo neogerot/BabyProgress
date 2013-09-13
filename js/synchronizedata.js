@@ -142,7 +142,7 @@ function UploadData()
 
 function UploadParticipantData(tx)
 {       
-     var sql = "Select REPLACE(FirstName,' ','-') AS FirstName,REPLACE(LastName,' ','-') as LastName,UniqueID,Image,Level,Points,LocationID,GroupID,IsNew,IsUpdate,Category,Influencer,InfluencerID,Payout from Participants";
+     var sql = "Select REPLACE(FirstName,' ','-') AS FirstName,REPLACE(LastName,' ','-') as LastName,UniqueID,Image,Level,InitialLevel,Points,LocationID,GroupID,IsNew,IsUpdate,Category,Influencer,InfluencerID,Payout from Participants";
      var pLen,DTO;
      
      
@@ -155,7 +155,7 @@ function UploadParticipantData(tx)
                     // Push into Images to Upload
                     //arrImagesToUpload.push(participant.Image);
 
-                    tx.executeSql('Select ObjectiveID, Completed from Performance where UniqueID = ?',
+                    tx.executeSql('Select ObjectiveID, Completed,IsSkip from Performance where UniqueID = ?',
                     [participant.UniqueID],
                     function(innerId, index) {
                         return (
@@ -260,6 +260,7 @@ function UploadtoServer(participantPerformance)
 						"FirstName VARCHAR(50), " +
 						"LastName VARCHAR(50), " +
 						"UniqueID VARCHAR(50), " +
+						"ParentUniqueID VARCHAR(50), " +
 						"Image VARCHAR(100), " + 
 						"Category INTEGER, " +
 						"Influencer INTEGER, " +
@@ -318,8 +319,9 @@ function UploadtoServer(participantPerformance)
 						"CREATE TABLE IF NOT EXISTS Performance ( "+
 						"ID INTEGER PRIMARY KEY AUTOINCREMENT, " +							
 						"UniqueID VARCHAR(50), " +
-						"ObjectiveID  VARCHAR(10), " +						
-						"Completed INTEGER)";
+						"ObjectiveID  VARCHAR(10), " +		
+						"Completed INTEGER, " +  				
+						"IsSkip INTEGER)";
 		
 		
 		db.transaction(function(tx)
@@ -726,16 +728,16 @@ function UploadtoServer(participantPerformance)
 			
     }
     
-   function SaveGrantee(participantObj)
+  function SaveGrantee(participantObj)
     {
     	//alert(granteeObj.FirstName);
-    	var sql ="INSERT INTO Participants (FirstName,LastName,UniqueID,Image,Category,Influencer,InfluencerID,Payout,Level,InitialLevel,Points,LocationID,GroupID,IsNew,IsUpdate,TodayPoints,IsLevelCompleted) VALUES ('" 
+    	var sql ="INSERT INTO Participants (FirstName,LastName,UniqueID,ParentUniqueID,Image,Category,Influencer,InfluencerID,Payout,Level,InitialLevel,Points,LocationID,GroupID,IsNew,IsUpdate,TodayPoints,IsLevelCompleted) VALUES ('" 
     	+ participantObj.FirstName  + "','"
-		+ participantObj.LastName + "','" + participantObj.UniqueID+"','"+ participantObj.Image +"','"
+		+ participantObj.LastName + "','" + participantObj.UniqueID+"','"+ participantObj.ParentUniqueID +"','"+ participantObj.Image +"','"
 		+ participantObj.Category + "','" + participantObj.Influencer +"','"
 		+ participantObj.InfluencerID +"','"+ participantObj.Payout+"','"
 		+ participantObj.Level+"','"+ participantObj.Level+"','"+participantObj.Points+"','"+participantObj.LocationID+"','"
-		+ participantObj.GroupID +"','"+participantObj.IsNew +"','"+participantObj.IsUpdate +"','0','0')";   
+		+ participantObj.GroupID +"','"+participantObj.IsNew +"','"+participantObj.IsUpdate +"','0','"+participantObj.IsLevelCompleted+"')";   
 	
 	     db.transaction(function(tx)
 	     {	     	
@@ -743,15 +745,14 @@ function UploadtoServer(participantPerformance)
 	     }
 	     	     , transaction_error, MetadataLoadComplete_success);
 			
-    }    
-     
+    }   
     
     function SaveGranteePerformance(granteePerformanceObj,userUniqueId)
     {
     	//alert(userUniqueId + '#'+ granteePerformanceObj.ObjectiveID + '-' + granteePerformanceObj.Completed );
     	    	
-    	var sql ="INSERT INTO Performance (UniqueID,ObjectiveID,Completed) VALUES ('" + userUniqueId +"','"
-		+ granteePerformanceObj.ObjectiveID +"',"+ "'"+granteePerformanceObj.Completed +"')"; 
+    	var sql ="INSERT INTO Performance (UniqueID,ObjectiveID,Completed,IsSkip) VALUES ('" + userUniqueId +"','"
+		+ granteePerformanceObj.ObjectiveID +"','"+granteePerformanceObj.Completed +"','"+granteePerformanceObj.IsSkip +"')"; 
 		       
 	     db.transaction(function(tx)
 	     {	     	

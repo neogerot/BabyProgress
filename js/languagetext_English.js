@@ -49,6 +49,7 @@ var PARTICIPANT_LABEL_LASTNAME="Last Name";//"अंतिम नाम";
 var PARTICIPANT_BUTTON_BACK="Back";//"वापस";
 var PARTICIPANT_BUTTON_CAPTUREIMAGE="Capture Image";//"फोटो ले";
 var PARTICIPANT_BUTTON_ENTRYSUBMIT="Save";//"सुरक्षित करे"; 
+var PARTICIPANT_BUTTON_SKIPLEVEL="Skip to next level";//"अगले स्तर पर जाये"; 
 
 var PARTICIPANT_SELECT_CATEGORY="Select Category";//"श्रेणी चुनिये";
 var PARTICIPANT_SELECT_CATEGORY_OPTION_PREGNANT="Pregnant";//"गर्भवती";
@@ -64,9 +65,11 @@ var PARTICIPANT_MESSAGE_BUSY_ADDRECORD="Record is being saved";//"विवर�
 
 
 //--------------------------------- PARTICIPANT DETAILS  ---------------------------------------------
-var PARTICIPANTDETAIL_LABEL_POINTS= "Money earned";//"अर्जित स्र्पये";
+var PARTICIPANTDETAIL_LABEL_POINTS="Total current earned money";//"कुल वर्तमान अर्जित रुपये";
+var PARTICIPANTDETAIL_LABEL_POINTS_PREVIOUS="Money upto last month";//"पिछले माह तक अर्जित रुपये";
 var PARTICIPANTDETAIL_LABEL_CURRENTOBJECTIVES ="Current Objectives";//"मौजूदा स्तर के लक्ष्य";
 var PARTICIPANTDETAIL_LABEL_NEXTOBJECTIVES ="Next Objectives";//"आपके अगले लक्ष्य है";
+var PARTICIPANTDETAIL_LABEL_POINTS_PREVIOUS="Money upto last round"//"आखिरी दौर तक पैसा";
 var PARTICIPANTDETAIL_BUTTON_BACK="Back";//"वापस";
 var PARTICIPANTDETAIL_BUTTON_ENTRYSUBMIT="Save";//"सुरक्षित करे"; 
 var PARTICIPANTDETAIL_LABEL_PAYOUT="Payout Amount";//"भुगतान राशि"; 
@@ -103,3 +106,7 @@ var SYNCHRONIZE_MESSAGE_ERROR_NETWORK="You are not connected to Internet current
 
 //-----------------------------------------------------------------------------------------------
 
+//----------------------------------- SELECT PARTICIPANT PROFILE ----------------------------------------------
+var SELECTPARTICIPANTPROFILE_BUTTON_PREGNANT="Pregnant"//"गर्भवती";
+var SELECTPARTICIPANTPROFILE_BUTTON_NEWMOM="New Mom"//"नयी माँ";
+//-----------------------------------------------------------------------------------------------

@@ -147,9 +147,9 @@ function Logout_success()
 
 function GetParticipants(tx) {	 
 	
-	   var  sql = "select p.ID,p.FirstName, p.LastName, p.UniqueID, p.Image "
+	   var  sql = "select p.ID,p.FirstName, p.LastName, p.UniqueID,p.ParentUniqueID, p.Image,p.Category "
   			  + 	" from Participants p " 
-  			  +  " where p.groupId=:groupId "
+  			  +  " where p.groupId=:groupId and (p.ParentUniqueID=0 or p.ParentUniqueID is null )"
 			  +  " order by p.FirstName,p.LastName ";	;	
 		
 		
@@ -168,8 +168,14 @@ function GetParticipants_success(tx, results) {
      
     for (var i=0; i<len; i++) {
     	var participant = results.rows.item(i);
+    	var urlToRedirect="employeedetails.html?uid=";
+		if(participant.Category==3)
+		{
+			//alert(participant.UniqueID+ 'It is null');
+			urlToRedirect="selectprofile.html?uid=";
+		}
 		
-	 $('#employeeList').append('<a href="employeedetails.html?uid='+ participant.UniqueID +'&locationId='+locationId+'&groupId='+groupId+'" target="_self" style="text-decoration:none;"><li>' +
+	 $('#employeeList').append('<a href='+urlToRedirect+ participant.UniqueID +'&locationId='+locationId+'&groupId='+groupId+' target="_self" style="text-decoration:none;"><li>' +
 	 '<h2>'+ participant.FirstName + ' ' + participant.LastName+ '</h2></li></a>');
     }
     

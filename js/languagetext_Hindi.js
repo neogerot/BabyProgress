@@ -49,6 +49,7 @@ var PARTICIPANT_LABEL_LASTNAME="अंतिम नाम";
 var PARTICIPANT_BUTTON_BACK="वापस";
 var PARTICIPANT_BUTTON_CAPTUREIMAGE="फोटो ले";
 var PARTICIPANT_BUTTON_ENTRYSUBMIT="सुरक्षित करे"; 
+var PARTICIPANT_BUTTON_SKIPLEVEL="अगले स्तर पर जाये"; 
 
 var PARTICIPANT_SELECT_CATEGORY="श्रेणी चुनिये";
 var PARTICIPANT_SELECT_CATEGORY_OPTION_PREGNANT="गर्भवती";
@@ -64,7 +65,8 @@ var PARTICIPANT_MESSAGE_BUSY_ADDRECORD="विवरण सुरक्षित
 
 
 //--------------------------------- PARTICIPANT DETAILS  ---------------------------------------------
-var PARTICIPANTDETAIL_LABEL_POINTS="अर्जित स्र्पये";
+var PARTICIPANTDETAIL_LABEL_POINTS="कुल वर्तमान अर्जित रुपये";
+var PARTICIPANTDETAIL_LABEL_POINTS_PREVIOUS="पिछले माह तक अर्जित रुपये";
 var PARTICIPANTDETAIL_LABEL_CURRENTOBJECTIVES ="मौजूदा स्तर के लक्ष्य";
 var PARTICIPANTDETAIL_LABEL_NEXTOBJECTIVES ="आपके अगले लक्ष्य है";
 var PARTICIPANTDETAIL_BUTTON_BACK="वापस";
@@ -103,3 +105,7 @@ var SYNCHRONIZE_MESSAGE_ERROR_NETWORK="अभी आप इंटरनेट �
 
 //-----------------------------------------------------------------------------------------------
 
+//----------------------------------- SELECT PARTICIPANT PROFILE ----------------------------------------------
+var SELECTPARTICIPANTPROFILE_BUTTON_PREGNANT="गर्भवती";
+var SELECTPARTICIPANTPROFILE_BUTTON_NEWMOM="नयी माँ";
+//-----------------------------------------------------------------------------------------------
