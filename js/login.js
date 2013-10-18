@@ -1027,12 +1027,7 @@ function MetadataLoadComplete_success() {
 	if(--mutexDB==0)
 	{
 		$('#busy').html('..........');
-	   if(arrImagesToDownload.length > 0 )
-        {
-        	DownloadParticipantImages(); 		
-        }
-        else
-        {
+	    // Now do not download any Images.. Oct 18 2013
         	  // make an entry into Login Table
 			db.transaction(function(tx)
 		     {	     	
@@ -1040,7 +1035,7 @@ function MetadataLoadComplete_success() {
 		     }
 		     , transaction_error,LoginExistingUser_success);	
 			 return;
-        }
+       
 	}
 }
 

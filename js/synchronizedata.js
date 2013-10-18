@@ -225,8 +225,8 @@ function UploadtoServer(participantPerformance)
 	       	return;
        }
        $('#busy').html(SYNCHRONIZE_MESSAGE_UPLOADINGIMAGES);
-       UploadParticipantImages();
-      // CleanTables();
+       //UploadParticipantImages();
+       CleanTables();
       // UploadParticipantImages();
     },
     error      : function() {
@@ -1010,7 +1010,7 @@ function DeleteTableComplete_success() {
     
     db.transaction(function(tx)
 			     {	     	
-			     	tx.executeSql("Select ID,Image from Participants where IsPhotoUpdate=1",[],GetPhotosforUpload_success);    	
+			     	tx.executeSql("Select ID,Image from Participants where IsPhotoUpdate=5",[],GetPhotosforUpload_success);    	
 			     }
 			     , transaction_error);
 }
