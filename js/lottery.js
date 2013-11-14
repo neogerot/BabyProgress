@@ -4,7 +4,7 @@ var count;
 			var numberOfParticipants;	
 			var myParticipants = [];
 			var currentParticipant;
-			var speed=300;
+			var speed=30;
 			var winneruid;
 			var ParticipantCollection = [];	
 			var locationId;
@@ -102,7 +102,7 @@ function getUrlVars() {
 			function SaveWinner_success()
 			{
 				$('#counter').append(' <h3>'+LOTTERY_MESSAGE_WINNER+ " : " + ParticipantCollection[currentParticipant].FirstName+ ' '+ParticipantCollection[currentParticipant].LastName
-				   			+ ' ('+ParticipantCollection[currentParticipant].locationname +')' 
+				   			+ ' ('+ParticipantCollection[currentParticipant].groupname +' : '+ParticipantCollection[currentParticipant].locationname +')' 
 				   			+ '<br> '+ LOTTERY_MESSAGE_WINNINGAMOUNT +': '+ ParticipantCollection[currentParticipant].WinningAmount+'</h3>');
 			  
 			    $('#winner').show();	
@@ -174,9 +174,10 @@ window.addEventListener('load', function() {
 
 function getEmployee(tx) {
  
- var  sql = "select e.ID,e.FirstName, e.LastName, e.UniqueID, e.Image,e.Level, e.Points,e.LocationID,e.GroupID,e.IsNew,e.IsUpdate,e.IsLevelCompleted,loc.WinningAmount,loc.Name as locationname "
+ var  sql = "select e.ID,e.FirstName, e.LastName, e.UniqueID, e.Image,e.Level, e.Points,e.LocationID,e.GroupID,e.IsNew,e.IsUpdate,e.IsLevelCompleted,loc.WinningAmount,loc.Name as locationname,g.Name as groupname "
   			  + 	" from Participants e " 
   			  +    " join Locations loc on loc.ID=e.LocationID "
+  			  +    " join Groups g on g.LocationId=loc.ID and e.GroupID=g.ID "
   			  +   " where e.LocationID=" + locationId +" and IsLevelCompleted=1 "	
 			  +  " order by e.LastName, e.FirstName";
 			 			
